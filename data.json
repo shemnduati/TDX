@@ -437,9 +437,99 @@
             "timestamp": "2026-04-19T15:54:12.966721+00:00",
             "balance": 1000.0,
             "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T15:55:13.860555+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T15:56:14.719436+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T15:57:15.394304+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T15:58:15.756932+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T15:59:16.269018+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:00:24.122808+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:01:24.761103+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:02:25.302489+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:03:25.928943+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:04:26.467648+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:05:27.271592+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:06:27.972687+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:07:29.046006+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:08:29.782063+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:09:30.383061+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:10:33.430412+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:11:35.070151+00:00",
+            "balance": 1000.0,
+            "realized": false
+        },
+        {
+            "timestamp": "2026-04-19T16:12:35.846415+00:00",
+            "balance": 1000.0,
+            "realized": false
         }
     ],
-    "updated_at": "2026-04-19T15:54:12.966731+00:00",
+    "updated_at": "2026-04-19T16:12:35.846424+00:00",
     "config": {
         "allocation_pct": 1.0,
         "stop_loss_pct": 0.02,
