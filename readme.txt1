@@ -1,0 +1,32 @@
+# terminal 1 — backend
+.\venv\Scripts\Activate.ps1
+python dashboard.py        # http://127.0.0.1:5001
+
+# terminal 2 — bot (writes data.json when it trades)
+python bot.py
+
+# terminal 3 — dashboard
+cd frontend
+npm run dev                # http://127.0.0.1:5173
+
+
+
+python backtest.py --symbol ETH/USDT --timeframe 1h
+python backtest.py --timeframe 4h --bars 500
+python backtest.py --timeframe 15m --bars 1000
+
+
+
+
+You now have the tooling. You don't yet have an edge.
+EMA crossover + RSI filter + bracket risk is one of the most studied setups on BTC, and on liquid timeframes it's very close to break-even before fees and a loser after. Walk-forward just confirmed that. The tooling is correct; the strategy is the bottleneck now.
+
+Realistic directions that would actually matter:
+
+Change the strategy, not the parameters. Parameter tuning can't rescue a flat expectancy. Candidates worth trying (easy to slot into strategy.py):
+RSI mean-reversion: buy on RSI<30 + cross back above, sell on RSI>70 + cross back below. Works better than crossovers in ranging markets.
+Breakout: donchian channel / 20-day high/low. Works better in trending markets.
+MACD histogram momentum: enter on histogram sign flip only when above/below zero (trend-with-momentum).
+Volatility filter: ATR-normalize SL/TP (e.g. SL = 1.5×ATR) instead of fixed %. Kills the "SL never fires in low vol, always fires in high vol" problem.
+Non-BTC instruments: momentum strategies work much better on ETH/SOL/smaller caps that trend harder. Literally python walkforward.py --symbol ETH/USDT will tell you.
+Strategy registry: refactor strategy.py into pluggable strategies so you can A/B them. Worth doing before you pile on more ideas.

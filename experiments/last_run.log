@@ -1,0 +1,226 @@
+[sweep] market=BTC-4h BTC/USDT 4h bars=10000  2021-09-25 20:00:00 -> 2026-04-19 08:00:00
+  [ema_crossover] 24 configs
+    10/24 in 31.6s
+    20/24 in 62.7s
+    24/24 in 75.1s
+  [rsi_mean_reversion] 24 configs
+    10/24 in 27.6s
+    20/24 in 55.3s
+    24/24 in 66.2s
+  [donchian_breakout] 54 configs
+    10/54 in 32.0s
+    20/54 in 61.3s
+    30/54 in 92.5s
+    40/54 in 121.5s
+    50/54 in 150.8s
+    54/54 in 162.0s
+
+[sweep] market=ETH-4h ETH/USDT 4h bars=10000  2021-09-25 20:00:00 -> 2026-04-19 08:00:00
+  [ema_crossover] 24 configs
+    10/24 in 28.4s
+    20/24 in 57.3s
+    24/24 in 68.6s
+  [rsi_mean_reversion] 24 configs
+    10/24 in 25.9s
+    20/24 in 52.1s
+    24/24 in 62.7s
+  [donchian_breakout] 54 configs
+    10/54 in 28.4s
+    20/54 in 56.4s
+    30/54 in 85.7s
+    40/54 in 114.8s
+    50/54 in 142.8s
+    54/54 in 153.9s
+
+[sweep] market=BTC-1h BTC/USDT 1h bars=20000  2024-01-07 02:00:00 -> 2026-04-19 09:00:00
+  [ema_crossover] 24 configs
+    10/24 in 60.4s
+    20/24 in 119.0s
+    24/24 in 143.4s
+  [rsi_mean_reversion] 24 configs
+    10/24 in 56.2s
+    20/24 in 114.6s
+    24/24 in 137.4s
+  [donchian_breakout] 54 configs
+    10/54 in 69.1s
+    20/54 in 132.5s
+    30/54 in 195.2s
+    40/54 in 259.0s
+    50/54 in 321.6s
+    54/54 in 345.3s
+
+[sweep] Cached 306 configs -> E:\Projects\TDX\experiments\last_sweep.json
+
+=== BTC-4h top 10 by trade_sharpe (trades >= 20, dropped 14 low-activity) ===
+
+market   strat                trades    ret%  sharpe     pf  maxdd%    wr%  label
+---------------------------------------------------------------------------------
+BTC-4h   rsi_mean_reversion       25   23.58   0.176   1.46   10.47   56.0  rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=False
+BTC-4h   ema_crossover            61   12.45   0.123   1.29    5.50   49.2  ema_crossover · ema_short=20 · ema_long=50 · ema_trend=200 · use_atr_sizing=True
+BTC-4h   rsi_mean_reversion       25    5.00   0.116   1.27    5.46   52.0  rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=True
+BTC-4h   ema_crossover           113   20.24   0.113   1.27    5.97   46.9  ema_crossover · ema_short=12 · ema_long=50 · ema_trend=100 · use_atr_sizing=True
+BTC-4h   ema_crossover            95   16.91   0.112   1.27    7.32   46.3  ema_crossover · ema_short=20 · ema_long=50 · ema_trend=100 · use_atr_sizing=True
+BTC-4h   ema_crossover            69   29.14   0.098   1.23   12.85   44.9  ema_crossover · ema_short=20 · ema_long=50 · ema_trend=200 · use_atr_sizing=False
+BTC-4h   ema_crossover           109   15.48   0.090   1.21    5.93   45.9  ema_crossover · ema_short=20 · ema_long=26 · ema_trend=100 · use_atr_sizing=True
+BTC-4h   ema_crossover            95   32.72   0.082   1.19   18.22   44.2  ema_crossover · ema_short=12 · ema_long=50 · ema_trend=200 · use_atr_sizing=False
+BTC-4h   donchian_breakout       222   22.93   0.068   1.15    8.32   49.1  donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+BTC-4h   ema_crossover            87    7.74   0.057   1.13    6.48   47.1  ema_crossover · ema_short=12 · ema_long=50 · ema_trend=200 · use_atr_sizing=True
+
+=== ETH-4h top 10 by trade_sharpe (trades >= 20, dropped 14 low-activity) ===
+
+market   strat                trades    ret%  sharpe     pf  maxdd%    wr%  label
+---------------------------------------------------------------------------------
+ETH-4h   donchian_breakout       249   32.06   0.077   1.18   10.00   44.6  donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.0
+ETH-4h   ema_crossover           114   14.38   0.076   1.18    7.69   43.0  ema_crossover · ema_short=12 · ema_long=50 · ema_trend=100 · use_atr_sizing=True
+ETH-4h   donchian_breakout       228   22.99   0.075   1.17    8.00   47.8  donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+ETH-4h   donchian_breakout       219   21.54   0.064   1.14   14.68   43.4  donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=2.0
+ETH-4h   donchian_breakout       202   71.57   0.062   1.15   21.43   41.1  donchian_breakout · donchian_period=55 · ema_trend=200 · use_atr_sizing=False
+ETH-4h   donchian_breakout       202   71.57   0.062   1.15   21.43   41.1  donchian_breakout · donchian_period=55 · ema_trend=200 · use_atr_sizing=False
+ETH-4h   donchian_breakout       202   71.57   0.062   1.15   21.43   41.1  donchian_breakout · donchian_period=55 · ema_trend=200 · use_atr_sizing=False
+ETH-4h   donchian_breakout       172   14.45   0.060   1.13    8.57   48.8  donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=2.5
+ETH-4h   donchian_breakout       225   15.58   0.058   1.13    9.20   48.9  donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+ETH-4h   donchian_breakout       232   72.25   0.058   1.14   23.58   40.5  donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=False
+
+=== BTC-1h top 10 by trade_sharpe (trades >= 20, dropped 10 low-activity) ===
+
+market   strat                trades    ret%  sharpe     pf  maxdd%    wr%  label
+---------------------------------------------------------------------------------
+BTC-1h   rsi_mean_reversion       22   41.18   0.413   2.36   11.29   59.1  rsi_mean_reversion · rsi_oversold=25 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=False
+BTC-1h   rsi_mean_reversion       22   11.90   0.299   1.91    3.95   59.1  rsi_mean_reversion · rsi_oversold=25 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=True
+BTC-1h   rsi_mean_reversion       42   54.59   0.261   1.72   13.53   52.4  rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=False
+BTC-1h   rsi_mean_reversion       25   18.55   0.179   1.46    6.99   48.0  rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=75 · ema_trend=200 · use_atr_sizing=False
+BTC-1h   rsi_mean_reversion       45    9.63   0.124   1.30    6.18   53.3  rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=True
+BTC-1h   donchian_breakout       358    7.89   0.017   1.04   13.17   52.0  donchian_breakout · donchian_period=40 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+BTC-1h   donchian_breakout       364    1.11   0.003   1.00   11.82   51.6  donchian_breakout · donchian_period=40 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=3.0
+BTC-1h   donchian_breakout       311    2.03   0.002   1.00   29.23   36.0  donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=False
+BTC-1h   donchian_breakout       311    2.03   0.002   1.00   29.23   36.0  donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=False
+BTC-1h   donchian_breakout       311    2.03   0.002   1.00   29.23   36.0  donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=False
+
+=== Walk-forward for BTC-4h (train=2000, test=500, 20 candidates) ===
+  [1/20] score= 0.03  mean=  0.52%  pos= 38%  std= 5.63%  WEAK         rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=False
+  [2/20] score= 0.11  mean=  0.50%  pos= 56%  std= 1.75%  WEAK         ema_crossover · ema_short=20 · ema_long=50 · ema_trend=200 · use_atr_sizing=True
+  [3/20] score= 0.02  mean=  0.11%  pos= 50%  std= 1.95%  WEAK         rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=True
+  [4/20] score= 0.17  mean=  1.11%  pos= 62%  std= 3.08%  ROBUST       ema_crossover · ema_short=12 · ema_long=50 · ema_trend=100 · use_atr_sizing=True
+  [5/20] score= 0.20  mean=  1.42%  pos= 62%  std= 3.40%  ROBUST       ema_crossover · ema_short=20 · ema_long=50 · ema_trend=100 · use_atr_sizing=True
+  [6/20] score= 0.07  mean=  1.20%  pos= 50%  std= 5.53%  WEAK         ema_crossover · ema_short=20 · ema_long=50 · ema_trend=200 · use_atr_sizing=False
+  [7/20] score= 0.18  mean=  1.32%  pos= 62%  std= 3.39%  ROBUST       ema_crossover · ema_short=20 · ema_long=26 · ema_trend=100 · use_atr_sizing=True
+  [8/20] score= 0.07  mean=  1.37%  pos= 56%  std= 7.44%  WEAK         ema_crossover · ema_short=12 · ema_long=50 · ema_trend=200 · use_atr_sizing=False
+  [9/20] score= 0.07  mean=  0.84%  pos= 50%  std= 3.61%  WEAK         donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+  [10/20] score= 0.09  mean=  0.57%  pos= 62%  std= 2.96%  ROBUST       ema_crossover · ema_short=12 · ema_long=50 · ema_trend=200 · use_atr_sizing=True
+  [11/20] score= 0.06  mean=  0.78%  pos= 50%  std= 3.81%  WEAK         donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=3.0
+  [12/20] score= 0.20  mean=  1.17%  pos= 69%  std= 3.29%  ROBUST       donchian_breakout · donchian_period=40 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=2.0
+  [13/20] score= 0.12  mean=  0.73%  pos= 62%  std= 2.84%  ROBUST       donchian_breakout · donchian_period=40 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=2.5
+  [14/20] score= 0.07  mean=  0.55%  pos= 62%  std= 3.77%  ROBUST       ema_crossover · ema_short=20 · ema_long=50 · ema_trend=0 · use_atr_sizing=True
+  [15/20] score= 0.08  mean=  0.99%  pos= 44%  std= 3.76%  WEAK         donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=2.5
+  [16/20] score= 0.04  mean=  0.36%  pos= 50%  std= 3.01%  WEAK         donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+  [17/20] score= 0.05  mean=  1.86%  pos= 44%  std=11.93%  WEAK         donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=False
+  [18/20] score= 0.05  mean=  1.86%  pos= 44%  std=11.93%  WEAK         donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=False
+  [19/20] score= 0.05  mean=  1.86%  pos= 44%  std=11.93%  WEAK         donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=False
+  [20/20] score= 0.04  mean=  0.75%  pos= 50%  std= 5.13%  WEAK         donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=2.0
+  (214.8s)
+
+=== Walk-forward for ETH-4h (train=2000, test=500, 20 candidates) ===
+  [1/20] score= 0.43  mean=  2.39%  pos= 75%  std= 3.65%  ROBUST       donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.0
+  [2/20] score= 0.11  mean=  1.13%  pos= 62%  std= 4.68%  ROBUST       ema_crossover · ema_short=12 · ema_long=50 · ema_trend=100 · use_atr_sizing=True
+  [3/20] score= 0.28  mean=  1.74%  pos= 69%  std= 3.52%  ROBUST       donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+  [4/20] score= 0.39  mean=  2.05%  pos= 81%  std= 3.91%  ROBUST       donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=2.0
+  [5/20] score= 0.17  mean=  5.10%  pos= 62%  std=14.12%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=200 · use_atr_sizing=False
+  [6/20] score= 0.17  mean=  5.10%  pos= 62%  std=14.12%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=200 · use_atr_sizing=False
+  [7/20] score= 0.17  mean=  5.10%  pos= 62%  std=14.12%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=200 · use_atr_sizing=False
+  [8/20] score= 0.16  mean=  1.02%  pos= 62%  std= 3.09%  ROBUST       donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=2.5
+  [9/20] score= 0.24  mean=  1.31%  pos= 69%  std= 3.07%  ROBUST       donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+  [10/20] score= 0.21  mean=  6.24%  pos= 62%  std=14.46%  ROBUST       donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=False
+  [11/20] score= 0.21  mean=  6.24%  pos= 62%  std=14.46%  ROBUST       donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=False
+  [12/20] score= 0.21  mean=  6.24%  pos= 62%  std=14.46%  ROBUST       donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=False
+  [13/20] score= 0.18  mean=  5.23%  pos= 62%  std=14.19%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=100 · use_atr_sizing=False
+  [14/20] score= 0.18  mean=  5.23%  pos= 62%  std=14.19%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=100 · use_atr_sizing=False
+  [15/20] score= 0.18  mean=  5.23%  pos= 62%  std=14.19%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=100 · use_atr_sizing=False
+  [16/20] score= 0.14  mean=  1.13%  pos= 56%  std= 3.16%  WEAK         donchian_breakout · donchian_period=40 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+  [17/20] score= 0.00  mean=  0.05%  pos= 50%  std= 3.50%  WEAK         ema_crossover · ema_short=20 · ema_long=26 · ema_trend=100 · use_atr_sizing=True
+  [18/20] score= 0.17  mean=  5.04%  pos= 62%  std=14.21%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=0 · use_atr_sizing=False
+  [19/20] score= 0.17  mean=  5.04%  pos= 62%  std=14.21%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=0 · use_atr_sizing=False
+  [20/20] score= 0.17  mean=  5.04%  pos= 62%  std=14.21%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=0 · use_atr_sizing=False
+  (218.9s)
+
+=== Walk-forward for BTC-1h (train=4000, test=1000, 20 candidates) ===
+  [1/20] score= 0.14  mean=  1.27%  pos= 44%  std= 2.80%  WEAK         rsi_mean_reversion · rsi_oversold=25 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=False
+  [2/20] score= 0.07  mean=  0.41%  pos= 44%  std= 1.79%  WEAK         rsi_mean_reversion · rsi_oversold=25 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=True
+  [3/20] score= 0.06  mean=  1.13%  pos= 44%  std= 5.59%  WEAK         rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=False
+  [4/20] score= 0.02  mean=  0.23%  pos= 25%  std= 4.48%  WEAK         rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=75 · ema_trend=200 · use_atr_sizing=False
+  [5/20] score= 0.02  mean=  0.21%  pos= 31%  std= 3.00%  WEAK         rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=True
+  [6/20] score= 0.04  mean=  0.39%  pos= 56%  std= 3.67%  WEAK         donchian_breakout · donchian_period=40 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+  [7/20] score= 0.01  mean=  0.15%  pos= 50%  std= 4.03%  WEAK         donchian_breakout · donchian_period=40 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=3.0
+  [8/20] score= 0.00  mean= -1.06%  pos= 50%  std= 9.41%  NOT_VIABLE   donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=False
+  [9/20] score= 0.00  mean= -1.06%  pos= 50%  std= 9.41%  NOT_VIABLE   donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=False
+  [10/20] score= 0.00  mean= -1.06%  pos= 50%  std= 9.41%  NOT_VIABLE   donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=False
+  [11/20] score= 0.00  mean= -0.06%  pos= 50%  std= 4.80%  NOT_VIABLE   donchian_breakout · donchian_period=40 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+  [12/20] score= 0.04  mean=  0.42%  pos= 56%  std= 4.00%  WEAK         donchian_breakout · donchian_period=55 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=2.5
+  [13/20] score= 0.03  mean=  0.25%  pos= 56%  std= 3.67%  WEAK         donchian_breakout · donchian_period=55 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+  [14/20] score= 0.00  mean= -0.88%  pos= 31%  std= 9.44%  NOT_VIABLE   donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=False
+  [15/20] score= 0.00  mean= -0.88%  pos= 31%  std= 9.44%  NOT_VIABLE   donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=False
+  [16/20] score= 0.00  mean= -0.88%  pos= 31%  std= 9.44%  NOT_VIABLE   donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=False
+  [17/20] score= 0.00  mean= -0.34%  pos= 44%  std= 4.52%  NOT_VIABLE   donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=3.0
+  [18/20] score= 0.06  mean=  0.55%  pos= 56%  std= 3.78%  WEAK         donchian_breakout · donchian_period=55 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=3.0
+  [19/20] score= 0.00  mean= -0.00%  pos= 56%  std= 5.46%  NOT_VIABLE   donchian_breakout · donchian_period=40 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=2.5
+  [20/20] score= 0.05  mean=  0.37%  pos= 62%  std= 3.64%  ROBUST       donchian_breakout · donchian_period=55 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+  (443.0s)
+
+=== Per-market WF ranking (top by wf_score, OOS-first) ===
+
+[BTC-4h]
+  strat                 score  wf_mean%  wf_pos%  wf_std%  bt_shrp  bt_ret%     verdict  label
+  --------------------------------------------------------------------------------------------
+  donchian_breakout      0.20      1.17       69     3.29    0.049    17.01      ROBUST  donchian_breakout · donchian_period=40 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=2.0
+  ema_crossover          0.20      1.42       62     3.40    0.112    16.91      ROBUST  ema_crossover · ema_short=20 · ema_long=50 · ema_trend=100 · use_atr_sizing=True
+  ema_crossover          0.18      1.32       62     3.39    0.090    15.48      ROBUST  ema_crossover · ema_short=20 · ema_long=26 · ema_trend=100 · use_atr_sizing=True
+  ema_crossover          0.17      1.11       62     3.08    0.113    20.24      ROBUST  ema_crossover · ema_short=12 · ema_long=50 · ema_trend=100 · use_atr_sizing=True
+  donchian_breakout      0.12      0.73       62     2.84    0.048    13.12      ROBUST  donchian_breakout · donchian_period=40 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=2.5
+  ema_crossover          0.11      0.50       56     1.75    0.123    12.45        WEAK  ema_crossover · ema_short=20 · ema_long=50 · ema_trend=200 · use_atr_sizing=True
+  ema_crossover          0.09      0.57       62     2.96    0.057     7.74      ROBUST  ema_crossover · ema_short=12 · ema_long=50 · ema_trend=200 · use_atr_sizing=True
+  donchian_breakout      0.08      0.99       44     3.76    0.042    11.52        WEAK  donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=2.5
+
+[ETH-4h]
+  strat                 score  wf_mean%  wf_pos%  wf_std%  bt_shrp  bt_ret%     verdict  label
+  --------------------------------------------------------------------------------------------
+  donchian_breakout      0.43      2.39       75     3.65    0.077    32.06      ROBUST  donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.0
+  donchian_breakout      0.39      2.05       81     3.91    0.064    21.54      ROBUST  donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=2.0
+  donchian_breakout      0.28      1.74       69     3.52    0.075    22.99      ROBUST  donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+  donchian_breakout      0.24      1.31       69     3.07    0.058    15.58      ROBUST  donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+  donchian_breakout      0.21      6.24       62    14.46    0.058    72.25      ROBUST  donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=False
+  donchian_breakout      0.21      6.24       62    14.46    0.058    72.25      ROBUST  donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=False
+  donchian_breakout      0.21      6.24       62    14.46    0.058    72.25      ROBUST  donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=False
+  donchian_breakout      0.18      5.23       62    14.19    0.058    80.42      ROBUST  donchian_breakout · donchian_period=55 · ema_trend=100 · use_atr_sizing=False
+
+[BTC-1h]
+  strat                 score  wf_mean%  wf_pos%  wf_std%  bt_shrp  bt_ret%     verdict  label
+  --------------------------------------------------------------------------------------------
+  rsi_mean_reversion     0.14      1.27       44     2.80    0.413    41.18        WEAK  rsi_mean_reversion · rsi_oversold=25 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=False
+  rsi_mean_reversion     0.07      0.41       44     1.79    0.299    11.90        WEAK  rsi_mean_reversion · rsi_oversold=25 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=True
+  rsi_mean_reversion     0.06      1.13       44     5.59    0.261    54.59        WEAK  rsi_mean_reversion · rsi_oversold=30 · rsi_overbought=70 · ema_trend=200 · use_atr_sizing=False
+  donchian_breakout      0.06      0.55       56     3.78   -0.004    -1.59        WEAK  donchian_breakout · donchian_period=55 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=3.0
+  donchian_breakout      0.05      0.37       62     3.64   -0.011    -4.02      ROBUST  donchian_breakout · donchian_period=55 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+  donchian_breakout      0.04      0.42       56     4.00    0.002     1.01        WEAK  donchian_breakout · donchian_period=55 · ema_trend=0 · use_atr_sizing=True · atr_stop_mult=2.5
+  donchian_breakout      0.04      0.39       56     3.67    0.017     7.89        WEAK  donchian_breakout · donchian_period=40 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+  donchian_breakout      0.03      0.25       56     3.67   -0.002    -0.91        WEAK  donchian_breakout · donchian_period=55 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+
+=== Cross-market survivors (same label, WF'd on >1 market) ===
+
+strategy             markets              verdicts                   min_score  avg_score  avg_mean%  min_pos%  label
+---------------------------------------------------------------------------------------------------------------------
+donchian_breakout    ETH-4h,ETH-4h,ETH-4h ROBUST,ROBUST,ROBUST            0.21       0.21       6.24        62  donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=False
+donchian_breakout    ETH-4h,ETH-4h,ETH-4h ROBUST,ROBUST,ROBUST            0.18       0.18       5.23        62  donchian_breakout · donchian_period=55 · ema_trend=100 · use_atr_sizing=False
+donchian_breakout    ETH-4h,ETH-4h,ETH-4h ROBUST,ROBUST,ROBUST            0.17       0.17       5.10        62  donchian_breakout · donchian_period=55 · ema_trend=200 · use_atr_sizing=False
+donchian_breakout    ETH-4h,ETH-4h,ETH-4h ROBUST,ROBUST,ROBUST            0.17       0.17       5.04        62  donchian_breakout · donchian_period=55 · ema_trend=0 · use_atr_sizing=False
+ema_crossover        BTC-4h,ETH-4h        ROBUST,ROBUST                   0.11       0.14       1.12        62  ema_crossover · ema_short=12 · ema_long=50 · ema_trend=100 · use_atr_sizing=True
+donchian_breakout    BTC-4h,ETH-4h        WEAK,ROBUST                     0.07       0.17       1.29        50  donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=2.5
+donchian_breakout    BTC-4h,ETH-4h        WEAK,ROBUST                     0.04       0.22       1.40        50  donchian_breakout · donchian_period=20 · ema_trend=200 · use_atr_sizing=True · atr_stop_mult=2.0
+donchian_breakout    BTC-4h,ETH-4h        WEAK,ROBUST                     0.04       0.14       0.84        50  donchian_breakout · donchian_period=20 · ema_trend=100 · use_atr_sizing=True · atr_stop_mult=3.0
+
+=== RECOMMENDED BASELINE ===
+  donchian_breakout · donchian_period=40 · ema_trend=200 · use_atr_sizing=False
+  Markets: ETH-4h, ETH-4h, ETH-4h
+  Verdicts: ROBUST, ROBUST, ROBUST
+  Avg WF mean: 6.24%
+  Min WF pos-rate: 62%
+
+Saved detailed report -> E:\Projects\TDX\experiments\last_run.json

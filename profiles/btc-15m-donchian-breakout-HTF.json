@@ -1,0 +1,46 @@
+{
+  "name": "btc-15m-donchian-breakout-HTF",
+  "description": "From run backtest \u00b7 donchian_breakout \u00b7 BTC/USDT \u00b7 15m",
+  "source": "run:20260419T153317-5570 (backtest \u00b7 donchian_breakout \u00b7 BTC/USDT \u00b7 15m)",
+  "parent": null,
+  "created_at": "2026-04-19T15:41:53Z",
+  "changelog": [],
+  "performance": {
+    "kind": "backtest",
+    "run_id": "20260419T153317-5570",
+    "summary": {
+      "avg_trade_pnl": 3.229,
+      "balance": 1200.2008731205963,
+      "bars": 9898,
+      "fees_paid": 137.94186242055267,
+      "gross_pnl": 338.1427355411492,
+      "losses": 38,
+      "max_drawdown_pct": 14.791,
+      "profit_factor": 1.243,
+      "reasons": {
+        "backtest_end": 1,
+        "reverse": 22,
+        "stop_loss": 17,
+        "take_profit": 22
+      },
+      "return_pct": 20.02008731205965,
+      "skipped_by_cooldown": 6,
+      "timeframe": "15m",
+      "total_pnl": 200.2008731205965,
+      "trade_sharpe": 0.096,
+      "trades": 62,
+      "win_rate": 38.70967741935484,
+      "wins": 24
+    },
+    "recorded_at": "2026-04-19T15:41:53Z"
+  },
+  "params": {
+    "timeframe": "15m",
+    "strategy": "donchian_breakout",
+    "use_atr_sizing": false,
+    "use_htf_confirm": true,
+    "htf_timeframe": "4h",
+    "use_adx_filter": false,
+    "use_volume_filter": true
+  }
+}

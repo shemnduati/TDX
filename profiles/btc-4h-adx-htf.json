@@ -1,0 +1,24 @@
+{
+  "name": "btc-4h-adx-htf",
+  "description": "BTC/USDT 4h consistency-focused variant: same EMA crossover as btc-4h-adx but with HTF 1d EMA50 confirmation layered on. Higher WF score (0.33 vs 0.30) and positive-rate (75% vs 69%), at the cost of lower mean return (+1.17% vs +1.46%). Pick this if you value smoother equity over peak return.",
+  "source": "experiments/filter_ablation.py B1-ema-12-50 + V5-htf50+adx20 (2026-04-18)",
+  "created_at": "2026-04-18T00:00:00Z",
+  "params": {
+    "symbol": "BTC/USDT",
+    "timeframe": "4h",
+    "strategy": "ema_crossover",
+    "ema_short": 12,
+    "ema_long": 50,
+    "ema_trend": 100,
+    "use_atr_sizing": true,
+    "atr_stop_mult": 2.0,
+    "atr_tp_mult": 3.0,
+    "use_adx_filter": true,
+    "adx_min": 20.0,
+    "adx_max": 0.0,
+    "filter_adx_period": 14,
+    "use_htf_confirm": true,
+    "htf_timeframe": "1d",
+    "htf_ema_period": 50
+  }
+}

@@ -1,0 +1,11 @@
+venv/
+.env
+config.py
+__pycache__/
+
+# Runtime artifacts written by the bot / backtester
+data.json
+backtest.json
+
+# Local OHLCV cache
+cache/

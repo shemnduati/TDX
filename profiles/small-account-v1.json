@@ -1,0 +1,17 @@
+{
+  "name": "small-account-v1",
+  "description": "",
+  "source": "dashboard form",
+  "parent": "btc-4h-adx-htf",
+  "created_at": "2026-04-19T12:31:49Z",
+  "changelog": [
+    {
+      "at": "2026-04-19T12:31:49Z",
+      "message": "Dropped atr_risk_pct 1% \u2192 0.5% for small-account survivability; all other params inherited from btc-4h-adx-htf."
+    }
+  ],
+  "performance": null,
+  "params": {
+    "use_htf_confirm": true
+  }
+}

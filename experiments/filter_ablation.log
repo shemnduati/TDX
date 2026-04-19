@@ -1,0 +1,232 @@
+
+### B1-ema-12-50-cross-market (ema_crossover) — Cross-market ROBUST on BTC-4h AND ETH-4h
+  [BTC-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      1.11       62     3.08   0.17  ROBUST    [1/61, eta 728s]
+    V1-htf1d-ema50              0      0.68       69     2.58   0.15  ROBUST    [2/61, eta 693s]
+    V2-htf1d-ema100             0      0.28       62     2.31   0.06  ROBUST    [3/61, eta 660s]
+    V3-adx-min20                0      1.46       69     2.78   0.30  ROBUST    [4/61, eta 650s]
+    V5-htf50+adx20              0      1.17       75     2.31   0.33  ROBUST    [5/61, eta 640s]
+  [ETH-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      1.13       62     4.68   0.11  ROBUST    [6/61, eta 623s]
+    V1-htf1d-ema50              0     -0.05       56     3.18   0.00  NOT_VIABLE    [7/61, eta 610s]
+    V2-htf1d-ema100             0      0.07       62     3.34   0.01  ROBUST    [8/61, eta 593s]
+    V3-adx-min20                0      0.33       44     3.02   0.03  WEAK    [9/61, eta 583s]
+    V5-htf50+adx20              0      0.07       38     2.07   0.01  WEAK    [10/61, eta 570s]
+
+### B2-ema-20-50-btc4h (ema_crossover) — Best ema_crossover on BTC-4h (WF score 0.20)
+  [BTC-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      1.42       62     3.40   0.20  ROBUST    [11/61, eta 558s]
+    V1-htf1d-ema50              0      0.82       69     2.10   0.22  ROBUST    [12/61, eta 551s]
+    V2-htf1d-ema100             0      0.38       62     1.83   0.10  ROBUST    [13/61, eta 537s]
+    V3-adx-min20                0      1.16       75     2.50   0.30  ROBUST    [14/61, eta 527s]
+    V5-htf50+adx20              0      0.69       62     1.65   0.20  ROBUST    [15/61, eta 516s]
+  [ETH-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0     -0.63       50     3.01   0.00  NOT_VIABLE    [16/61, eta 505s]
+    V1-htf1d-ema50              0     -0.50       44     3.12   0.00  NOT_VIABLE    [17/61, eta 494s]
+    V2-htf1d-ema100             0     -0.93       38     3.50   0.00  NOT_VIABLE    [18/61, eta 482s]
+    V3-adx-min20                0     -0.56       44     2.38   0.00  NOT_VIABLE    [19/61, eta 470s]
+    V5-htf50+adx20              0     -0.11       25     2.51   0.00  NOT_VIABLE    [20/61, eta 459s]
+
+### B3-don40-btc4h (donchian_breakout) — Best donchian on BTC-4h (WF score 0.20)
+  [BTC-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      1.17       69     3.29   0.20  ROBUST    [21/61, eta 448s]
+    V1-htf1d-ema50              0      1.41       62     2.94   0.23  ROBUST    [22/61, eta 437s]
+    V2-htf1d-ema100             0      0.49       69     3.09   0.09  ROBUST    [23/61, eta 426s]
+    V3-adx-min20                0      1.59       69     3.68   0.24  ROBUST    [24/61, eta 416s]
+    V4-vol-1.3x                 0      0.86       62     3.24   0.13  ROBUST    [25/61, eta 405s]
+    V5-htf50+vol                0      1.17       50     2.95   0.12  WEAK    [26/61, eta 393s]
+  [ETH-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      1.51       62     3.95   0.18  ROBUST    [27/61, eta 382s]
+    V1-htf1d-ema50              0      1.47       69     4.13   0.20  ROBUST    [28/61, eta 370s]
+    V2-htf1d-ema100             0      1.22       62     3.38   0.17  ROBUST    [29/61, eta 359s]
+    V3-adx-min20                0      1.91       69     4.55   0.24  ROBUST    [30/61, eta 348s]
+    V4-vol-1.3x                 0      1.47       75     3.83   0.25  ROBUST    [31/61, eta 337s]
+    V5-htf50+vol                0      1.62       69     4.37   0.21  ROBUST    [32/61, eta 326s]
+
+### B4-don20-eth4h-100 (donchian_breakout) — Best donchian on ETH-4h (WF score 0.43)
+  [ETH-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      2.39       75     3.65   0.43  ROBUST    [33/61, eta 315s]
+    V1-htf1d-ema50              0      1.62       75     4.19   0.25  ROBUST    [34/61, eta 303s]
+    V2-htf1d-ema100             0      1.18       62     3.41   0.16  ROBUST    [35/61, eta 292s]
+    V3-adx-min20                0      1.74       50     4.06   0.13  WEAK    [36/61, eta 280s]
+    V4-vol-1.3x                 0      2.59       62     4.19   0.29  ROBUST    [37/61, eta 269s]
+    V5-htf50+vol                0      2.06       69     4.47   0.26  ROBUST    [38/61, eta 258s]
+  [BTC-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      0.81       62     5.00   0.08  ROBUST    [39/61, eta 247s]
+    V1-htf1d-ema50              0      1.27       62     5.05   0.12  ROBUST    [40/61, eta 235s]
+    V2-htf1d-ema100             0     -0.14       56     6.14   0.00  NOT_VIABLE    [41/61, eta 224s]
+    V3-adx-min20                0      0.49       50     4.62   0.03  WEAK    [42/61, eta 213s]
+    V4-vol-1.3x                 0      0.49       56     4.83   0.04  WEAK    [43/61, eta 201s]
+    V5-htf50+vol                0      0.79       56     4.93   0.06  WEAK    [44/61, eta 190s]
+
+### B5-don20-eth4h-200 (donchian_breakout) — 2nd-best donchian on ETH-4h (WF score 0.39, pos 81%)
+  [ETH-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      2.05       81     3.91   0.39  ROBUST    [45/61, eta 179s]
+    V1-htf1d-ema50              0      1.49       69     4.38   0.19  ROBUST    [46/61, eta 168s]
+    V2-htf1d-ema100             0      1.22       62     3.50   0.17  ROBUST    [47/61, eta 156s]
+    V3-adx-min20                0      1.60       56     4.34   0.14  WEAK    [48/61, eta 145s]
+    V4-vol-1.3x                 0      2.12       62     4.79   0.21  ROBUST    [49/61, eta 134s]
+    V5-htf50+vol                0      2.01       69     4.65   0.24  ROBUST    [50/61, eta 123s]
+  [BTC-4h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      0.75       50     5.13   0.04  WEAK    [51/61, eta 112s]
+    V1-htf1d-ema50              0      1.36       62     5.26   0.12  ROBUST    [52/61, eta 100s]
+    V2-htf1d-ema100             0      0.09       56     6.02   0.01  WEAK    [53/61, eta 89s]
+    V3-adx-min20                0      0.40       62     3.79   0.05  ROBUST    [54/61, eta 78s]
+    V4-vol-1.3x                 0      0.46       62     5.15   0.04  ROBUST    [55/61, eta 67s]
+    V5-htf50+vol                0      0.82       56     5.05   0.06  WEAK    [56/61, eta 56s]
+
+### B6-rsi-btc1h-rescue (rsi_mean_reversion) — RSI on BTC-1h failed WF (44% pos). Test if ADX_max rescues.
+  [BTC-1h]
+    variant                trades  wf_mean%  wf_pos%  wf_std%  score  verdict
+    -------------------------------------------------------------------------
+    V0-control                  0      1.27       44     2.80   0.14  WEAK    [57/61, eta 45s]
+    V1-htf1d-ema50              0      0.20       25     1.93   0.03  WEAK    [58/61, eta 35s]
+    V2-htf1d-ema100             0     -0.69        6     1.41   0.00  NOT_VIABLE    [59/61, eta 23s]
+    V3-adx-max25                0      0.81       25     2.40   0.10  WEAK    [60/61, eta 12s]
+    V5-htf50+adxmax             0      0.52       19     2.17   0.07  WEAK    [61/61, eta 0s]
+
+
+=== DELTA TABLE (variant vs control per baseline/market) ===
+
+--- B1-ema-12-50-cross-market   on BTC-4h ---
+    control: trades=  0  mean=+1.11%  pos=62%  std=3.08%  score=0.17  ROBUST
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 +++-0.43 ++++++6 ++-0.50 +++-0.02  ROBUST
+    V2-htf1d-ema100        +++++++0 +++-0.83 ++++++0 ++-0.77 +++-0.11  ROBUST
+    V3-adx-min20           +++++++0 ++++0.36 ++++++6 ++-0.30 ++++0.13  ROBUST
+    V5-htf50+adx20         +++++++0 ++++0.07 +++++12 ++-0.77 ++++0.16  ROBUST
+
+--- B1-ema-12-50-cross-market   on ETH-4h ---
+    control: trades=  0  mean=+1.13%  pos=62%  std=4.68%  score=0.11  ROBUST
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 +++-1.18 +++++-6 ++-1.50 +++-0.11  NOT_VIABLE
+    V2-htf1d-ema100        +++++++0 +++-1.06 ++++++0 ++-1.34 +++-0.10  ROBUST
+    V3-adx-min20           +++++++0 +++-0.80 ++++-19 ++-1.66 +++-0.08  WEAK
+    V5-htf50+adx20         +++++++0 +++-1.05 ++++-25 ++-2.61 +++-0.10  WEAK
+
+--- B2-ema-20-50-btc4h   on BTC-4h ---
+    control: trades=  0  mean=+1.42%  pos=62%  std=3.40%  score=0.20  ROBUST
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 +++-0.60 ++++++6 ++-1.30 ++++0.02  ROBUST
+    V2-htf1d-ema100        +++++++0 +++-1.04 ++++++0 ++-1.56 +++-0.10  ROBUST
+    V3-adx-min20           +++++++0 +++-0.25 +++++12 ++-0.90 ++++0.10  ROBUST
+    V5-htf50+adx20         +++++++0 +++-0.72 ++++++0 ++-1.75 ++++0.00  ROBUST
+
+--- B2-ema-20-50-btc4h   on ETH-4h ---
+    control: trades=  0  mean=-0.63%  pos=50%  std=3.01%  score=0.00  NOT_VIABLE
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 ++++0.13 +++++-6 +++0.10 ++++0.00  NOT_VIABLE
+    V2-htf1d-ema100        +++++++0 +++-0.30 ++++-12 +++0.48 ++++0.00  NOT_VIABLE
+    V3-adx-min20           +++++++0 ++++0.07 +++++-6 ++-0.64 ++++0.00  NOT_VIABLE
+    V5-htf50+adx20         +++++++0 ++++0.52 ++++-25 ++-0.51 ++++0.00  NOT_VIABLE
+
+--- B3-don40-btc4h   on BTC-4h ---
+    control: trades=  0  mean=+1.17%  pos=69%  std=3.29%  score=0.20  ROBUST
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 ++++0.24 +++++-6 ++-0.36 ++++0.03  ROBUST
+    V2-htf1d-ema100        +++++++0 +++-0.68 ++++++0 ++-0.21 +++-0.11  ROBUST
+    V3-adx-min20           +++++++0 ++++0.42 ++++++0 +++0.39 ++++0.04  ROBUST
+    V4-vol-1.3x            +++++++0 +++-0.31 +++++-6 ++-0.05 +++-0.07  ROBUST
+    V5-htf50+vol           +++++++0 ++++0.00 ++++-19 ++-0.35 +++-0.08  WEAK
+
+--- B3-don40-btc4h   on ETH-4h ---
+    control: trades=  0  mean=+1.51%  pos=62%  std=3.95%  score=0.18  ROBUST
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 +++-0.04 ++++++6 +++0.18 ++++0.02  ROBUST
+    V2-htf1d-ema100        +++++++0 +++-0.28 ++++++0 ++-0.57 +++-0.01  ROBUST
+    V3-adx-min20           +++++++0 ++++0.40 ++++++6 +++0.60 ++++0.05  ROBUST
+    V4-vol-1.3x            +++++++0 +++-0.04 +++++12 ++-0.12 ++++0.07  ROBUST
+    V5-htf50+vol           +++++++0 ++++0.11 ++++++6 +++0.42 ++++0.03  ROBUST
+
+--- B4-don20-eth4h-100   on ETH-4h ---
+    control: trades=  0  mean=+2.39%  pos=75%  std=3.65%  score=0.43  ROBUST
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 +++-0.76 ++++++0 +++0.55 +++-0.17  ROBUST
+    V2-htf1d-ema100        +++++++0 +++-1.21 ++++-12 ++-0.24 +++-0.26  ROBUST
+    V3-adx-min20           +++++++0 +++-0.65 ++++-25 +++0.42 +++-0.30  WEAK
+    V4-vol-1.3x            +++++++0 ++++0.20 ++++-12 +++0.54 +++-0.13  ROBUST
+    V5-htf50+vol           +++++++0 +++-0.33 +++++-6 +++0.83 +++-0.17  ROBUST
+
+--- B4-don20-eth4h-100   on BTC-4h ---
+    control: trades=  0  mean=+0.81%  pos=62%  std=5.00%  score=0.08  ROBUST
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 ++++0.46 ++++++0 +++0.05 ++++0.04  ROBUST
+    V2-htf1d-ema100        +++++++0 +++-0.95 +++++-6 +++1.14 +++-0.08  NOT_VIABLE
+    V3-adx-min20           +++++++0 +++-0.32 ++++-12 ++-0.38 +++-0.05  WEAK
+    V4-vol-1.3x            +++++++0 +++-0.32 +++++-6 ++-0.18 +++-0.04  WEAK
+    V5-htf50+vol           +++++++0 +++-0.02 +++++-6 ++-0.08 +++-0.02  WEAK
+
+--- B5-don20-eth4h-200   on ETH-4h ---
+    control: trades=  0  mean=+2.05%  pos=81%  std=3.91%  score=0.39  ROBUST
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 +++-0.56 ++++-12 +++0.47 +++-0.20  ROBUST
+    V2-htf1d-ema100        +++++++0 +++-0.84 ++++-19 ++-0.41 +++-0.22  ROBUST
+    V3-adx-min20           +++++++0 +++-0.46 ++++-25 +++0.43 +++-0.24  WEAK
+    V4-vol-1.3x            +++++++0 ++++0.07 ++++-19 +++0.87 +++-0.18  ROBUST
+    V5-htf50+vol           +++++++0 +++-0.04 ++++-12 +++0.73 +++-0.14  ROBUST
+
+--- B5-don20-eth4h-200   on BTC-4h ---
+    control: trades=  0  mean=+0.75%  pos=50%  std=5.13%  score=0.04  WEAK
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 ++++0.61 +++++12 +++0.12 ++++0.08  ROBUST
+    V2-htf1d-ema100        +++++++0 +++-0.67 ++++++6 +++0.89 +++-0.04  WEAK
+    V3-adx-min20           +++++++0 +++-0.35 +++++12 ++-1.35 ++++0.01  ROBUST
+    V4-vol-1.3x            +++++++0 +++-0.29 +++++12 +++0.02 +++-0.00  ROBUST
+    V5-htf50+vol           +++++++0 ++++0.07 ++++++6 ++-0.08 ++++0.02  WEAK
+
+--- B6-rsi-btc1h-rescue   on BTC-1h ---
+    control: trades=  0  mean=+1.27%  pos=44%  std=2.80%  score=0.14  WEAK
+    variant                d_trades  d_mean%  d_pos%  d_std%  d_score  verdict
+    --------------------------------------------------------------------------
+    V1-htf1d-ema50         +++++++0 +++-1.07 ++++-19 ++-0.87 +++-0.10  WEAK
+    V2-htf1d-ema100        +++++++0 +++-1.96 ++++-38 ++-1.40 +++-0.14  NOT_VIABLE
+    V3-adx-max25           +++++++0 +++-0.46 ++++-19 ++-0.41 +++-0.03  WEAK
+    V5-htf50+adxmax        +++++++0 +++-0.75 ++++-25 ++-0.63 +++-0.06  WEAK
+
+=== PROMOTIONS (variants that turn WEAK/NOT_VIABLE -> ROBUST OR improve ROBUST score) ===
+
+  reason   baseline                   market   variant                 d_score              verdict  d_pos%, d_mean%, d_std%
+  --------------------------------------------------------------------------------------------------------------------------
+  IMPROVE  B1-ema-12-50-cross-market  BTC-4h   V5-htf50+adx20            +0.16       ROBUST->ROBUST  +12%, +0.07%, -0.77%
+  IMPROVE  B1-ema-12-50-cross-market  BTC-4h   V3-adx-min20              +0.13       ROBUST->ROBUST  +6%, +0.36%, -0.30%
+  IMPROVE  B2-ema-20-50-btc4h         BTC-4h   V3-adx-min20              +0.10       ROBUST->ROBUST  +12%, -0.25%, -0.90%
+  RESCUE   B5-don20-eth4h-200         BTC-4h   V1-htf1d-ema50            +0.08         WEAK->ROBUST  +12%, +0.61%, +0.12%
+  IMPROVE  B3-don40-btc4h             ETH-4h   V4-vol-1.3x               +0.07       ROBUST->ROBUST  +12%, -0.04%, -0.12%
+  IMPROVE  B3-don40-btc4h             ETH-4h   V3-adx-min20              +0.05       ROBUST->ROBUST  +6%, +0.40%, +0.60%
+  IMPROVE  B3-don40-btc4h             BTC-4h   V3-adx-min20              +0.04       ROBUST->ROBUST  +0%, +0.42%, +0.39%
+  IMPROVE  B4-don20-eth4h-100         BTC-4h   V1-htf1d-ema50            +0.04       ROBUST->ROBUST  +0%, +0.46%, +0.05%
+  RESCUE   B5-don20-eth4h-200         BTC-4h   V3-adx-min20              +0.01         WEAK->ROBUST  +12%, -0.35%, -1.35%
+  RESCUE   B5-don20-eth4h-200         BTC-4h   V4-vol-1.3x               -0.00         WEAK->ROBUST  +12%, -0.29%, +0.02%
+
+
+Saved detailed rows -> E:\Projects\TDX\experiments\filter_ablation.json

@@ -1,0 +1,19 @@
+{
+  "name": "eth-4h-donchian",
+  "description": "ETH/USDT 4h — 20-bar Donchian breakout with trend-100 filter, ATR sizing (stop=2.0*ATR). Highest WF score we found anywhere (0.43 on native ETH-4h), mean +2.39%/window, positive rate 75%. Deliberately has NO ADX filter — ADX min=20 HURTS this config on ETH (positive rate drops 25%). Do not inherit the ADX filter from config.py here.",
+  "source": "experiments/filter_ablation.py B4-don20-eth4h-100 control (2026-04-18)",
+  "created_at": "2026-04-18T00:00:00Z",
+  "params": {
+    "symbol": "ETH/USDT",
+    "timeframe": "4h",
+    "strategy": "donchian_breakout",
+    "donchian_period": 20,
+    "ema_trend": 100,
+    "use_atr_sizing": true,
+    "atr_stop_mult": 2.0,
+    "atr_tp_mult": 3.0,
+    "use_adx_filter": false,
+    "adx_min": 0.0,
+    "adx_max": 0.0
+  }
+}
