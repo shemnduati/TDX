@@ -49,13 +49,16 @@ AVAILABLE_SYMBOLS = [
 ]
 TIMEFRAME = "4h"     # 4h baseline: 16-window walk-forward (69% pos, +1.46% mean with ADX)
 LIMIT = 300          # bars fetched per live tick (enough warm-up for EMA_TREND=100)
-BACKTEST_BARS = 1000 # bars fetched for backtest replay (Binance max = 1000)
+# Bars for backtests / WF. Binance caps one fetch at ~1000; `history.fetch_history`
+# paginates automatically, so raising this pulls deeper history via multiple calls.
+BACKTEST_BARS = 1000
 
 # ---- Strategy ----------------------------------------------------------------
 # Active strategy. Implementations live in strategies.py. Currently:
 #   "ema_crossover"       — EMA crossover + RSI filter + trend filter
 #   "rsi_mean_reversion"  — RSI bounce off oversold / rejection off overbought
 #   "donchian_breakout"   — breakout above/below the N-bar Donchian channel
+#   "intraday_donchian"  — HTF+Donchian+ATR filters (use 1h HTF + 5m/15m LTF)
 STRATEGY = "ema_crossover"
 
 # EMA crossover hyperparameters
@@ -77,6 +80,22 @@ RSI_OVERBOUGHT = 70    # rsi_mean_reversion: short entry when crossing down thro
 # Donchian breakout lookback (bars). Classic "turtle" value is 20; 50/55 are
 # also common for slower, fewer-but-bigger breakouts.
 DONCHIAN_PERIOD = 20
+# When True, require a "tight" market before a valid break: the average bar
+# range (high–low) over the prior L bars must be <= max_range_atr × ATR.
+USE_DONCHIAN_COMPRESSION = False
+DONCHIAN_COMPRESSION_LOOKBACK = 20
+DONCHIAN_COMPRESSION_MAX_RANGE_ATR = 1.0
+# When True, longs require RSI < rsi_buy_max, shorts require RSI > rsi_sell_min
+# (anti-chase; like intraday_donchian use_breakout_rsi).
+USE_DONCHIAN_RSI = False
+
+# intraday_donchian: ATR mean window, min extension past Donchian band in ATR
+# units, optional LTF EMA (0 = off), optional RSI / ATR-expansion gates.
+ATR_MA_PERIOD = 20
+BREAKOUT_ATR_MULT = 0.5
+LTF_EMA_PERIOD = 0
+USE_BREAKOUT_RSI = False
+USE_ATR_EXPANSION = False
 
 # ---- Liquidity-sweep reversal ------------------------------------------------
 # "Stop hunt" fade: price pokes above a prior swing high (or below a prior
@@ -165,6 +184,49 @@ VOL_MULT = 1.2
 # as a percentage of close price, so the threshold is regime-agnostic.
 USE_ATR_FILTER = False
 ATR_MIN_PCT = 0.0
+# Cap volatility (opposite of atr_min). Skip when ATR/close is *above* the
+# threshold—useful to avoid news-like spikes in mean reversion, etc.
+USE_ATR_MAX_FILTER = False
+ATR_MAX_PCT = 0.0  # 0 = disabled even when the toggle is on
+
+# UTC time-of-day window (bar timestamp must fall in [start, end) in minutes
+# from midnight; end may be < start for a session that wraps past midnight).
+USE_TIME_FILTER = False
+# Default: 08:00–20:00 UTC (crypto cash session overlap proxy; adjust in UI).
+TIME_START_UTC_MINS = 8 * 60
+TIME_END_UTC_MINS = 20 * 60
+
+# --- Mean-reversion–specific (rsi_mean_reversion only) --------------------
+# 0 = off. When >0, only trade when ADX < this (ranging; uses filter_adx_period).
+MR_REGIME_ADX_MAX = 0.0
+
+# --- Execution & risk (PaperTrader) --------------------------------------
+# Proportional half-spread / slippage on each fill (0 = off).
+SLIPPAGE_PCT = 0.0
+# Extra proportional slippage per fill added as atr_mult × (ATR / reference_price).
+# When >0 backtests/live compute ATR on the series (`atr_period` from Params).
+SLIPPAGE_ATR_MULT = 0.0
+# Fixed half-spread per fill as basis points (1 bp = 0.01%).
+# Adds (HALF_SPREAD_BPS / 10000) to the *fractional* adverse move on entry/exit,
+# stacked on top of SLIPPAGE_PCT + ATR-linked terms (see PaperTrader).
+HALF_SPREAD_BPS = 0.0
+# Intraday ambiguity: candle touches BOTH stop and TP. `stop_first` is conservative.
+# Use `take_first` for an optimistic bracket; `random` for a stochastic path (seeded).
+INTRABAR_SL_TP_POLICY = "stop_first"  # stop_first | take_first | random
+INTRABAR_RANDOM_SEED = 42
+# Trail stop this far below the best price (long) / above (short). 0 = off.
+USE_TRAILING_STOP = False
+TRAILING_STOP_PCT = 0.015
+# 0 = off. Halt *new* entries after this many realized losses in a row.
+MAX_CONSECUTIVE_LOSSES = 0
+# 0 = off. Halt if realized balance fell more than this fraction since UTC day start.
+MAX_DAILY_LOSS_PCT = 0.0
+
+# Perpetual funding model (optional). Positive `FUNDING_RATE_BPS` means longs pay
+# shorts every `FUNDING_INTERVAL_HOURS`. Negative does the reverse.
+ENABLE_FUNDING = False
+FUNDING_RATE_BPS = 0.0
+FUNDING_INTERVAL_HOURS = 8
 
 # MACD confirmation. For a BUY we require MACD line > signal line (and >0);
 # for a SELL we require MACD line < signal line (and <0).

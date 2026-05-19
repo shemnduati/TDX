@@ -67,7 +67,7 @@ class SweepJob:
             keys = list(matrix.keys())
             combos = list(itertools.product(*[matrix[k] for k in keys]))
             total = len(combos)
-            if total > 200:
+            if total > 400:
                 raise ValueError(
                     f"Refusing to run sweep of {total} configs; split it up."
                 )
@@ -192,6 +192,8 @@ _INT_FIELDS = {
     "ema_trend",
     "rsi_period",
     "donchian_period",
+    "atr_ma_period",
+    "ltf_ema_period",
     "sweep_lookback",
     "sweep_adx_period",
     "sweep_volume_lookback",
@@ -203,6 +205,8 @@ _INT_FIELDS = {
     "macd_fast",
     "macd_slow",
     "macd_signal",
+    "intrabar_random_seed",
+    "funding_interval_hours",
 }
 
 _BOOL_FIELDS = {
@@ -212,6 +216,9 @@ _BOOL_FIELDS = {
     "use_volume_filter",
     "use_atr_filter",
     "use_macd_confirm",
+    "use_breakout_rsi",
+    "use_atr_expansion",
+    "enable_funding",
 }
 
 

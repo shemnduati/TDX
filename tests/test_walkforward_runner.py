@@ -47,17 +47,19 @@ class TestWalkforwardRunner:
         st = job.status()
         assert not st["running"]
         assert st["error"] is None
-        # (300 - 100 - 50) / 50 + 1 = 4 windows
-        assert st["total"] == 4
-        assert st["completed"] == 4
-        assert len(st["windows"]) == 4
+        # Reserve final 25% holdout: dev_end=225 so only 2 WFO windows fit.
+        assert st["total"] == 2
+        assert st["completed"] == 2
+        assert len(st["windows"]) == 2
 
         summary = st["summary"]
         assert summary is not None
-        assert summary["n_windows"] == 4
+        assert summary["n_windows"] == 2
         assert "mean_test_ret" in summary
         assert "positive_rate" in summary
         assert summary["verdict"] in {"ROBUST", "WEAK", "NOT_VIABLE", "NO_DATA"}
+        assert "final_oos" in summary
+        assert summary["final_oos"]["bars"] == 75
 
     def test_insufficient_bars_raises(self, stubbed):
         job = stubbed.WalkforwardJob()

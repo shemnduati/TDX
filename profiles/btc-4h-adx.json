@@ -1,7 +1,7 @@
 {
   "name": "btc-4h-adx",
-  "description": "BTC/USDT 4h — EMA 12/50 crossover + trend-100 + ATR sizing + ADX regime filter. Best BTC-4h result from the filter ablation (WF score 0.30, mean +1.46%/window, pos 69%).",
-  "source": "experiments/filter_ablation.py B1-ema-12-50 + V3-adx-min20 (run dated 2026-04-18). Note: already matches current config.py defaults — this profile exists so deployments can pin the BTC-4h settings even if config.py later drifts.",
+  "description": "BTC/USDT 4h \u2014 EMA 12/50 crossover + trend-100 + ATR sizing + ADX regime filter. Best BTC-4h result from the filter ablation (WF score 0.30, mean +1.46%/window, pos 69%).",
+  "source": "experiments/filter_ablation.py B1-ema-12-50 + V3-adx-min20 (run dated 2026-04-18). Note: already matches current config.py defaults \u2014 this profile exists so deployments can pin the BTC-4h settings even if config.py later drifts.",
   "created_at": "2026-04-18T00:00:00Z",
   "params": {
     "symbol": "BTC/USDT",
@@ -17,5 +17,43 @@
     "adx_min": 20.0,
     "adx_max": 0.0,
     "filter_adx_period": 14
+  },
+  "parent": null,
+  "changelog": [
+    {
+      "at": "2026-05-19T04:40:08Z",
+      "message": "rebaseline performance with walk-forward + final holdout OOS"
+    }
+  ],
+  "performance": {
+    "kind": "walkforward",
+    "summary": {
+      "n_windows": 1,
+      "mean_test_ret": 0.7370910516082017,
+      "median_test_ret": 0.7370910516082017,
+      "stdev_test_ret": 0.0,
+      "positive_rate": 100.0,
+      "mean_test_mdd_pct": 3.108,
+      "total_test_trades": 4,
+      "total_train_trades": 2,
+      "unique_selected_configs": 1,
+      "selection_transition_rate": 0.0,
+      "tuned_keys": [
+        "ema_long",
+        "ema_short",
+        "ema_trend"
+      ],
+      "train_engine": "grid",
+      "dev_end_bar": 749,
+      "holdout_start_bar": 749,
+      "holdout_bars": 250,
+      "final_oos_return_pct": -2.1772056792255596,
+      "final_oos_trades": 2,
+      "final_oos_win_rate": 0.0,
+      "final_oos_mdd_pct": 2.087,
+      "final_oos_profit_factor": 0.0,
+      "final_oos_policy": "mode_selected_config"
+    },
+    "recorded_at": "2026-05-19T04:40:08Z"
   }
 }

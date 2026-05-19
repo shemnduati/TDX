@@ -12,6 +12,18 @@ const RISK_FIELDS: (keyof StrategyParams)[] = [
   "take_profit_pct",
   "entry_cooldown_bars",
   "fee_pct",
+  "slippage_pct",
+  "slippage_atr_mult",
+  "half_spread_bps",
+  "intrabar_sl_tp_policy",
+  "intrabar_random_seed",
+  "enable_funding",
+  "funding_rate_bps",
+  "funding_interval_hours",
+  "use_trailing_stop",
+  "trailing_stop_pct",
+  "max_consecutive_losses",
+  "max_daily_loss_pct",
 ];
 
 const ATR_FIELDS: (keyof StrategyParams)[] = [
@@ -59,6 +71,18 @@ const FILTER_GROUPS: {
     fields: ["atr_min_pct"],
   },
   {
+    toggle: "use_atr_max_filter",
+    label: "Maximum volatility (ATR %)",
+    help: "Skip signals when ATR / price exceeds atr_max (spike / news guard).",
+    fields: ["atr_max_pct"],
+  },
+  {
+    toggle: "use_time_filter",
+    label: "Time of day (UTC)",
+    help: "Only take signals when bar time falls in [start, end) minutes from midnight.",
+    fields: ["time_start_utc_mins", "time_end_utc_mins"],
+  },
+  {
     toggle: "use_macd_confirm",
     label: "MACD confirmation",
     help: "Require MACD line on trade side (> signal & > 0 for longs).",
@@ -79,7 +103,7 @@ const FIELD_META: Record<
   keyof StrategyParams,
   {
     label: string;
-    type: "number" | "text" | "select";
+    type: "number" | "text" | "select" | "boolean";
     step?: number;
     min?: number;
     max?: number;
@@ -143,6 +167,61 @@ const FIELD_META: Record<
     step: 1,
     min: 2,
   },
+  use_donchian_compression: {
+    label: "Compression gate (Donchian)",
+    type: "boolean",
+    help: "Require prior mean range ≤ k×ATR before a valid break",
+  },
+  donchian_compression_lookback: {
+    label: "Compression lookback",
+    type: "number",
+    step: 1,
+    min: 1,
+    help: "Bars for mean(high−low) before the signal bar",
+  },
+  donchian_compression_max_range_atr: {
+    label: "Max range / ATR",
+    type: "number",
+    step: 0.1,
+    min: 0,
+    help: "Allow break only if prior mean range ≤ this × ATR",
+  },
+  use_donchian_rsi: {
+    label: "RSI anti-chase (Donchian)",
+    type: "boolean",
+    help: "Long only if RSI < buy max; short only if RSI > sell min",
+  },
+  atr_ma_period: {
+    label: "ATR mean period",
+    type: "number",
+    step: 1,
+    min: 1,
+    help: "require ATR above this rolling mean (volatility alive)",
+  },
+  breakout_atr_mult: {
+    label: "Min breakout × ATR",
+    type: "number",
+    step: 0.05,
+    min: 0,
+    help: "extension past Donchian band ≥ this × ATR",
+  },
+  ltf_ema_period: {
+    label: "LTF micro EMA",
+    type: "number",
+    step: 1,
+    min: 0,
+    help: "0 = off; long above / short below this EMA",
+  },
+  use_breakout_rsi: {
+    label: "RSI breakout filter",
+    type: "boolean",
+    help: "long only if RSI < buy max; short only if RSI > sell min",
+  },
+  use_atr_expansion: {
+    label: "ATR expansion",
+    type: "boolean",
+    help: "require ATR > prior bar",
+  },
   // risk
   initial_balance: {
     label: "Initial balance",
@@ -185,6 +264,85 @@ const FIELD_META: Record<
     step: 0.0001,
     min: 0,
     help: "0.001 = 0.1%",
+  },
+  slippage_pct: {
+    label: "Slippage (per side)",
+    type: "number",
+    step: 0.0001,
+    min: 0,
+    help: "Proportional adverse fill; 0.0005 = 0.05% per fill",
+  },
+  slippage_atr_mult: {
+    label: "ATR × slippage",
+    type: "number",
+    step: 0.05,
+    min: 0,
+    help:
+      "Added slippage = this × ATR/price each fill (0 = off); uses atr_period",
+  },
+  half_spread_bps: {
+    label: "Half-spread (bps)",
+    type: "number",
+    step: 1,
+    min: 0,
+    help:
+      "Fixed liquidity cost per fill: adds bps÷10000 to fractional slip (distinct from pct + ATR terms)",
+  },
+  intrabar_sl_tp_policy: {
+    label: "Same-bar SL vs TP",
+    type: "select",
+    options: ["stop_first", "take_first", "random"],
+    help:
+      "If both brackets touch one candle: conservative stop-first, optimistic take-first, or coin flip",
+  },
+  intrabar_random_seed: {
+    label: "Intrabar random seed",
+    type: "number",
+    step: 1,
+    help:
+      "When policy is random: fixed seed ⇒ reproducible coin flips across runs.",
+  },
+  enable_funding: {
+    label: "Enable funding",
+    type: "boolean",
+    help:
+      "Perpetual-style periodic funding transfer while position remains open.",
+  },
+  funding_rate_bps: {
+    label: "Funding rate (bps)",
+    type: "number",
+    step: 0.1,
+    help:
+      "Per funding interval. Positive means longs pay shorts; negative reverses.",
+  },
+  funding_interval_hours: {
+    label: "Funding interval (hours)",
+    type: "number",
+    step: 1,
+    min: 1,
+    help: "Settlement cadence for funding accrual.",
+  },
+  use_trailing_stop: { label: "Trailing stop", type: "boolean" },
+  trailing_stop_pct: {
+    label: "Trail distance",
+    type: "number",
+    step: 0.002,
+    min: 0,
+    help: "Stop trails this far from best price since entry (0.015 = 1.5%)",
+  },
+  max_consecutive_losses: {
+    label: "Max consecutive losses",
+    type: "number",
+    step: 1,
+    min: 0,
+    help: "0 = off; halts new entries after N losing trades in a row",
+  },
+  max_daily_loss_pct: {
+    label: "Max daily loss (UTC)",
+    type: "number",
+    step: 0.02,
+    min: 0,
+    help: "0 = off; halt new entries if realized balance drops this % from day start",
   },
   // ATR sizing
   use_atr_sizing: { label: "ATR sizing", type: "text" }, // rendered as toggle
@@ -274,6 +432,35 @@ const FIELD_META: Record<
     step: 0.001,
     min: 0,
     help: "0.005 = 0.5% of price",
+  },
+  use_atr_max_filter: { label: "ATR max filter", type: "text" },
+  atr_max_pct: {
+    label: "ATR max %",
+    type: "number",
+    step: 0.001,
+    min: 0,
+    help: "0.03 = 3% of price",
+  },
+  use_time_filter: { label: "Time filter (UTC)", type: "text" },
+  time_start_utc_mins: {
+    label: "Start (min from midnight)",
+    type: "number",
+    step: 15,
+    min: 0,
+    help: "480 = 08:00 UTC",
+  },
+  time_end_utc_mins: {
+    label: "End (min from midnight)",
+    type: "number",
+    step: 15,
+    min: 0,
+  },
+  mr_regime_adx_max: {
+    label: "MR regime ADX max",
+    type: "number",
+    step: 1,
+    min: 0,
+    help: "rsi_mean_reversion: require ADX < this; 0 = off. Uses filter ADX period.",
   },
   use_macd_confirm: { label: "MACD confirm", type: "text" },
   macd_fast: { label: "MACD fast", type: "number", step: 1, min: 2 },
@@ -368,7 +555,7 @@ export function StrategyForm({
               <Field
                 key={f}
                 name={f}
-                value={params[f] as string | number}
+                value={params[f] as string | number | boolean}
                 onChange={(v) => set(f, v as StrategyParams[typeof f])}
                 disabled={disabled}
               />
@@ -383,7 +570,7 @@ export function StrategyForm({
             <Field
               key={f}
               name={f}
-              value={params[f] as number}
+              value={params[f] as string | number | boolean}
               onChange={(v) => set(f, v as StrategyParams[typeof f])}
               disabled={disabled}
             />
@@ -507,8 +694,8 @@ function Grid({ children }: { children: React.ReactNode }) {
 
 interface FieldProps {
   name: keyof StrategyParams;
-  value: string | number;
-  onChange: (value: string | number) => void;
+  value: string | number | boolean;
+  onChange: (value: string | number | boolean) => void;
   disabled?: boolean;
   /**
    * Dynamic option list provided by the caller. When present, overrides
@@ -557,6 +744,14 @@ function Field({ name, value, onChange, disabled, options }: FieldProps) {
         disabled={disabled}
         value={String(value)}
         onChange={(e) => onChange(e.target.value)}
+      />
+    ) : effectiveType === "boolean" ? (
+      <input
+        type="checkbox"
+        className="mt-1 h-4 w-4 rounded border-slate-700 bg-slate-950 text-slate-400 focus:ring-1 focus:ring-slate-500"
+        disabled={disabled}
+        checked={Boolean(value)}
+        onChange={(e) => onChange(e.target.checked)}
       />
     ) : (
       <input

@@ -106,6 +106,35 @@ def _fetch_range(
     return out
 
 
+def ts_open_ms(ts) -> int:
+    """Candle open time in milliseconds (Binance: row timestamp = open)."""
+    if ts is None:
+        return 0
+    t = pd.Timestamp(ts)
+    return int(t.value // 1_000_000)
+
+
+def trim_incomplete_last_row(
+    df: pd.DataFrame, timeframe: str, now_ms: int | None = None,
+) -> pd.DataFrame:
+    """Drop the last row if that candle is still in progress (unclosed).
+
+    OHLCV rows use open time; a bar with open T is complete only when
+    now >= T + tf_ms, so the newest row from `fetch_ohlcv` is often partial.
+    """
+    if df.empty or timeframe not in TF_MS:
+        return df
+    tf_ms = TF_MS[timeframe]
+    if now_ms is None:
+        now_ms = int(time.time() * 1000)
+    out = df
+    if not out.empty:
+        last_open = ts_open_ms(out.iloc[-1]["timestamp"])
+        if last_open + tf_ms > now_ms:
+            out = out.iloc[:-1].copy()
+    return out
+
+
 def fetch_history(
     symbol: str,
     timeframe: str,
@@ -155,4 +184,5 @@ def fetch_history(
         print(
             f"  WARNING: asked for {bars} bars, exchange returned {len(take)}."
         )
-    return format_data(take)
+    df = format_data(take)
+    return trim_incomplete_last_row(df, timeframe)

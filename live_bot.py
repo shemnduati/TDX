@@ -22,11 +22,111 @@ import traceback
 from dataclasses import replace
 from typing import Optional
 
-from backtest import Params, _atr_overrides, apply_full_indicators
+import pandas as pd
+
+from backtest import Params, _atr_overrides, _bar_atr, apply_full_indicators
 from exchange import get_exchange
+from history import TF_MS, trim_incomplete_last_row
 from paper_trader import DEFAULT_DATA_FILE, PaperTrader
 from strategies import get_strategy
 from utils import format_data
+
+
+def _seconds_until_next_bar_close(tf_ms: int) -> float:
+    """Sleep duration until the current in-progress candle closes (+ small buffer)."""
+    now_ms = int(time.time() * 1000)
+    current_open = (now_ms // tf_ms) * tf_ms
+    next_close_ms = current_open + tf_ms
+    return max(0.05, (next_close_ms - now_ms) / 1000.0 + 0.05)
+
+
+def _ts_key(ts) -> pd.Timestamp:
+    return pd.Timestamp(ts)
+
+
+def run_exchange_paper_step(
+    params: Params,
+    strategy,
+    exchange,
+    trader: PaperTrader,
+    *,
+    ohlcv_limit: int = 300,
+    last_processed_closed_ts: object | None = None,
+    last_reported_signal: str = "HOLD",
+) -> tuple[str, float, float | None, pd.Timestamp]:
+    """Fetch OHLCV, run strategy on the last *closed* row set, then fill at the
+    open of the in-progress bar and evaluate SL/TP on that bar's range.
+
+    If `last_processed_closed_ts` matches the current newest closed-candle
+    time, skips ``generate_signal`` and ``on_signal`` (avoids re-arming
+    the same bar when the loop wakes more than once before the next close);
+    still runs ``on_tick`` so stops / cooldown / mark-to-market advance.
+
+    Returns (signal, mark_price, rsi_on_last_closed_bar | None, newest_closed_ts).
+    """
+    if params.timeframe not in TF_MS:
+        raise ValueError(f"Unsupported timeframe: {params.timeframe}")
+    now_ms = int(time.time() * 1000)
+
+    bars = exchange.fetch_ohlcv(
+        params.symbol, params.timeframe, limit=ohlcv_limit
+    )
+    df = format_data(bars)
+    df = apply_full_indicators(df, params)
+    n_full = len(df)
+    closed_df = trim_incomplete_last_row(df, params.timeframe, now_ms=now_ms)
+    forming = df.iloc[-1] if len(closed_df) < n_full else None
+
+    if len(closed_df) < 1:
+        raise ValueError("No closed OHLCV rows after trimming incomplete bar")
+
+    newest_closed_ts = _ts_key(closed_df.iloc[-1]["timestamp"])
+    same_closed_bar = (
+        last_processed_closed_ts is not None
+        and _ts_key(last_processed_closed_ts) == newest_closed_ts
+    )
+
+    if forming is not None:
+        f_ts = forming["timestamp"]
+        f_hi = float(forming["high"])
+        f_lo = float(forming["low"])
+        f_cl = float(forming["close"])
+    else:
+        f_ts = closed_df.iloc[-1]["timestamp"]
+        c = float(closed_df.iloc[-1]["close"])
+        f_hi = f_lo = f_cl = c
+
+    tick_bar = forming if forming is not None else closed_df.iloc[-1]
+    atr_tick_bar = _bar_atr(tick_bar)
+
+    if same_closed_bar:
+        trader.on_tick(
+            f_cl, timestamp=f_ts, high=f_hi, low=f_lo, atr=atr_tick_bar
+        )
+        return last_reported_signal, f_cl, None, newest_closed_ts
+
+    signal = strategy.generate_signal(closed_df, params)
+    last_bar = closed_df.iloc[-1]
+    rsi_out: float | None = None
+    if "rsi" in closed_df.columns and not closed_df["rsi"].empty:
+        v = last_bar.get("rsi")
+        if v is not None and not pd.isna(v):
+            rsi_out = float(v)
+    if forming is not None:
+        price = float(forming["open"])
+        ts = forming["timestamp"]
+    else:
+        # All rows are complete (stale snapshot); avoid same-bar lookahead.
+        price = float(closed_df.iloc[-1]["close"])
+        ts = closed_df.iloc[-1]["timestamp"]
+
+    overrides = _atr_overrides(signal, price, last_bar, trader, params)
+    slip_atr = _bar_atr(last_bar)
+    trader.on_signal(signal, price, timestamp=ts, atr=slip_atr, **overrides)
+    trader.on_tick(
+        f_cl, timestamp=f_ts, high=f_hi, low=f_lo, atr=atr_tick_bar
+    )
+    return signal, f_cl, rsi_out, newest_closed_ts
 
 
 class LiveBotManager:
@@ -64,6 +164,18 @@ class LiveBotManager:
                 entry_cooldown_bars=params.entry_cooldown_bars,
                 fee_pct=params.fee_pct,
                 data_file=DEFAULT_DATA_FILE,
+                slippage_pct=params.slippage_pct,
+                slippage_atr_mult=params.slippage_atr_mult,
+                half_spread_bps=params.half_spread_bps,
+                intrabar_sl_tp_policy=params.intrabar_sl_tp_policy,
+                intrabar_random_seed=params.intrabar_random_seed,
+                use_trailing_stop=params.use_trailing_stop,
+                trailing_stop_pct=params.trailing_stop_pct,
+                max_consecutive_losses=params.max_consecutive_losses,
+                max_daily_loss_pct=params.max_daily_loss_pct,
+                enable_funding=params.enable_funding,
+                funding_rate_bps=params.funding_rate_bps,
+                funding_interval_hours=params.funding_interval_hours,
             )
             self._stop_event.clear()
             self._started_at = time.time()
@@ -137,31 +249,32 @@ class LiveBotManager:
         params = self._params
         strategy = get_strategy(params.strategy)
         exchange = get_exchange()
+        if params.timeframe not in TF_MS:
+            with self._lock:
+                self._last_error = f"Unsupported timeframe: {params.timeframe}"
+            return
 
+        tf_ms = TF_MS[params.timeframe]
+        last_closed_ts: object | None = None
         # Initial back-fill so indicators have warm-up history before we
         # actually start trading.
         while not self._stop_event.is_set():
             try:
-                bars = exchange.fetch_ohlcv(
-                    params.symbol, params.timeframe, limit=self.warmup_bars
+                signal, mtm, _, out_ts = run_exchange_paper_step(
+                    params,
+                    strategy,
+                    exchange,
+                    self._trader,
+                    ohlcv_limit=self.warmup_bars,
+                    last_processed_closed_ts=last_closed_ts,
+                    last_reported_signal=self._last_signal,
                 )
-                df = format_data(bars)
-                df = apply_full_indicators(df, params)
-                signal = strategy.generate_signal(df, params)
-                price = float(df["close"].iloc[-1])
-                last_bar = df.iloc[-1]
-
+                last_closed_ts = out_ts
                 with self._lock:
                     self._last_tick_at = time.time()
                     self._last_signal = signal
-                    self._last_price = price
+                    self._last_price = mtm
                     self._last_error = None
-
-                overrides = _atr_overrides(
-                    signal, price, last_bar, self._trader, params
-                )
-                self._trader.on_signal(signal, price, **overrides)
-                self._trader.on_tick(price)
             except Exception as e:
                 with self._lock:
                     self._last_error = (
@@ -169,8 +282,11 @@ class LiveBotManager:
                         + traceback.format_exc(limit=2)
                     )
 
-            # Sleep in small slices so stop() is responsive.
-            deadline = time.time() + self.tick_seconds
+            # Align with candle closes, but keep a minimum tick for low timeframes.
+            sleep_s = max(
+                self.tick_seconds, _seconds_until_next_bar_close(tf_ms)
+            )
+            deadline = time.time() + sleep_s
             while time.time() < deadline:
                 if self._stop_event.wait(timeout=0.5):
                     return

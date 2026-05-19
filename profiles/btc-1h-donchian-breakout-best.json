@@ -1,0 +1,56 @@
+{
+  "name": "btc-1h-donchian-breakout-best",
+  "description": "From run backtest \u00b7 donchian_breakout \u00b7 BTC/USDT \u00b7 1h",
+  "source": "run:20260425T184501-ddc1 (backtest \u00b7 donchian_breakout \u00b7 BTC/USDT \u00b7 1h)",
+  "parent": null,
+  "created_at": "2026-04-25T18:51:59Z",
+  "changelog": [
+    {
+      "at": "2026-05-19T04:40:02Z",
+      "message": "rebaseline performance with walk-forward + final holdout OOS"
+    }
+  ],
+  "performance": {
+    "kind": "walkforward",
+    "summary": {
+      "n_windows": 1,
+      "mean_test_ret": -2.3601444294602536,
+      "median_test_ret": -2.3601444294602536,
+      "stdev_test_ret": 0.0,
+      "positive_rate": 0.0,
+      "mean_test_mdd_pct": 4.967,
+      "total_test_trades": 6,
+      "total_train_trades": 7,
+      "unique_selected_configs": 1,
+      "selection_transition_rate": 0.0,
+      "tuned_keys": [
+        "breakout_atr_mult",
+        "donchian_period",
+        "ema_trend"
+      ],
+      "train_engine": "grid",
+      "dev_end_bar": 749,
+      "holdout_start_bar": 749,
+      "holdout_bars": 250,
+      "final_oos_return_pct": -5.094783666810669,
+      "final_oos_trades": 4,
+      "final_oos_win_rate": 0.0,
+      "final_oos_mdd_pct": 4.732,
+      "final_oos_profit_factor": 0.0,
+      "final_oos_policy": "mode_selected_config"
+    },
+    "recorded_at": "2026-05-19T04:40:02Z"
+  },
+  "params": {
+    "timeframe": "1h",
+    "strategy": "donchian_breakout",
+    "ema_trend": 0,
+    "atr_period": 10,
+    "atr_stop_mult": 1.8,
+    "use_htf_confirm": true,
+    "use_adx_filter": false,
+    "adx_min": 25,
+    "use_volume_filter": true,
+    "vol_mult": 1.3
+  }
+}

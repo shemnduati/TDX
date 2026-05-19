@@ -37,5 +37,8 @@ tzdata==2026.1
 urllib3==2.6.3
 yarl==1.23.0
 
+# ---- optional extras ----
+# optuna>=3  # Bayesian train-window tuning: pip install optuna
+
 # ---- dev / test only ----
 pytest==8.3.4

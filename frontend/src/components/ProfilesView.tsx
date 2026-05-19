@@ -5,6 +5,8 @@ import type {
   ProfileDoc,
   ProfileMeta,
   ProfilePerformancePreview,
+  ProfilesWalkforwardRebaselineStart,
+  ProfilesWalkforwardRebaselineResponse,
   StrategyParams,
 } from "../types";
 
@@ -41,6 +43,9 @@ interface Props {
   /** Append a single changelog entry to an existing profile. */
   onAppendChangelog: (name: string, message: string) => Promise<void>;
   onDelete: (name: string) => Promise<void>;
+  onRebaselineWalkforward: (
+    body: ProfilesWalkforwardRebaselineStart
+  ) => Promise<ProfilesWalkforwardRebaselineResponse>;
 }
 
 type SortKey = "name" | "created_at" | "return_pct" | "versions";
@@ -55,6 +60,7 @@ export function ProfilesView({
   onEditDescription,
   onAppendChangelog,
   onDelete,
+  onRebaselineWalkforward,
 }: Props) {
   const [selectedName, setSelectedName] = useState<string | null>(null);
   const [fullDoc, setFullDoc] = useState<ProfileDoc | null>(null);
@@ -62,6 +68,21 @@ export function ProfilesView({
   const [detailError, setDetailError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [filter, setFilter] = useState("");
+  const [rebaselineBusy, setRebaselineBusy] = useState(false);
+  const [rebaselineMsg, setRebaselineMsg] = useState<string | null>(null);
+  const [rebaselineResult, setRebaselineResult] =
+    useState<ProfilesWalkforwardRebaselineResponse | null>(null);
+  const [showRebaselineOptions, setShowRebaselineOptions] = useState(false);
+  const [rbTrainBars, setRbTrainBars] = useState(500);
+  const [rbTestBars, setRbTestBars] = useState(200);
+  const [rbStep, setRbStep] = useState<number | "">("");
+  const [rbMcSims, setRbMcSims] = useState(2000);
+  const [rbEngine, setRbEngine] = useState<"grid" | "optuna">("grid");
+  const [rbOptunaTrials, setRbOptunaTrials] = useState(64);
+  const [rbOptunaSeed, setRbOptunaSeed] = useState(42);
+  const [rbMessage, setRbMessage] = useState(
+    "rebaseline performance with walk-forward + final holdout OOS"
+  );
 
   // Auto-select the first profile on first render so the detail pane
   // isn't empty when the tab opens.
@@ -166,6 +187,129 @@ export function ProfilesView({
         onSortChange={setSortKey}
         filter={filter}
         onFilterChange={setFilter}
+        rebaselineBusy={rebaselineBusy}
+        rebaselineMsg={rebaselineMsg}
+        rebaselineResult={rebaselineResult}
+        showRebaselineOptions={showRebaselineOptions}
+        onToggleRebaselineOptions={() =>
+          setShowRebaselineOptions((prev) => !prev)
+        }
+        rbTrainBars={rbTrainBars}
+        onRbTrainBarsChange={setRbTrainBars}
+        rbTestBars={rbTestBars}
+        onRbTestBarsChange={setRbTestBars}
+        rbStep={rbStep}
+        onRbStepChange={setRbStep}
+        rbMcSims={rbMcSims}
+        onRbMcSimsChange={setRbMcSims}
+        rbEngine={rbEngine}
+        onRbEngineChange={setRbEngine}
+        rbOptunaTrials={rbOptunaTrials}
+        onRbOptunaTrialsChange={setRbOptunaTrials}
+        rbOptunaSeed={rbOptunaSeed}
+        onRbOptunaSeedChange={setRbOptunaSeed}
+        rbMessage={rbMessage}
+        onRbMessageChange={setRbMessage}
+        onRebaselineAll={async () => {
+          setRebaselineBusy(true);
+          setRebaselineMsg(null);
+          setRebaselineResult(null);
+          try {
+            const r = await onRebaselineWalkforward({
+              dry_run: false,
+              train_bars: Math.max(1, Math.floor(rbTrainBars)),
+              test_bars: Math.max(1, Math.floor(rbTestBars)),
+              step: rbStep === "" ? undefined : Math.max(1, Math.floor(rbStep)),
+              mc_sims: Math.max(0, Math.floor(rbMcSims)),
+              train_engine: rbEngine,
+              optuna_trials: Math.max(1, Math.floor(rbOptunaTrials)),
+              optuna_seed: Math.floor(rbOptunaSeed),
+              append_message: rbMessage.trim(),
+            });
+            setRebaselineResult(r);
+            setRebaselineMsg(
+              `Rebaseline complete: ${r.ok}/${r.total} updated in ${r.elapsed_secs.toFixed(1)}s`
+            );
+            onRefresh();
+          } catch (e) {
+            setRebaselineMsg(
+              `Rebaseline failed: ${e instanceof Error ? e.message : String(e)}`
+            );
+          } finally {
+            setRebaselineBusy(false);
+          }
+        }}
+        onRebaselineProfiles={async (names) => {
+          if (!names.length) return;
+          setRebaselineBusy(true);
+          setRebaselineMsg(null);
+          setRebaselineResult(null);
+          try {
+            const r = await onRebaselineWalkforward({
+              profiles: names,
+              dry_run: false,
+              train_bars: Math.max(1, Math.floor(rbTrainBars)),
+              test_bars: Math.max(1, Math.floor(rbTestBars)),
+              step: rbStep === "" ? undefined : Math.max(1, Math.floor(rbStep)),
+              mc_sims: Math.max(0, Math.floor(rbMcSims)),
+              train_engine: rbEngine,
+              optuna_trials: Math.max(1, Math.floor(rbOptunaTrials)),
+              optuna_seed: Math.floor(rbOptunaSeed),
+              append_message: rbMessage.trim(),
+            });
+            setRebaselineResult(r);
+            setRebaselineMsg(
+              `Re-run failed complete: ${r.ok}/${r.total} updated in ${r.elapsed_secs.toFixed(1)}s`
+            );
+            onRefresh();
+          } catch (e) {
+            setRebaselineMsg(
+              `Re-run failed failed: ${e instanceof Error ? e.message : String(e)}`
+            );
+          } finally {
+            setRebaselineBusy(false);
+          }
+        }}
+        onDryRunSelected={async () => {
+          if (!selectedName) return;
+          setRebaselineBusy(true);
+          setRebaselineMsg(null);
+          setRebaselineResult(null);
+          try {
+            const r = await onRebaselineWalkforward({
+              profiles: [selectedName],
+              dry_run: true,
+              train_bars: Math.max(1, Math.floor(rbTrainBars)),
+              test_bars: Math.max(1, Math.floor(rbTestBars)),
+              step: rbStep === "" ? undefined : Math.max(1, Math.floor(rbStep)),
+              mc_sims: Math.max(0, Math.floor(rbMcSims)),
+              train_engine: rbEngine,
+              optuna_trials: Math.max(1, Math.floor(rbOptunaTrials)),
+              optuna_seed: Math.floor(rbOptunaSeed),
+            });
+            setRebaselineResult(r);
+            const row = r.rows[0];
+            if (row?.ok && row.summary) {
+              const mean = Number((row.summary as Record<string, unknown>).mean_test_ret ?? 0);
+              const finalOos = Number(
+                (row.summary as Record<string, unknown>).final_oos_return_pct ?? 0
+              );
+              setRebaselineMsg(
+                `Dry-run ${selectedName}: WFO mean ${mean.toFixed(2)}%, final OOS ${finalOos.toFixed(2)}%`
+              );
+            } else {
+              setRebaselineMsg(
+                `Dry-run ${selectedName}: ${row?.error ?? "no result"}`
+              );
+            }
+          } catch (e) {
+            setRebaselineMsg(
+              `Dry-run failed: ${e instanceof Error ? e.message : String(e)}`
+            );
+          } finally {
+            setRebaselineBusy(false);
+          }
+        }}
       />
 
       <div>
@@ -207,6 +351,30 @@ function ProfileListPane({
   onSortChange,
   filter,
   onFilterChange,
+  rebaselineBusy,
+  rebaselineMsg,
+  rebaselineResult,
+  showRebaselineOptions,
+  onToggleRebaselineOptions,
+  rbTrainBars,
+  onRbTrainBarsChange,
+  rbTestBars,
+  onRbTestBarsChange,
+  rbStep,
+  onRbStepChange,
+  rbMcSims,
+  onRbMcSimsChange,
+  rbEngine,
+  onRbEngineChange,
+  rbOptunaTrials,
+  onRbOptunaTrialsChange,
+  rbOptunaSeed,
+  onRbOptunaSeedChange,
+  rbMessage,
+  onRbMessageChange,
+  onRebaselineAll,
+  onRebaselineProfiles,
+  onDryRunSelected,
 }: {
   profiles: ProfileMeta[];
   selectedName: string | null;
@@ -216,6 +384,30 @@ function ProfileListPane({
   onSortChange: (k: SortKey) => void;
   filter: string;
   onFilterChange: (s: string) => void;
+  rebaselineBusy: boolean;
+  rebaselineMsg: string | null;
+  rebaselineResult: ProfilesWalkforwardRebaselineResponse | null;
+  showRebaselineOptions: boolean;
+  onToggleRebaselineOptions: () => void;
+  rbTrainBars: number;
+  onRbTrainBarsChange: (n: number) => void;
+  rbTestBars: number;
+  onRbTestBarsChange: (n: number) => void;
+  rbStep: number | "";
+  onRbStepChange: (n: number | "") => void;
+  rbMcSims: number;
+  onRbMcSimsChange: (n: number) => void;
+  rbEngine: "grid" | "optuna";
+  onRbEngineChange: (v: "grid" | "optuna") => void;
+  rbOptunaTrials: number;
+  onRbOptunaTrialsChange: (n: number) => void;
+  rbOptunaSeed: number;
+  onRbOptunaSeedChange: (n: number) => void;
+  rbMessage: string;
+  onRbMessageChange: (v: string) => void;
+  onRebaselineAll: () => Promise<void>;
+  onRebaselineProfiles: (names: string[]) => Promise<void>;
+  onDryRunSelected: () => Promise<void>;
 }) {
   return (
     <div className="rounded-lg border border-slate-800 bg-slate-900/40 p-3">
@@ -247,6 +439,102 @@ function ProfileListPane({
           ↻
         </button>
       </div>
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => void onRebaselineAll()}
+          disabled={rebaselineBusy}
+          className="rounded-md border border-indigo-500/40 px-2 py-1.5 text-[11px] text-indigo-200 hover:bg-indigo-500/10 disabled:cursor-not-allowed disabled:opacity-50"
+          title="Refresh all profile performance baselines via walk-forward"
+        >
+          {rebaselineBusy ? "Rebaselining…" : "Rebaseline all (WFO)"}
+        </button>
+        <button
+          type="button"
+          onClick={() => void onDryRunSelected()}
+          disabled={rebaselineBusy || !selectedName}
+          className="rounded-md border border-slate-700 px-2 py-1.5 text-[11px] text-slate-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          title="Evaluate selected profile with WFO without writing to disk"
+        >
+          Dry-run selected
+        </button>
+        <button
+          type="button"
+          onClick={onToggleRebaselineOptions}
+          className="rounded-md border border-slate-700 px-2 py-1.5 text-[11px] text-slate-300 hover:bg-slate-800"
+          title="Tune walk-forward rebaseline parameters"
+        >
+          {showRebaselineOptions ? "Hide options" : "Options"}
+        </button>
+      </div>
+      {showRebaselineOptions && (
+        <div className="mb-3 rounded-md border border-slate-800 bg-slate-950/50 p-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <MiniNumberField
+              label="Train bars"
+              value={rbTrainBars}
+              onChange={onRbTrainBarsChange}
+            />
+            <MiniNumberField
+              label="Test bars"
+              value={rbTestBars}
+              onChange={onRbTestBarsChange}
+            />
+            <MiniNumberField
+              label="Step (optional)"
+              value={rbStep === "" ? 0 : rbStep}
+              onChange={(v) => onRbStepChange(v <= 0 ? "" : v)}
+            />
+            <MiniNumberField
+              label="MC sims"
+              value={rbMcSims}
+              onChange={onRbMcSimsChange}
+            />
+            <label className="block text-[10px] text-slate-400">
+              Train engine
+              <select
+                className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-[11px] text-slate-200 focus:border-slate-500 focus:outline-none"
+                value={rbEngine}
+                onChange={(e) =>
+                  onRbEngineChange(e.target.value === "optuna" ? "optuna" : "grid")
+                }
+              >
+                <option value="grid">grid</option>
+                <option value="optuna">optuna</option>
+              </select>
+            </label>
+            <MiniNumberField
+              label="Optuna trials"
+              value={rbOptunaTrials}
+              onChange={onRbOptunaTrialsChange}
+            />
+            <MiniNumberField
+              label="Optuna seed"
+              value={rbOptunaSeed}
+              onChange={onRbOptunaSeedChange}
+            />
+            <label className="block text-[10px] text-slate-400 sm:col-span-2">
+              Changelog append message
+              <input
+                value={rbMessage}
+                onChange={(e) => onRbMessageChange(e.target.value)}
+                className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-[11px] text-slate-200 focus:border-slate-500 focus:outline-none"
+              />
+            </label>
+          </div>
+        </div>
+      )}
+      {rebaselineMsg && (
+        <div className="mb-3 rounded-md border border-slate-700 bg-slate-950/60 px-2 py-1.5 text-[11px] text-slate-300">
+          {rebaselineMsg}
+        </div>
+      )}
+      {rebaselineResult && (
+        <RebaselineResultCard
+          result={rebaselineResult}
+          onRerunFailed={(names) => onRebaselineProfiles(names)}
+        />
+      )}
       <ul className="max-h-[72vh] space-y-1 overflow-auto pr-1">
         {profiles.map((p) => {
           const active = p.name === selectedName;
@@ -303,6 +591,204 @@ function ProfileListPane({
         })}
       </ul>
     </div>
+  );
+}
+
+function RebaselineResultCard({
+  result,
+  onRerunFailed,
+}: {
+  result: ProfilesWalkforwardRebaselineResponse;
+  onRerunFailed: (names: string[]) => Promise<void>;
+}) {
+  const [expanded, setExpanded] = useState(true);
+  const [failedOnly, setFailedOnly] = useState(false);
+  const fails = result.rows.filter((r) => !r.ok);
+  const visibleRows = failedOnly ? fails : result.rows;
+  const downloadCsv = () => {
+    const lines = [
+      [
+        "name",
+        "ok",
+        "error",
+        "symbol",
+        "timeframe",
+        "strategy",
+        "wfo_mean_test_ret_pct",
+        "wfo_positive_rate_pct",
+        "final_oos_return_pct",
+        "final_oos_trades",
+      ].join(","),
+    ];
+    for (const row of result.rows) {
+      const s = (row.summary || {}) as Record<string, unknown>;
+      lines.push(
+        [
+          csvCell(row.name),
+          csvCell(String(!!row.ok)),
+          csvCell(row.error ?? ""),
+          csvCell(row.symbol ?? ""),
+          csvCell(row.timeframe ?? ""),
+          csvCell(row.strategy ?? ""),
+          csvCell(String(Number(s.mean_test_ret ?? 0))),
+          csvCell(String(Number(s.positive_rate ?? 0))),
+          csvCell(String(Number(s.final_oos_return_pct ?? 0))),
+          csvCell(String(Number(s.final_oos_trades ?? 0))),
+        ].join(",")
+      );
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    a.href = url;
+    a.download = `profiles_wf_rebaseline_${stamp}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+  const copyFailedNames = async () => {
+    const names = fails.map((r) => r.name).filter(Boolean);
+    if (!names.length) return;
+    const text = names.join(",");
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+    } catch {
+      // no-op: keep button best-effort only
+    }
+  };
+  return (
+    <div className="mb-3 rounded-md border border-slate-700 bg-slate-950/60">
+      <div className="flex items-center justify-between px-2 py-1.5">
+        <div className="text-[11px] text-slate-300">
+          Last run: {result.ok}/{result.total} ok · {fails.length} failed ·{" "}
+          {result.elapsed_secs.toFixed(1)}s
+        </div>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => void onRerunFailed(fails.map((r) => r.name))}
+            disabled={fails.length === 0}
+            className="rounded border border-slate-700 px-1.5 py-0.5 text-[10px] text-slate-400 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Re-run failed
+          </button>
+          <button
+            type="button"
+            onClick={() => void copyFailedNames()}
+            disabled={fails.length === 0}
+            className="rounded border border-slate-700 px-1.5 py-0.5 text-[10px] text-slate-400 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Copy failed names
+          </button>
+          <button
+            type="button"
+            onClick={downloadCsv}
+            className="rounded border border-slate-700 px-1.5 py-0.5 text-[10px] text-slate-400 hover:bg-slate-800"
+          >
+            CSV
+          </button>
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="rounded border border-slate-700 px-1.5 py-0.5 text-[10px] text-slate-400 hover:bg-slate-800"
+          >
+            {expanded ? "Hide rows" : "Show rows"}
+          </button>
+        </div>
+      </div>
+      {expanded && (
+        <div className="max-h-56 overflow-auto border-t border-slate-800">
+          <div className="flex items-center justify-between border-b border-slate-800 px-2 py-1">
+            <label className="flex items-center gap-1.5 text-[10px] text-slate-400">
+              <input
+                type="checkbox"
+                checked={failedOnly}
+                onChange={(e) => setFailedOnly(e.target.checked)}
+              />
+              Failed only
+            </label>
+            <span className="text-[10px] text-slate-500">
+              showing {visibleRows.length}/{result.rows.length}
+            </span>
+          </div>
+          <table className="min-w-full text-[10px]">
+            <thead className="sticky top-0 bg-slate-900/90 text-slate-500">
+              <tr>
+                <th className="px-2 py-1 text-left font-medium">Profile</th>
+                <th className="px-2 py-1 text-left font-medium">Status</th>
+                <th className="px-2 py-1 text-right font-medium">WFO mean%</th>
+                <th className="px-2 py-1 text-right font-medium">Final OOS%</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visibleRows.map((row) => {
+                const s = (row.summary || {}) as Record<string, unknown>;
+                const mean = Number(s.mean_test_ret ?? 0);
+                const oos = Number(s.final_oos_return_pct ?? 0);
+                return (
+                  <tr key={row.name} className="border-t border-slate-800/60">
+                    <td className="px-2 py-1 font-mono text-slate-300">
+                      {row.name}
+                    </td>
+                    <td className={clsx("px-2 py-1", row.ok ? "text-bull" : "text-bear")}>
+                      {row.ok ? "ok" : row.error || "error"}
+                    </td>
+                    <td className="px-2 py-1 text-right text-slate-300">
+                      {row.ok ? `${mean > 0 ? "+" : ""}${mean.toFixed(2)}` : "—"}
+                    </td>
+                    <td className="px-2 py-1 text-right text-slate-300">
+                      {row.ok ? `${oos > 0 ? "+" : ""}${oos.toFixed(2)}` : "—"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function csvCell(v: string): string {
+  const s = String(v ?? "");
+  if (/[",\n]/.test(s)) {
+    return `"${s.replace(/"/g, '""')}"`;
+  }
+  return s;
+}
+
+function MiniNumberField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (n: number) => void;
+}) {
+  return (
+    <label className="block text-[10px] text-slate-400">
+      {label}
+      <input
+        type="number"
+        min={0}
+        value={value || ""}
+        onChange={(e) => onChange(Number(e.target.value) || 0)}
+        className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-[11px] text-slate-200 focus:border-slate-500 focus:outline-none"
+      />
+    </label>
   );
 }
 

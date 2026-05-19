@@ -80,6 +80,16 @@ class TestStopTake:
         t.on_tick(103.0)  # above 102 TP
         assert t.position is None
         assert t.trade_log[-1]["reason"] == "take_profit"
+        assert t.trade_log[-1]["exit"] == pytest.approx(102.0)
+
+    def test_long_stop_uses_intrabar_low_not_close(self):
+        """Wick through stop closes at stop level even if mark (close) is safe."""
+        t = _t(stop_loss_pct=0.02, take_profit_pct=0.10)
+        t.on_signal("BUY", 100.0)
+        t.on_tick(99.5, high=100.0, low=97.0)  # close 99.5 but low hit 98 stop
+        assert t.position is None
+        assert t.trade_log[-1]["reason"] == "stop_loss"
+        assert t.trade_log[-1]["exit"] == pytest.approx(98.0)
 
     def test_short_hits_stop_loss_above(self):
         t = _t(stop_loss_pct=0.02, take_profit_pct=0.10)
@@ -152,3 +162,212 @@ class TestMarkToMarket:
     def test_mtm_flat_is_just_balance(self):
         t = _t()
         assert t.mark_to_market(9999.0) == pytest.approx(t.balance)
+
+
+class TestSlippage:
+    def test_long_entry_pays_adverse_slip(self):
+        t = _t(slippage_pct=0.01)
+        t.on_signal("BUY", 100.0)
+        assert t.entry_price == pytest.approx(101.0)
+        assert t.position_size == pytest.approx(1000.0 / 101.0)
+
+    def test_half_spread_bps_long_entry_additive(self):
+        t = PaperTrader(
+            fee_pct=0.0,
+            slippage_pct=0.0,
+            half_spread_bps=10.0,
+        )
+        # 10 bps adverse on a long ⇒ +0.10% on fill price.
+        t.on_signal("BUY", 100.0)
+        assert t.entry_price == pytest.approx(100.1)
+
+    def test_half_spread_bps_stacks_with_slippage_pct(self):
+        # 50 bps (=0.5%) + proportional 0.5% ⇒ +1.0% on fill.
+        t = PaperTrader(
+            fee_pct=0.0, slippage_pct=0.005, half_spread_bps=50.0
+        )
+        t.on_signal("BUY", 100.0)
+        assert t.entry_price == pytest.approx(101.0)
+
+    def test_slippage_atr_mult_adds_atr_frac_of_price_long(self):
+        t = PaperTrader(
+            initial_balance=1000.0,
+            fee_pct=0.0,
+            slippage_pct=0.0,
+            slippage_atr_mult=1.0,
+        )
+        t.on_signal("BUY", 100.0, atr=2.0)
+        assert t.entry_price == pytest.approx(102.0)
+
+
+class TestIntrabarSlTpConflict:
+    def test_long_both_touch_stop_first_policy(self):
+        t = PaperTrader(
+            fee_pct=0.0,
+            stop_loss_pct=0.02,
+            take_profit_pct=0.04,
+            intrabar_sl_tp_policy="stop_first",
+        )
+        t.on_signal("BUY", 100.0)
+        t.on_tick(100.0, high=105.0, low=97.0)
+        assert t.trade_log[-1]["reason"] == "stop_loss"
+
+    def test_long_both_touch_take_first_policy(self):
+        t = PaperTrader(
+            fee_pct=0.0,
+            stop_loss_pct=0.02,
+            take_profit_pct=0.04,
+            intrabar_sl_tp_policy="take_first",
+        )
+        t.on_signal("BUY", 100.0)
+        t.on_tick(100.0, high=105.0, low=97.0)
+        assert t.trade_log[-1]["reason"] == "take_profit"
+
+    def test_short_both_touch_take_first_policy(self):
+        t = PaperTrader(
+            fee_pct=0.0,
+            stop_loss_pct=0.02,
+            take_profit_pct=0.04,
+            intrabar_sl_tp_policy="take_first",
+        )
+        t.on_signal("SELL", 100.0)
+        t.on_tick(100.0, high=103.0, low=95.0)
+        assert t.trade_log[-1]["reason"] == "take_profit"
+
+    def test_random_policy_is_seeded_repeatable(self):
+        reasons = []
+        for _ in range(3):
+            t = PaperTrader(
+                fee_pct=0.0,
+                stop_loss_pct=0.02,
+                take_profit_pct=0.04,
+                intrabar_sl_tp_policy="random",
+                intrabar_random_seed=999,
+                verbose=False,
+            )
+            t.on_signal("BUY", 100.0)
+            t.on_tick(100.0, high=105.0, low=97.0)
+            reasons.append(t.trade_log[-1]["reason"])
+        assert len(set(reasons)) == 1
+
+    def test_invalid_intrabar_policy_raises(self):
+        with pytest.raises(ValueError):
+            PaperTrader(intrabar_sl_tp_policy="wrong")
+
+
+class TestFunding:
+    def test_long_pays_positive_funding_rate(self):
+        t = PaperTrader(
+            initial_balance=1000.0,
+            fee_pct=0.0,
+            enable_funding=True,
+            funding_rate_bps=10.0,
+            funding_interval_hours=8,
+            verbose=False,
+        )
+        t.on_signal("BUY", 100.0, timestamp="2026-01-01T00:00:00Z")
+        # After one 8h interval: notional ~= 1000, rate=0.1% => -1.0 for long.
+        t.on_tick(100.0, timestamp="2026-01-01T08:00:00Z")
+        assert t.cumulative_funding == pytest.approx(-1.0, rel=1e-3)
+        assert t.balance == pytest.approx(999.0, rel=1e-3)
+
+    def test_short_receives_positive_funding_rate(self):
+        t = PaperTrader(
+            initial_balance=1000.0,
+            fee_pct=0.0,
+            enable_funding=True,
+            funding_rate_bps=10.0,
+            funding_interval_hours=8,
+            verbose=False,
+        )
+        t.on_signal("SELL", 100.0, timestamp="2026-01-01T00:00:00Z")
+        t.on_tick(100.0, timestamp="2026-01-01T08:00:00Z")
+        assert t.cumulative_funding == pytest.approx(1.0, rel=1e-3)
+        assert t.balance == pytest.approx(1001.0, rel=1e-3)
+
+    def test_funding_applies_multiple_intervals(self):
+        t = PaperTrader(
+            initial_balance=1000.0,
+            fee_pct=0.0,
+            enable_funding=True,
+            funding_rate_bps=5.0,
+            funding_interval_hours=8,
+            verbose=False,
+        )
+        t.on_signal("BUY", 100.0, timestamp="2026-01-01T00:00:00Z")
+        # 24h = 3 intervals, each 0.05% of ~1000 => 0.5; long pays => -1.5
+        t.on_tick(100.0, timestamp="2026-01-02T00:00:00Z")
+        assert t.cumulative_funding == pytest.approx(-1.5, rel=1e-3)
+
+
+class TestExecutionComposition:
+    def test_long_cost_stack_and_funding_with_same_bar_conflict(self):
+        t = PaperTrader(
+            initial_balance=1000.0,
+            fee_pct=0.001,
+            slippage_pct=0.001,
+            half_spread_bps=10.0,
+            intrabar_sl_tp_policy="stop_first",
+            stop_loss_pct=0.02,
+            take_profit_pct=0.03,
+            enable_funding=True,
+            funding_rate_bps=8.0,
+            funding_interval_hours=8,
+            verbose=False,
+        )
+        t.on_signal("BUY", 100.0, timestamp="2026-01-01T00:00:00Z")
+        # High/low touch both brackets; policy forces stop-first close.
+        t.on_tick(
+            100.0,
+            timestamp="2026-01-01T08:00:00Z",
+            high=104.0,
+            low=96.0,
+        )
+        assert t.trade_log[-1]["reason"] == "stop_loss"
+        assert t.cumulative_funding < 0.0
+        trade_total = sum(x["profit"] for x in t.trade_log)
+        assert t.balance == pytest.approx(
+            t.initial_balance + trade_total + t.cumulative_funding, rel=1e-9
+        )
+
+    def test_short_cost_stack_and_funding_with_same_bar_conflict(self):
+        t = PaperTrader(
+            initial_balance=1000.0,
+            fee_pct=0.001,
+            slippage_pct=0.001,
+            half_spread_bps=10.0,
+            intrabar_sl_tp_policy="take_first",
+            stop_loss_pct=0.02,
+            take_profit_pct=0.03,
+            enable_funding=True,
+            funding_rate_bps=8.0,
+            funding_interval_hours=8,
+            verbose=False,
+        )
+        t.on_signal("SELL", 100.0, timestamp="2026-01-01T00:00:00Z")
+        # Both touched; policy forces take-first close.
+        t.on_tick(
+            100.0,
+            timestamp="2026-01-01T08:00:00Z",
+            high=104.0,
+            low=95.0,
+        )
+        assert t.trade_log[-1]["reason"] == "take_profit"
+        assert t.cumulative_funding > 0.0
+        trade_total = sum(x["profit"] for x in t.trade_log)
+        assert t.balance == pytest.approx(
+            t.initial_balance + trade_total + t.cumulative_funding, rel=1e-9
+        )
+
+
+class TestCircuitBreaker:
+    def test_halts_new_entries_after_consecutive_losses(self):
+        t = _t(max_consecutive_losses=2)
+        t.on_signal("BUY", 100.0)
+        t.close(99.0)  # loss
+        t.on_signal("BUY", 100.0)
+        t.close(99.0)  # second loss, halt
+        assert t._trading_halted
+        t.on_signal("BUY", 100.0)
+        assert t.position is None
+        assert t.skipped_by_circuit == 1

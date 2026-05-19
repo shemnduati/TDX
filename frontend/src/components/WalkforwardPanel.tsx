@@ -1,19 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
 import { clsx } from "clsx";
-import type { StrategyParams, WalkforwardStatus } from "../types";
+import type {
+  StrategyParams,
+  WalkforwardStabilityMatrix,
+  WalkforwardStabilityResponse,
+  WalkforwardStart,
+  WalkforwardStatus,
+} from "../types";
 
 interface Props {
   defaults: StrategyParams | null;
   params: StrategyParams | null;
   onParamsChange: (p: StrategyParams) => void;
   status: WalkforwardStatus | null;
-  onStart: (body: {
-    params: StrategyParams;
-    train_bars: number;
-    test_bars: number;
-    step?: number;
-  }) => Promise<void>;
+  stability: WalkforwardStabilityResponse | null;
+  onStart: (body: WalkforwardStart & { params: StrategyParams }) => Promise<void>;
   onCancel: () => Promise<void>;
+  onDownloadStabilityCsv: () => Promise<void>;
+  onDownloadWindowsCsv: () => Promise<void>;
+  onDownloadReportJson: () => Promise<void>;
   busy: boolean;
   error: string | null;
 }
@@ -34,14 +39,24 @@ export function WalkforwardPanel({
   params,
   onParamsChange,
   status,
+  stability,
   onStart,
   onCancel,
+  onDownloadStabilityCsv,
+  onDownloadWindowsCsv,
+  onDownloadReportJson,
   busy,
   error,
 }: Props) {
   const [trainBars, setTrainBars] = useState(500);
   const [testBars, setTestBars] = useState(200);
   const [step, setStep] = useState<number | "">("");
+  const [mcSims, setMcSims] = useState(2000);
+  const [trainEngine, setTrainEngine] = useState<"grid" | "optuna">("grid");
+  const [optunaTrials, setOptunaTrials] = useState(64);
+  const [optunaSeed, setOptunaSeed] = useState(42);
+  const [optMatrixText, setOptMatrixText] = useState("");
+  const [optError, setOptError] = useState<string | null>(null);
 
   const running = !!status?.running;
   const completed = status?.completed ?? 0;
@@ -68,11 +83,44 @@ export function WalkforwardPanel({
 
   const handleStart = async () => {
     if (!params) return;
+    setOptError(null);
+    let optMatrix: Record<string, (string | number | boolean)[]> | undefined;
+    if (optMatrixText.trim()) {
+      try {
+        const parsed = JSON.parse(optMatrixText) as unknown;
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+          throw new Error("opt_matrix must be a JSON object.");
+        }
+        const clean: Record<string, (string | number | boolean)[]> = {};
+        for (const [k, v] of Object.entries(parsed)) {
+          if (!Array.isArray(v) || v.length === 0) {
+            throw new Error(`opt_matrix.${k} must be a non-empty array.`);
+          }
+          for (const item of v) {
+            if (!["string", "number", "boolean"].includes(typeof item)) {
+              throw new Error(
+                `opt_matrix.${k} contains unsupported value type.`
+              );
+            }
+          }
+          clean[k] = v as (string | number | boolean)[];
+        }
+        optMatrix = clean;
+      } catch (e) {
+        setOptError(e instanceof Error ? e.message : String(e));
+        return;
+      }
+    }
     await onStart({
       params,
       train_bars: trainBars,
       test_bars: testBars,
       step: step === "" ? undefined : Number(step),
+      mc_sims: Math.max(0, Math.floor(mcSims)),
+      opt_matrix: optMatrix,
+      train_engine: trainEngine,
+      optuna_trials: Math.max(1, Math.floor(optunaTrials)),
+      optuna_seed: Math.floor(optunaSeed),
     });
   };
 
@@ -124,6 +172,63 @@ export function WalkforwardPanel({
             onChange={(v) => setStep(v <= 0 ? "" : v)}
             disabled={running}
           />
+        </div>
+        <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-3">
+          <label className="block text-xs">
+            <span className="text-slate-300">Train selection engine</span>
+            <select
+              className="mt-1 w-full rounded-md border border-slate-800 bg-slate-950 px-2 py-1.5 font-mono text-sm text-slate-100 focus:border-slate-600 focus:outline-none disabled:opacity-50"
+              value={trainEngine}
+              onChange={(e) =>
+                setTrainEngine(e.target.value === "optuna" ? "optuna" : "grid")
+              }
+              disabled={running}
+            >
+              <option value="grid">Grid (exhaustive train search)</option>
+              <option value="optuna">
+                {"Optuna Bayesian (pip install optuna>=3)"}
+              </option>
+            </select>
+            <span className="mt-1 block text-[10px] text-slate-500">
+              Test metrics always use post-selection frozen params (OOS).
+            </span>
+          </label>
+          <NumberField
+            label="Optuna trials / window"
+            help="Bounded by search-space size · API caps at 512."
+            value={optunaTrials}
+            onChange={setOptunaTrials}
+            disabled={running || trainEngine !== "optuna"}
+          />
+          <NumberField
+            label="Optuna seed"
+            help="Sampler reproducibility seed."
+            value={optunaSeed}
+            onChange={setOptunaSeed}
+            disabled={running || trainEngine !== "optuna"}
+          />
+        </div>
+        <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <NumberField
+            label="Monte Carlo sims"
+            help="Trade-order bootstrap count for robustness stats."
+            value={mcSims}
+            onChange={setMcSims}
+            disabled={running}
+          />
+          <label className="block text-xs">
+            <span className="text-slate-300">opt_matrix (optional JSON)</span>
+            <textarea
+              className="mt-1 h-24 w-full rounded-md border border-slate-800 bg-slate-950 px-2 py-1 font-mono text-[11px] text-slate-100 focus:border-slate-600 focus:outline-none disabled:opacity-50"
+              placeholder='{"ema_short":[10,12,14],"ema_long":[40,50,60]}'
+              value={optMatrixText}
+              onChange={(e) => setOptMatrixText(e.target.value)}
+              disabled={running}
+            />
+            <span className="mt-1 block text-[10px] text-slate-500">
+              Leave blank to use backend strategy-aware defaults.
+            </span>
+          </label>
         </div>
 
         <div className="mt-3 text-xs text-slate-500">
@@ -177,6 +282,9 @@ export function WalkforwardPanel({
             Need at least train + test = {trainBars + testBars} bars; have{" "}
             {params.bars}.
           </div>
+        )}
+        {optError && (
+          <div className="mt-2 text-xs text-bear">{optError}</div>
         )}
       </div>
 
@@ -259,7 +367,13 @@ export function WalkforwardPanel({
       )}
 
       {status?.summary && status.windows.length > 0 && (
-        <Results status={status} />
+        <Results
+          status={status}
+          stabilityMatrix={stability?.matrix ?? status.summary.stability_matrix}
+          onDownloadStabilityCsv={onDownloadStabilityCsv}
+          onDownloadWindowsCsv={onDownloadWindowsCsv}
+          onDownloadReportJson={onDownloadReportJson}
+        />
       )}
     </div>
   );
@@ -267,7 +381,19 @@ export function WalkforwardPanel({
 
 // =====================================================================
 
-function Results({ status }: { status: WalkforwardStatus }) {
+function Results({
+  status,
+  stabilityMatrix,
+  onDownloadStabilityCsv,
+  onDownloadWindowsCsv,
+  onDownloadReportJson,
+}: {
+  status: WalkforwardStatus;
+  stabilityMatrix?: WalkforwardStabilityMatrix;
+  onDownloadStabilityCsv: () => Promise<void>;
+  onDownloadWindowsCsv: () => Promise<void>;
+  onDownloadReportJson: () => Promise<void>;
+}) {
   const s = status.summary!;
   return (
     <div className="space-y-4">
@@ -301,16 +427,126 @@ function Results({ status }: { status: WalkforwardStatus }) {
           }
         />
       </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatCard
+          label="Mean test MDD"
+          value={`${(s.mean_test_mdd_pct ?? 0).toFixed(2)}%`}
+        />
+        <StatCard
+          label="Unique selected cfgs"
+          value={String(s.unique_selected_configs ?? 0)}
+        />
+        <StatCard
+          label="Selection changes"
+          value={`${(s.selection_transition_rate ?? 0).toFixed(0)}%`}
+        />
+        <StatCard
+          label={
+            status.train_engine === "optuna"
+              ? "Train search (grid pts)"
+              : "Candidates/window"
+          }
+          value={String(status.n_candidates ?? 0)}
+        />
+        {status.train_engine === "optuna" && (
+          <>
+            <StatCard
+              label="Optuna trials cap"
+              value={String(status.optuna_trials_effective ?? "—")}
+            />
+            <StatCard
+              label="Optuna seed"
+              value={String(status.optuna_seed ?? "—")}
+            />
+          </>
+        )}
+      </div>
+      {s.trade_mc && s.trade_mc.sims > 0 && (
+        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-300">
+            Monte Carlo (trade order bootstrap)
+          </h3>
+          <div className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-4">
+            <MiniStat
+              label="Sims"
+              value={String(s.trade_mc.sims)}
+            />
+            <MiniStat
+              label="Trades"
+              value={String(s.trade_mc.n_trades)}
+            />
+            <MiniStat
+              label="Return p05/p50/p95"
+              value={`${s.trade_mc.ret_p05_pct.toFixed(2)} / ${s.trade_mc.ret_p50_pct.toFixed(2)} / ${s.trade_mc.ret_p95_pct.toFixed(2)}%`}
+            />
+            <MiniStat
+              label="MDD mean/p95"
+              value={`${s.trade_mc.mdd_mean_pct.toFixed(2)} / ${s.trade_mc.mdd_p95_pct.toFixed(2)}%`}
+            />
+          </div>
+        </div>
+      )}
+      {s.final_oos && (
+        <div className="rounded-xl border border-indigo-800/60 bg-indigo-950/20 p-4">
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-indigo-200">
+            Final Holdout OOS (last 25%)
+          </h3>
+          <div className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-4">
+            <MiniStat
+              label="Bars"
+              value={String(s.final_oos.bars)}
+            />
+            <MiniStat
+              label="Return %"
+              value={`${s.final_oos.return_pct > 0 ? "+" : ""}${s.final_oos.return_pct.toFixed(2)}%`}
+            />
+            <MiniStat
+              label="Trades / Win %"
+              value={`${s.final_oos.trades} / ${s.final_oos.win_rate.toFixed(1)}%`}
+            />
+            <MiniStat
+              label="MDD / PF"
+              value={`${s.final_oos.max_drawdown_pct.toFixed(2)}% / ${s.final_oos.profit_factor.toFixed(2)}`}
+            />
+          </div>
+          <div className="mt-2 text-[10px] text-indigo-200/80">
+            Policy: {s.final_oos.policy ?? "—"} · selected windows:{" "}
+            {s.final_oos.selected_windows ?? 0}
+          </div>
+        </div>
+      )}
+      {stabilityMatrix?.cells?.length ? (
+        <StabilityHeatmap
+          matrix={stabilityMatrix}
+          onDownloadCsv={onDownloadStabilityCsv}
+        />
+      ) : null}
 
       <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
         <div className="flex items-center justify-between px-4 py-3">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
             Per-window results
           </h3>
-          <span className="text-[10px] text-slate-500">
-            stdev {s.stdev_test_ret.toFixed(2)}% · median{" "}
-            {s.median_test_ret.toFixed(2)}%
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              className="rounded-md border border-slate-700 px-2 py-1 text-[10px] text-slate-300 hover:bg-slate-800"
+              onClick={() => void onDownloadWindowsCsv()}
+            >
+              Download windows CSV
+            </button>
+            <button
+              type="button"
+              className="rounded-md border border-slate-700 px-2 py-1 text-[10px] text-slate-300 hover:bg-slate-800"
+              onClick={() => void onDownloadReportJson()}
+            >
+              Download report JSON
+            </button>
+            <span className="text-[10px] text-slate-500">
+              stdev {s.stdev_test_ret.toFixed(2)}% · median{" "}
+              {s.median_test_ret.toFixed(2)}%
+            </span>
+          </div>
         </div>
         <div className="max-h-96 overflow-auto">
           <table className="min-w-full text-left text-xs">
@@ -354,6 +590,138 @@ function Results({ status }: { status: WalkforwardStatus }) {
       </div>
     </div>
   );
+}
+
+function MiniStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border border-slate-800 bg-slate-950/40 p-2">
+      <div className="text-[10px] uppercase tracking-wider text-slate-500">
+        {label}
+      </div>
+      <div className="mt-1 font-mono text-slate-200">{value}</div>
+    </div>
+  );
+}
+
+function StabilityHeatmap({
+  matrix,
+  onDownloadCsv,
+}: {
+  matrix: WalkforwardStabilityMatrix;
+  onDownloadCsv: () => Promise<void>;
+}) {
+  const xVals = Array.from(new Set(matrix.cells.map((c) => String(c.x))));
+  const yVals = Array.from(new Set(matrix.cells.map((c) => String(c.y))));
+  const xSort = [...xVals].sort((a, b) => cmpNumericMaybe(a, b));
+  const ySort = [...yVals].sort((a, b) => cmpNumericMaybe(a, b));
+  const maxAbsRet =
+    Math.max(
+      0.01,
+      ...matrix.cells.map((c) => Math.abs(c.mean_test_ret))
+    ) || 1;
+  const cellMap = new Map(
+    matrix.cells.map((c) => [`${String(c.x)}|${String(c.y)}`, c] as const)
+  );
+  return (
+    <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
+      <div className="flex items-center justify-between px-4 py-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+          Stability heatmap
+        </h3>
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] text-slate-500">
+            Color = mean test return · opacity = sample windows
+          </span>
+          <button
+            type="button"
+            className="rounded-md border border-slate-700 px-2 py-1 text-[10px] text-slate-300 hover:bg-slate-800"
+            onClick={() => {
+              void onDownloadCsv();
+            }}
+          >
+            Download CSV
+          </button>
+        </div>
+      </div>
+      <div className="overflow-auto px-4 pb-4">
+        <table className="min-w-max text-xs">
+          <thead>
+            <tr>
+              <th className="sticky left-0 z-10 bg-slate-900/90 px-2 py-1 text-left text-slate-500">
+                {matrix.y_key ?? "y"} \ {matrix.x_key ?? "x"}
+              </th>
+              {xSort.map((x) => (
+                <th key={x} className="px-2 py-1 text-slate-500">
+                  {x}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {ySort.map((y) => (
+              <tr key={y} className="border-t border-slate-800/60">
+                <td className="sticky left-0 z-10 bg-slate-900/90 px-2 py-1 text-slate-500">
+                  {y}
+                </td>
+                {xSort.map((x) => {
+                  const c = cellMap.get(`${x}|${y}`);
+                  const ret = c?.mean_test_ret ?? 0;
+                  const alpha = c ? Math.min(1, 0.25 + c.n_windows * 0.15) : 0.1;
+                  const tone =
+                    ret > 0
+                      ? `rgba(34,197,94,${alpha})`
+                      : ret < 0
+                      ? `rgba(239,68,68,${alpha})`
+                      : `rgba(100,116,139,${alpha})`;
+                  return (
+                    <td key={`${x}-${y}`} className="px-1 py-1">
+                      <div
+                        className="min-w-20 rounded px-2 py-1 font-mono text-[11px]"
+                        style={{
+                          backgroundColor: tone,
+                          border: "1px solid rgba(148,163,184,0.2)",
+                        }}
+                        title={
+                          c
+                            ? `ret=${c.mean_test_ret.toFixed(2)}%, mdd=${c.mean_test_mdd.toFixed(2)}%, windows=${c.n_windows}, positive=${c.positive_rate.toFixed(0)}%`
+                            : "No selections in this cell."
+                        }
+                      >
+                        {c ? (
+                          <>
+                            <div>{fmtSigned(c.mean_test_ret)}%</div>
+                            <div className="text-[10px] text-slate-100/90">
+                              n={c.n_windows}
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-slate-200/50">—</div>
+                        )}
+                      </div>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="px-4 pb-3 text-[10px] text-slate-500">
+        Max |mean test return| in grid: {maxAbsRet.toFixed(2)}%
+      </div>
+    </div>
+  );
+}
+
+function cmpNumericMaybe(a: string, b: string): number {
+  const na = Number(a);
+  const nb = Number(b);
+  if (Number.isFinite(na) && Number.isFinite(nb)) return na - nb;
+  return a.localeCompare(b);
+}
+
+function fmtSigned(v: number): string {
+  return `${v > 0 ? "+" : ""}${v.toFixed(2)}`;
 }
 
 function StatCard({

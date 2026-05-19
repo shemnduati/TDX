@@ -29,6 +29,8 @@ Caveats we're explicitly guarding against:
 
 Run:
     python -m experiments.filter_ablation
+    python -m experiments.filter_ablation --wf-train-engine optuna \\
+        --wf-optuna-trials 64 --wf-optuna-seed 42    # optional pip install optuna>=3
 """
 from __future__ import annotations
 
@@ -36,7 +38,6 @@ import contextlib
 import io
 import json
 import os
-import sys
 import time
 from dataclasses import asdict, replace
 from typing import Any
@@ -245,10 +246,19 @@ def _build_params(baseline: dict, market: dict, variant_overrides: dict) -> Para
     )
 
 
-def run() -> list[dict]:
+def run(
+    *,
+    train_engine: str = "grid",
+    optuna_trials: int = 64,
+    optuna_seed: int = 42,
+) -> list[dict]:
     rows: list[dict] = []
     total_jobs = sum(
         len(b["markets"]) * len(_variants_for(b["strategy"])) for b in BASELINES
+    )
+    print(
+        f"[walk-forward] train_engine={train_engine}, "
+        f"optuna_trials={optuna_trials}, optuna_seed={optuna_seed}\n"
     )
     job_i = 0
     t_start = time.time()
@@ -269,7 +279,14 @@ def run() -> list[dict]:
                 params = _build_params(baseline, mkt, vover)
                 try:
                     with _silenced():
-                        wf = walk_forward(params, mkt["wf_train"], mkt["wf_test"])
+                        wf = walk_forward(
+                            params,
+                            mkt["wf_train"],
+                            mkt["wf_test"],
+                            train_engine=train_engine,
+                            optuna_trials=optuna_trials,
+                            optuna_seed=optuna_seed,
+                        )
                 except Exception as e:
                     print(f"    {vname:<22} SKIP: {e}")
                     continue
@@ -407,12 +424,45 @@ def pick_winners(rows: list[dict]) -> None:
 
 
 def main() -> None:
-    rows = run()
+    args = _parse_cli()
+    rows = run(
+        train_engine=args.wf_train_engine,
+        optuna_trials=args.wf_optuna_trials,
+        optuna_seed=args.wf_optuna_seed,
+    )
     print_deltas(rows)
     pick_winners(rows)
     with open(REPORT_JSON, "w") as f:
         json.dump(rows, f, indent=2, default=str)
     print(f"\nSaved detailed rows -> {REPORT_JSON}")
+
+
+def _parse_cli():
+    import argparse
+
+    p = argparse.ArgumentParser(description="Filter ablation vs walk-forward.")
+    p.add_argument(
+        "--wf-train-engine",
+        choices=["grid", "optuna"],
+        default="grid",
+        help="Train-window selection (Optuna requires pip install optuna>=3).",
+    )
+    p.add_argument(
+        "--wf-optuna-trials",
+        type=int,
+        default=64,
+        help="Trials per train window when --wf-train-engine optuna.",
+    )
+    p.add_argument(
+        "--wf-optuna-seed",
+        type=int,
+        default=42,
+        help="Sampler seed when using Optuna.",
+    )
+    args = p.parse_args()
+    if args.wf_optuna_trials < 1:
+        p.error("--wf-optuna-trials must be >= 1")
+    return args
 
 
 if __name__ == "__main__":

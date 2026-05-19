@@ -31,6 +31,17 @@ from backtest import (
     replay_on_df,
 )
 from strategies import get_strategy
+from walkforward import (
+    _choose_final_oos_params,
+    _build_stability_matrix,
+    _cartesian_candidates,
+    _default_tuning_matrix,
+    _mc_trade_resample,
+    _normalize_train_engine,
+    _param_key,
+    _search_space_cartesian,
+    select_best_train_config,
+)
 
 
 class WalkforwardJob:
@@ -48,6 +59,11 @@ class WalkforwardJob:
         train_bars: int,
         test_bars: int,
         step: Optional[int] = None,
+        opt_matrix: Optional[dict[str, list[Any]]] = None,
+        mc_sims: int = 2000,
+        train_engine: str = "grid",
+        optuna_trials: int = 64,
+        optuna_seed: int = 42,
     ) -> dict:
         with self._lock:
             if self._thread and self._thread.is_alive():
@@ -56,6 +72,10 @@ class WalkforwardJob:
                 raise ValueError("train_bars and test_bars must be > 0")
             if step is not None and step <= 0:
                 raise ValueError("step must be > 0")
+            eng = _normalize_train_engine(train_engine)
+            ot = int(optuna_trials)
+            if ot < 1:
+                raise ValueError("optuna_trials must be >= 1")
 
             params = _merge_params(Params(), base_params)
 
@@ -68,12 +88,30 @@ class WalkforwardJob:
                     "test_bars": test_bars,
                     "step": step or test_bars,
                     "params": _params_snapshot(params),
+                    "n_candidates": 0,
+                    "tuned_keys": [],
+                    "mc_sims": int(mc_sims),
+                    "train_engine": eng,
+                    "optuna_trials_requested": ot if eng == "optuna" else None,
+                    "optuna_trials_effective": None,
+                    "optuna_seed": int(optuna_seed) if eng == "optuna" else None,
+                    "search_space_size": None,
                 }
             )
             self._stop_event.clear()
             self._thread = threading.Thread(
                 target=self._run,
-                args=(params, train_bars, test_bars, step or test_bars),
+                args=(
+                    params,
+                    train_bars,
+                    test_bars,
+                    step or test_bars,
+                    opt_matrix or {},
+                    int(mc_sims),
+                    eng,
+                    ot,
+                    int(optuna_seed),
+                ),
                 name="walkforward",
                 daemon=True,
             )
@@ -102,18 +140,35 @@ class WalkforwardJob:
         train_bars: int,
         test_bars: int,
         step: int,
+        opt_matrix: dict[str, list[Any]],
+        mc_sims: int,
+        train_engine: str,
+        optuna_trials: int,
+        optuna_seed: int,
     ) -> None:
         try:
-            df = fetch_data(params)
-            df = apply_full_indicators(df, params)
-            total = len(df)
+            df_raw = fetch_data(params)
+            total = len(df_raw)
             warmup = get_strategy(params.strategy).warmup_bars(params)
+            holdout_start = int(total * 0.75)
+            dev_end = holdout_start
+            matrix = opt_matrix or _default_tuning_matrix(params)
+            candidates = _cartesian_candidates(params, matrix)
+            tuned_keys = sorted(list(matrix.keys()))
+            space_n = _search_space_cartesian(matrix) if matrix else 1
+            opt_budget = (
+                max(1, min(int(optuna_trials), space_n))
+                if train_engine == "optuna"
+                else None
+            )
+            ind_cache: dict[tuple, Any] = {}
+            all_test_trade_returns: list[float] = []
 
             # Pre-compute the list of windows so we know `total` up-front and
             # the UI can draw an accurate progress bar.
             windows_plan: list[tuple[int, int, int, int]] = []
             start = 0
-            while start + train_bars + test_bars <= total:
+            while start + train_bars + test_bars <= dev_end:
                 train_start = start
                 train_end = start + train_bars
                 test_start = train_end
@@ -127,13 +182,21 @@ class WalkforwardJob:
 
             if not windows_plan:
                 raise ValueError(
-                    f"Not enough bars to walk-forward: have {total}, "
-                    f"need {train_bars + test_bars}. Increase bars."
+                    f"Not enough bars to walk-forward after reserving final 25% OOS: "
+                    f"have dev={dev_end}, need {train_bars + test_bars}. Increase bars."
                 )
 
             with self._lock:
                 self._state["total"] = len(windows_plan)
                 self._state["total_bars"] = total
+                self._state["dev_end_bar"] = dev_end
+                self._state["holdout_start_bar"] = holdout_start
+                self._state["holdout_bars"] = max(0, total - holdout_start)
+                self._state["n_candidates"] = len(candidates)
+                self._state["tuned_keys"] = tuned_keys
+                self._state["search_space_size"] = space_n if matrix else 1
+                if train_engine == "optuna":
+                    self._state["optuna_trials_effective"] = opt_budget
 
             for i, (ts, te, xs, xe) in enumerate(windows_plan):
                 if self._stop_event.is_set():
@@ -142,19 +205,54 @@ class WalkforwardJob:
                 with self._lock:
                     self._state["current"] = {"i": i, "of": len(windows_plan)}
 
-                train = replay_on_df(df, params, start=ts, end=te)
+                best_params, best_train, best_score = select_best_train_config(
+                    df_raw,
+                    base=params,
+                    matrix=matrix,
+                    candidates=candidates,
+                    ind_cache=ind_cache,
+                    eff_train_start=ts,
+                    train_end=te,
+                    train_engine=train_engine,
+                    optuna_trials=optuna_trials,
+                    optuna_seed=optuna_seed,
+                    stop_checker=lambda: self._stop_event.is_set(),
+                )
+
                 if self._stop_event.is_set():
                     break
-                test = replay_on_df(df, params, start=xs, end=xe)
+                best_key = _param_key(best_params)
+                if best_key not in ind_cache:
+                    ind_cache[best_key] = apply_full_indicators(df_raw, best_params)
+                test = replay_on_df(
+                    ind_cache[best_key],
+                    best_params,
+                    start=xs,
+                    end=xe,
+                    verbose=False,
+                    include_trades=True,
+                )
+                train = best_train or {}
+                all_test_trade_returns.extend(test.get("trade_returns", []))
 
                 window = {
                     "i": i,
+                    "train_start": ts,
+                    "train_end": te,
+                    "test_start": xs,
+                    "test_end": xe,
                     "train_ret": train.get("return_pct", 0.0),
                     "test_ret": test.get("return_pct", 0.0),
                     "train_n": train.get("trades", 0),
                     "test_n": test.get("trades", 0),
                     "test_wr": test.get("win_rate", 0.0),
-                    "test_mdd": test.get("max_drawdown_pct", 0.0),
+                    "test_mdd": test.get("max_drawdown_intrabar_pct",
+                                         test.get("max_drawdown_pct", 0.0)),
+                    "train_score": best_score,
+                    "chosen": {k: getattr(best_params, k) for k in tuned_keys},
+                    "chosen_key": tuple(
+                        (k, getattr(best_params, k)) for k in tuned_keys
+                    ),
                 }
                 with self._lock:
                     self._state["windows"].append(window)
@@ -162,7 +260,49 @@ class WalkforwardJob:
                     self._state["current"] = None
 
             with self._lock:
-                self._state["summary"] = _aggregate(self._state["windows"])
+                summary = _aggregate(self._state["windows"])
+                summary["trade_mc"] = _mc_trade_resample(
+                    all_test_trade_returns,
+                    sims=int(mc_sims),
+                    seed=42,
+                )
+                summary["stability_matrix"] = _build_stability_matrix(
+                    self._state["windows"], tuned_keys
+                )
+                final_params, final_meta = _choose_final_oos_params(
+                    params, self._state["windows"]
+                )
+                final_key = _param_key(final_params)
+                if final_key not in ind_cache:
+                    ind_cache[final_key] = apply_full_indicators(df_raw, final_params)
+                final_oos = replay_on_df(
+                    ind_cache[final_key],
+                    final_params,
+                    start=holdout_start,
+                    end=total,
+                    verbose=False,
+                    include_trades=True,
+                )
+                summary["final_oos"] = {
+                    "start_bar": holdout_start,
+                    "end_bar": total,
+                    "bars": max(0, total - holdout_start),
+                    "policy": final_meta.get("policy"),
+                    "selected_windows": final_meta.get("selected_windows", 0),
+                    "selected_key": final_meta.get("selected_key"),
+                    "chosen": {k: getattr(final_params, k) for k in tuned_keys},
+                    "return_pct": float(final_oos.get("return_pct", 0.0)),
+                    "trades": int(final_oos.get("trades", 0)),
+                    "win_rate": float(final_oos.get("win_rate", 0.0)),
+                    "max_drawdown_pct": float(
+                        final_oos.get(
+                            "max_drawdown_intrabar_pct",
+                            final_oos.get("max_drawdown_pct", 0.0),
+                        )
+                    ),
+                    "profit_factor": float(final_oos.get("profit_factor", 0.0)),
+                }
+                self._state["summary"] = summary
 
         except Exception as e:
             with self._lock:
@@ -196,6 +336,17 @@ def _initial_state() -> dict:
         "step": 0,
         "total_bars": 0,
         "params": {},
+        "n_candidates": 0,
+        "tuned_keys": [],
+        "mc_sims": 2000,
+        "train_engine": "grid",
+        "optuna_trials_requested": None,
+        "optuna_trials_effective": None,
+        "optuna_seed": None,
+        "search_space_size": None,
+        "dev_end_bar": 0,
+        "holdout_start_bar": 0,
+        "holdout_bars": 0,
     }
 
 
@@ -226,9 +377,21 @@ def _aggregate(windows: list[dict]) -> dict:
         "mean_test_ret": mean_ret,
         "median_test_ret": median(test_rets),
         "stdev_test_ret": stdev(test_rets) if len(test_rets) > 1 else 0.0,
+        "mean_test_mdd_pct": mean([w.get("test_mdd", 0.0) for w in windows]),
         "positive_rate": pos_rate,
         "total_test_trades": sum(w["test_n"] for w in windows),
         "total_train_trades": sum(w["train_n"] for w in windows),
+        "unique_selected_configs": len(set(w.get("chosen_key") for w in windows)),
+        "selection_transition_rate": (
+            (
+                sum(
+                    1
+                    for i in range(1, len(windows))
+                    if windows[i].get("chosen_key") != windows[i - 1].get("chosen_key")
+                )
+                / max(1, len(windows) - 1)
+            ) * 100
+        ),
         "verdict": verdict,
     }
 

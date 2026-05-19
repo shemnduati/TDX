@@ -24,6 +24,8 @@ Run
 ---
     python -m experiments.explore_configs            # reuses cached sweep
     python -m experiments.explore_configs --fresh    # force full re-run
+    python -m experiments.explore_configs --wf-train-engine optuna \\
+        --wf-optuna-trials 96 --wf-optuna-seed 7    # optional pip install optuna>=3
 """
 from __future__ import annotations
 
@@ -31,7 +33,6 @@ import contextlib
 import io
 import json
 import os
-import sys
 import tempfile
 import time
 from dataclasses import asdict, replace
@@ -381,6 +382,10 @@ def _verdict(pos: float, mean: float) -> str:
 def run_walkforward_per_market(
     ranked: dict[str, list[dict]],
     per_market: dict[str, list[dict]],
+    *,
+    train_engine: str = "grid",
+    optuna_trials: int = 64,
+    optuna_seed: int = 42,
 ) -> list[dict]:
     wf_rows: list[dict] = []
     for market in MARKETS:
@@ -396,7 +401,14 @@ def run_walkforward_per_market(
             params = Params(**hit["params"])
             try:
                 with _silenced():
-                    wf = walk_forward(params, market["wf_train"], market["wf_test"])
+                    wf = walk_forward(
+                        params,
+                        market["wf_train"],
+                        market["wf_test"],
+                        train_engine=train_engine,
+                        optuna_trials=optuna_trials,
+                        optuna_seed=optuna_seed,
+                    )
             except ValueError as e:
                 print(f"  [{i}/{len(candidates)}] skipped ({e}) · {row['label']}")
                 continue
@@ -537,7 +549,13 @@ def cross_market_report(wf_rows: list[dict]) -> None:
 # ------------------------------------------------------------------- main
 
 
-def main(fresh: bool = False) -> None:
+def main(
+    *,
+    fresh: bool = False,
+    train_engine: str = "grid",
+    optuna_trials: int = 64,
+    optuna_seed: int = 42,
+) -> None:
     if not fresh and os.path.exists(SWEEP_CACHE):
         with open(SWEEP_CACHE) as f:
             per_market = json.load(f)
@@ -561,7 +579,17 @@ def main(fresh: bool = False) -> None:
         print(f"[sweep] Cached {total} configs -> {SWEEP_CACHE}\n")
 
     ranked = rank_per_market(per_market)
-    wf_rows = run_walkforward_per_market(ranked, per_market)
+    print(
+        f"[walk-forward] train_engine={train_engine}, "
+        f"optuna_trials={optuna_trials}, optuna_seed={optuna_seed}\n"
+    )
+    wf_rows = run_walkforward_per_market(
+        ranked,
+        per_market,
+        train_engine=train_engine,
+        optuna_trials=optuna_trials,
+        optuna_seed=optuna_seed,
+    )
     cross_market_report(wf_rows)
 
     with open(REPORT_JSON, "w") as f:
@@ -573,6 +601,44 @@ def main(fresh: bool = False) -> None:
     print(f"Saved detailed report -> {REPORT_JSON}")
 
 
+def _parse_cli():
+    import argparse
+
+    p = argparse.ArgumentParser(description="Sweep + rank configs, then walk-forward.")
+    p.add_argument(
+        "--fresh",
+        action="store_true",
+        help="Ignore sweep cache and re-run all markets.",
+    )
+    p.add_argument(
+        "--wf-train-engine",
+        choices=["grid", "optuna"],
+        default="grid",
+        help="Train-window selection for walk_forward (Optuna requires pip install optuna>=3).",
+    )
+    p.add_argument(
+        "--wf-optuna-trials",
+        type=int,
+        default=64,
+        help="Trials per train window when --wf-train-engine optuna (capped by search space).",
+    )
+    p.add_argument(
+        "--wf-optuna-seed",
+        type=int,
+        default=42,
+        help="Sampler seed when using Optuna.",
+    )
+    args = p.parse_args()
+    if args.wf_optuna_trials < 1:
+        p.error("--wf-optuna-trials must be >= 1")
+    return args
+
+
 if __name__ == "__main__":
-    fresh = "--fresh" in sys.argv
-    main(fresh=fresh)
+    cli = _parse_cli()
+    main(
+        fresh=cli.fresh,
+        train_engine=cli.wf_train_engine,
+        optuna_trials=cli.wf_optuna_trials,
+        optuna_seed=cli.wf_optuna_seed,
+    )

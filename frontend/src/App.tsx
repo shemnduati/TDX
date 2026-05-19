@@ -2,6 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   deleteProfile,
   deleteRun,
+  downloadWalkforwardReportJson,
+  downloadWalkforwardStabilityCsv,
+  downloadWalkforwardWindowsCsv,
   fetchDashboardData,
   fetchDefaults,
   fetchStrategies,
@@ -13,29 +16,46 @@ import {
   liveStop,
   listRuns,
   loadRun,
+  monitorDivergence,
+  monitorReadiness,
+  portfolioRun,
   renameRun,
+  regimeExpectancy,
+  rebaselineProfilesWalkforward,
   runBacktest,
   saveProfile,
   sweepCancel,
   sweepStart,
   sweepStatus,
+  tournamentRun,
   updateProfile,
   walkforwardCancel,
   walkforwardStart,
+  walkforwardStability,
   walkforwardStatus,
 } from "./api";
 import type {
   BacktestRunResponse,
   DashboardData,
+  DivergenceResponse,
   LiveStatus,
+  PortfolioRunResponse,
+  PortfolioRiskConfig,
+  ReadinessResponse,
+  RegimeExpectancyResponse,
   ProfileDoc,
   ProfileMeta,
   ProfilePerformance,
+  ProfilesWalkforwardRebaselineStart,
+  ProfilesWalkforwardRebaselineResponse,
   RunMeta,
   RunPayload,
   StrategyInfo,
   StrategyParams,
   SweepStatus,
+  TournamentRunResponse,
+  WalkforwardStart,
+  WalkforwardStabilityResponse,
   WalkforwardStatus,
 } from "./types";
 import { MetricsCards } from "./components/MetricsCards";
@@ -52,6 +72,9 @@ import { ProfilesView } from "./components/ProfilesView";
 import { Tabs, type Tab } from "./components/Tabs";
 import { SweepPanel } from "./components/SweepPanel";
 import { WalkforwardPanel } from "./components/WalkforwardPanel";
+import { RegimePanel } from "./components/RegimePanel";
+import { PortfolioPanel } from "./components/PortfolioPanel";
+import { AutomationPanel } from "./components/AutomationPanel";
 import { formatCurrency } from "./metrics";
 
 const POLL_MS = 3000;
@@ -62,6 +85,9 @@ type TabId =
   | "live"
   | "sweep"
   | "walkforward"
+  | "regimes"
+  | "portfolio"
+  | "automation"
   | "history"
   | "compare"
   | "profiles";
@@ -90,6 +116,7 @@ export default function App() {
   const [runs, setRuns] = useState<RunMeta[]>([]);
   const [runsLoading, setRunsLoading] = useState(false);
   const [selectedRunIds, setSelectedRunIds] = useState<Set<string>>(new Set());
+  const [runsDeleteBusy, setRunsDeleteBusy] = useState(false);
 
   // Profiles — see ProfileBar.tsx. activeProfile{Backtest,Live} track the
   // name of the last profile applied to each form, which the UI uses to
@@ -110,7 +137,20 @@ export default function App() {
   const [sweepBusy, setSweepBusy] = useState(false);
 
   const [wfState, setWfState] = useState<WalkforwardStatus | null>(null);
+  const [wfStability, setWfStability] =
+    useState<WalkforwardStabilityResponse | null>(null);
   const [wfBusy, setWfBusy] = useState(false);
+  const [regimeBusy, setRegimeBusy] = useState(false);
+  const [regimeData, setRegimeData] = useState<RegimeExpectancyResponse | null>(null);
+  const [portfolioBusy, setPortfolioBusy] = useState(false);
+  const [portfolioResult, setPortfolioResult] = useState<PortfolioRunResponse | null>(null);
+  const [automationBusy, setAutomationBusy] = useState(false);
+  const [tournamentResult, setTournamentResult] =
+    useState<TournamentRunResponse | null>(null);
+  const [divergenceResult, setDivergenceResult] =
+    useState<DivergenceResponse | null>(null);
+  const [readinessResult, setReadinessResult] =
+    useState<ReadinessResponse | null>(null);
 
   const [liveState, setLiveState] = useState<LiveStatus | null>(null);
   const [backtestBusy, setBacktestBusy] = useState(false);
@@ -250,8 +290,14 @@ export default function App() {
     let cancelled = false;
     const load = async () => {
       try {
-        const s = await walkforwardStatus();
-        if (!cancelled) setWfState(s);
+        const [s, st] = await Promise.all([
+          walkforwardStatus(),
+          walkforwardStability(),
+        ]);
+        if (!cancelled) {
+          setWfState(s);
+          setWfStability(st);
+        }
       } catch {
         /* non-fatal */
       }
@@ -354,6 +400,36 @@ export default function App() {
     [currentSource, refreshRuns]
   );
 
+  const handleDeleteSelectedRuns = useCallback(async () => {
+    const ids = [...selectedRunIds];
+    if (ids.length === 0) return;
+    if (
+      !window.confirm(
+        `Delete ${ids.length} selected run(s)? This cannot be undone.`
+      )
+    ) {
+      return;
+    }
+    setError(null);
+    const idSet = new Set(ids);
+    setRunsDeleteBusy(true);
+    try {
+      await Promise.all(ids.map((id) => deleteRun(id)));
+      setCurrentSource((prev) =>
+        prev.type === "run" && idSet.has(prev.id)
+          ? { type: "backtest" }
+          : prev
+      );
+      setSelectedRunIds(new Set());
+      refreshRuns();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+      refreshRuns();
+    } finally {
+      setRunsDeleteBusy(false);
+    }
+  }, [selectedRunIds, refreshRuns]);
+
   const handleRenameRun = useCallback(
     async (id: string, label: string) => {
       try {
@@ -447,7 +523,7 @@ export default function App() {
           src = `run:${source.run.id} (${source.run.label})`;
           // Runs already carry a summary — attach it as the baseline.
           performance = {
-            kind: source.run.kind === "live" ? "live" : "backtest",
+            kind: source.run.kind,
             run_id: source.run.id,
             summary: source.run.summary as unknown as Record<string, unknown>,
           };
@@ -577,6 +653,20 @@ export default function App() {
     [activeProfileBacktest, activeProfileLive, refreshProfiles]
   );
 
+  const handleRebaselineProfilesWalkforward = useCallback(
+    async (
+      body: ProfilesWalkforwardRebaselineStart = {}
+    ): Promise<ProfilesWalkforwardRebaselineResponse> => {
+      setError(null);
+      const res = await rebaselineProfilesWalkforward(body);
+      if (!body.dry_run) {
+        await refreshProfiles();
+      }
+      return res;
+    },
+    [refreshProfiles]
+  );
+
   // Wrapped setters so any hand-edit to the form automatically drops
   // the active-profile badge — otherwise the UI would keep claiming
   // "Active: btc-4h-adx" while the user was merrily tweaking values.
@@ -651,12 +741,7 @@ export default function App() {
   }, []);
 
   const handleWfStart = useCallback(
-    async (body: {
-      params: StrategyParams;
-      train_bars: number;
-      test_bars: number;
-      step?: number;
-    }) => {
+    async (body: WalkforwardStart) => {
       setWfBusy(true);
       setError(null);
       try {
@@ -682,6 +767,127 @@ export default function App() {
       setWfBusy(false);
     }
   }, []);
+
+  const handleWfDownloadStabilityCsv = useCallback(async () => {
+    setError(null);
+    try {
+      await downloadWalkforwardStabilityCsv();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  }, []);
+
+  const handleWfDownloadWindowsCsv = useCallback(async () => {
+    setError(null);
+    try {
+      await downloadWalkforwardWindowsCsv();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  }, []);
+
+  const handleWfDownloadReportJson = useCallback(async () => {
+    setError(null);
+    try {
+      await downloadWalkforwardReportJson();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  }, []);
+
+  const handleRegimeRun = useCallback(async () => {
+    if (!backtestParams) return;
+    setRegimeBusy(true);
+    setError(null);
+    try {
+      const res = await regimeExpectancy({ params: backtestParams });
+      setRegimeData(res);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setRegimeBusy(false);
+    }
+  }, [backtestParams]);
+
+  const handlePortfolioRun = useCallback(
+    async (weights: Record<string, number>, risk: PortfolioRiskConfig) => {
+      if (!backtestParams) return;
+      setPortfolioBusy(true);
+      setError(null);
+      try {
+        const res = await portfolioRun({
+          params: backtestParams,
+          weights,
+          risk,
+        });
+        setPortfolioResult(res);
+        if (res.saved?.id) {
+          await refreshRuns();
+        }
+      } catch (e) {
+        setError(e instanceof Error ? e.message : String(e));
+      } finally {
+        setPortfolioBusy(false);
+      }
+    },
+    [backtestParams, refreshRuns]
+  );
+
+  const handleTournamentRun = useCallback(async () => {
+    setAutomationBusy(true);
+    setError(null);
+    try {
+      const res = await tournamentRun({ dry_run: true });
+      setTournamentResult(res);
+      await refreshProfiles();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setAutomationBusy(false);
+    }
+  }, [refreshProfiles]);
+
+  const handleDivergenceCheck = useCallback(
+    async (thresholds: Record<string, number>) => {
+    setAutomationBusy(true);
+    setError(null);
+    try {
+        const res = await monitorDivergence({ thresholds });
+        setDivergenceResult(res);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : String(e));
+      } finally {
+        setAutomationBusy(false);
+      }
+    },
+    []
+  );
+
+  const handleReadinessCheck = useCallback(
+    async (raw: Record<string, number>) => {
+      setAutomationBusy(true);
+      setError(null);
+      try {
+        const {
+          min_avg_timestamp_match_rate,
+          max_avg_mean_abs_pnl_delta_pct,
+          ...thresholds
+        } = raw;
+        const res = await monitorReadiness({
+          days: 30,
+          thresholds,
+          min_avg_timestamp_match_rate,
+          max_avg_mean_abs_pnl_delta_pct,
+        });
+        setReadinessResult(res);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : String(e));
+      } finally {
+        setAutomationBusy(false);
+      }
+    },
+    []
+  );
 
   // Drop deleted runs from the selection so the Compare button count stays sane.
   useEffect(() => {
@@ -763,6 +969,21 @@ export default function App() {
         : wfState?.summary?.verdict === "ROBUST"
         ? "ROBUST"
         : undefined,
+    },
+    {
+      id: "regimes",
+      label: "Regimes",
+      badge: regimeData?.rows?.length || undefined,
+    },
+    {
+      id: "portfolio",
+      label: "Portfolio",
+      badge: portfolioResult?.result?.combined?.total_trades || undefined,
+    },
+    {
+      id: "automation",
+      label: "Automation",
+      badge: readinessResult?.summary?.verdict === "READY" ? "READY" : undefined,
     },
     { id: "history", label: "History", badge: runs.length || undefined },
     {
@@ -895,10 +1116,48 @@ export default function App() {
             params={backtestParams}
             onParamsChange={handleBacktestParamsChange}
             status={wfState}
+            stability={wfStability}
             busy={wfBusy}
             error={wfState?.error ?? null}
             onStart={handleWfStart}
             onCancel={handleWfCancel}
+            onDownloadStabilityCsv={handleWfDownloadStabilityCsv}
+            onDownloadWindowsCsv={handleWfDownloadWindowsCsv}
+            onDownloadReportJson={handleWfDownloadReportJson}
+          />
+        )}
+
+        {tab === "regimes" && (
+          <RegimePanel
+            params={backtestParams}
+            busy={regimeBusy}
+            data={regimeData}
+            error={error}
+            onRun={handleRegimeRun}
+          />
+        )}
+
+        {tab === "portfolio" && (
+          <PortfolioPanel
+            params={backtestParams}
+            strategies={strategies}
+            busy={portfolioBusy}
+            error={error}
+            result={portfolioResult}
+            onRun={handlePortfolioRun}
+          />
+        )}
+
+        {tab === "automation" && (
+          <AutomationPanel
+            busy={automationBusy}
+            error={error}
+            tournament={tournamentResult}
+            divergence={divergenceResult}
+            readiness={readinessResult}
+            onRunTournament={handleTournamentRun}
+            onCheckDivergence={handleDivergenceCheck}
+            onCheckReadiness={handleReadinessCheck}
           />
         )}
 
@@ -914,6 +1173,8 @@ export default function App() {
             onClearSelection={handleClearSelection}
             onCompare={handleOpenCompare}
             compareLoading={compareLoading}
+            onDeleteSelected={handleDeleteSelectedRuns}
+            deleteSelectedBusy={runsDeleteBusy}
             onOpen={handleOpenRun}
             onClone={handleCloneRun}
             onDelete={handleDeleteRun}
@@ -947,6 +1208,7 @@ export default function App() {
             onEditDescription={handleEditProfileDescription}
             onAppendChangelog={handleAppendProfileChangelog}
             onDelete={handleDeleteProfile}
+            onRebaselineWalkforward={handleRebaselineProfilesWalkforward}
           />
         )}
       </main>
@@ -1321,6 +1583,8 @@ function HistoryView({
   onClearSelection,
   onCompare,
   compareLoading,
+  onDeleteSelected,
+  deleteSelectedBusy,
   onOpen,
   onClone,
   onDelete,
@@ -1336,6 +1600,8 @@ function HistoryView({
   onClearSelection: () => void;
   onCompare: () => void;
   compareLoading: boolean;
+  onDeleteSelected: () => void;
+  deleteSelectedBusy: boolean;
   onOpen: (id: string) => void;
   onClone: (run: RunMeta) => void;
   onDelete: (id: string) => void;
@@ -1365,7 +1631,8 @@ function HistoryView({
         <div>
           <h2 className="text-lg font-semibold">Saved runs</h2>
           <p className="text-xs text-slate-500">
-            Tick the boxes to overlay multiple runs on a single chart.
+            Tick the boxes to compare runs on one chart or delete several at
+            once.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -1387,6 +1654,14 @@ function HistoryView({
                 {compareLoading
                   ? "Loading…"
                   : `Compare ${count} selected`}
+              </button>
+              <button
+                type="button"
+                onClick={onDeleteSelected}
+                disabled={deleteSelectedBusy || count < 1}
+                className="rounded-md border border-bear/40 px-3 py-1.5 text-xs text-bear hover:bg-bear/10 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {deleteSelectedBusy ? "Deleting…" : `Delete ${count} selected`}
               </button>
             </>
           )}

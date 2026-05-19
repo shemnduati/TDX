@@ -1,6 +1,6 @@
 {
   "name": "eth-4h-donchian",
-  "description": "ETH/USDT 4h — 20-bar Donchian breakout with trend-100 filter, ATR sizing (stop=2.0*ATR). Highest WF score we found anywhere (0.43 on native ETH-4h), mean +2.39%/window, positive rate 75%. Deliberately has NO ADX filter — ADX min=20 HURTS this config on ETH (positive rate drops 25%). Do not inherit the ADX filter from config.py here.",
+  "description": "ETH/USDT 4h \u2014 20-bar Donchian breakout with trend-100 filter, ATR sizing (stop=2.0*ATR). Highest WF score we found anywhere (0.43 on native ETH-4h), mean +2.39%/window, positive rate 75%. Deliberately has NO ADX filter \u2014 ADX min=20 HURTS this config on ETH (positive rate drops 25%). Do not inherit the ADX filter from config.py here.",
   "source": "experiments/filter_ablation.py B4-don20-eth4h-100 control (2026-04-18)",
   "created_at": "2026-04-18T00:00:00Z",
   "params": {
@@ -15,5 +15,43 @@
     "use_adx_filter": false,
     "adx_min": 0.0,
     "adx_max": 0.0
+  },
+  "parent": null,
+  "changelog": [
+    {
+      "at": "2026-05-19T04:40:33Z",
+      "message": "rebaseline performance with walk-forward + final holdout OOS"
+    }
+  ],
+  "performance": {
+    "kind": "walkforward",
+    "summary": {
+      "n_windows": 1,
+      "mean_test_ret": 2.2595573100278865,
+      "median_test_ret": 2.2595573100278865,
+      "stdev_test_ret": 0.0,
+      "positive_rate": 100.0,
+      "mean_test_mdd_pct": 2.684,
+      "total_test_trades": 5,
+      "total_train_trades": 10,
+      "unique_selected_configs": 1,
+      "selection_transition_rate": 0.0,
+      "tuned_keys": [
+        "breakout_atr_mult",
+        "donchian_period",
+        "ema_trend"
+      ],
+      "train_engine": "grid",
+      "dev_end_bar": 749,
+      "holdout_start_bar": 749,
+      "holdout_bars": 250,
+      "final_oos_return_pct": -4.052228582717382,
+      "final_oos_trades": 11,
+      "final_oos_win_rate": 27.27272727272727,
+      "final_oos_mdd_pct": 8.412,
+      "final_oos_profit_factor": 0.504,
+      "final_oos_policy": "mode_selected_config"
+    },
+    "recorded_at": "2026-05-19T04:40:33Z"
   }
 }

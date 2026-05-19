@@ -37,6 +37,7 @@ class TestRegistry:
             "ema_crossover",
             "rsi_mean_reversion",
             "donchian_breakout",
+            "intraday_donchian",
             "liquidity_sweep",
         }
 
@@ -160,6 +161,62 @@ class TestDonchianBreakout:
         params = self._params()
         df = apply_full_indicators(df, params)
         assert DonchianBreakoutStrategy().generate_signal(df, params) == "HOLD"
+
+    def test_compression_off_default_unchanged(self, ohlcv):
+        p = replace(self._params(), use_donchian_compression=False)
+        closes = [100.0] * 20 + [105.0, 106.0, 107.0]
+        df = apply_full_indicators(ohlcv(closes), p)
+        s = [DonchianBreakoutStrategy().generate_signal(df.iloc[: i + 1], p) for i in range(len(df))]
+        assert s.count("BUY") >= 1
+
+
+class TestIntradayDonchian:
+    def _params(self) -> Params:
+        return replace(
+            Params(),
+            strategy="intraday_donchian",
+            donchian_period=5,
+            rsi_period=5,
+            rsi_buy_max=90,
+            rsi_sell_min=10,
+            atr_period=5,
+            atr_ma_period=3,
+            breakout_atr_mult=0.0,
+            ltf_ema_period=0,
+            use_breakout_rsi=False,
+            use_atr_expansion=False,
+            use_adx_filter=False,
+            use_htf_confirm=False,
+            use_atr_sizing=True,
+        )
+
+    def test_columns_after_apply(self, ohlcv):
+        from strategies import IntradayDonchianStrategy
+
+        df = ohlcv([100.0] * 40)
+        p = self._params()
+        out = IntradayDonchianStrategy().apply_indicators(df, p)
+        assert "atr_ma" in out.columns
+        assert "ltf_ema" in out.columns
+
+    def test_warmup_short_data_returns_hold(self, ohlcv):
+        from strategies import IntradayDonchianStrategy
+
+        df = ohlcv([100.0] * 8)
+        p = self._params()
+        df = apply_full_indicators(df, p)
+        assert IntradayDonchianStrategy().generate_signal(df, p) == "HOLD"
+
+    def test_signal_types_bounded(self, sine_ohlcv):
+        """Long synthetic series: every bar returns a valid decision."""
+        from strategies import IntradayDonchianStrategy
+
+        p = self._params()
+        df = apply_full_indicators(sine_ohlcv, p)
+        s = IntradayDonchianStrategy()
+        for i in range(len(df)):
+            out = s.generate_signal(df.iloc[: i + 1], p)
+            assert out in ("BUY", "SELL", "HOLD")
 
 
 class TestTrendFilter:

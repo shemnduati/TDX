@@ -136,6 +136,15 @@ class TestSummaryShape:
         out = _summary(t, Params(), start=0, end=100)
         assert out["profit_factor"] == 999.0  # no losses → clamped
 
+    def test_summary_reports_funding_separately(self):
+        t = PaperTrader(initial_balance=1000.0, fee_pct=0.0)
+        t.on_signal("BUY", 100.0)
+        t.close(110.0)
+        t.cumulative_funding = -2.5
+        out = _summary(t, Params(), start=0, end=100)
+        assert out["funding_pnl"] == pytest.approx(-2.5)
+        assert out["total_pnl"] == pytest.approx(97.5)
+
 
 # -------------------------------------------------------- _atr_overrides ---
 

@@ -405,7 +405,21 @@ export function SweepPanel({
 /** Best-effort type coercion per sweepable field. */
 function coerce(key: keyof StrategyParams, raw: string): string | number | boolean {
   // Booleans
-  if (key === "use_atr_sizing") {
+  if (
+    key === "use_atr_sizing" ||
+    key === "use_htf_confirm" ||
+    key === "use_adx_filter" ||
+    key === "use_volume_filter" ||
+    key === "use_atr_filter" ||
+    key === "use_macd_confirm" ||
+    key === "use_breakout_rsi" ||
+    key === "use_atr_expansion" ||
+    key === "use_atr_max_filter" ||
+    key === "use_time_filter" ||
+    key === "use_trailing_stop" ||
+    key === "use_donchian_compression" ||
+    key === "use_donchian_rsi"
+  ) {
     return /^(true|1|yes|on)$/i.test(raw);
   }
   // Strings

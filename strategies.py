@@ -52,6 +52,23 @@ def macd(
     return macd_line, signal_line, hist
 
 
+def wilder_atr(df: pd.DataFrame, period: int) -> pd.Series:
+    """Wilder ATR(period) as a float Series (same TR definition as `backtest._apply_atr`)."""
+    p = max(int(period), 1)
+    high = df["high"]
+    low = df["low"]
+    close_prev = df["close"].shift(1)
+    tr = pd.concat(
+        [
+            (high - low).abs(),
+            (high - close_prev).abs(),
+            (low - close_prev).abs(),
+        ],
+        axis=1,
+    ).max(axis=1)
+    return tr.ewm(alpha=1 / p, adjust=False).mean()
+
+
 def adx(df: pd.DataFrame, period: int) -> pd.Series:
     """Wilder's Average Directional Index.
 
@@ -214,6 +231,7 @@ class RsiMeanReversionStrategy(Strategy):
         "rsi_oversold",
         "rsi_overbought",
         "ema_trend",
+        "mr_regime_adx_max",
     ]
 
     def apply_indicators(self, df, params):
@@ -225,12 +243,20 @@ class RsiMeanReversionStrategy(Strategy):
             ).mean()
         else:
             df["ema_trend"] = pd.NA
+        if params.mr_regime_adx_max and params.mr_regime_adx_max > 0:
+            df["mr_adx"] = adx(df, params.filter_adx_period)
+        else:
+            df["mr_adx"] = pd.NA
         return df
 
     def warmup_bars(self, params):
+        mrg = 0
+        if params.mr_regime_adx_max and params.mr_regime_adx_max > 0:
+            mrg = params.filter_adx_period * 3
         return max(
             params.rsi_period,
             params.ema_trend or 0,
+            mrg,
             filter_warmup_bars(params),
         ) + 2
 
@@ -249,6 +275,11 @@ class RsiMeanReversionStrategy(Strategy):
             prev["rsi"] >= params.rsi_overbought
             and last["rsi"] < params.rsi_overbought
         )
+
+        if params.mr_regime_adx_max and params.mr_regime_adx_max > 0:
+            mx = last.get("mr_adx")
+            if pd.isna(mx) or float(mx) >= float(params.mr_regime_adx_max):
+                return "HOLD"
 
         ok_long, ok_short = _trend_ok(last, params)
 
@@ -277,12 +308,26 @@ class DonchianBreakoutStrategy(Strategy):
 
     The optional trend filter still applies — longs only above `ema_trend`,
     shorts only below. Disable with `ema_trend=0` for pure breakout.
+
+    Optional `use_donchian_compression`: require a quiet period first — the
+    mean bar range over the prior L bars must be <= k×ATR before a breakout
+    counts (skip "late" breaks in already-wide markets).
+
+    Optional `use_donchian_rsi` + `rsi_buy_max` / `rsi_sell_min`: skip longs
+    when RSI is already stretched above the buy cap, and shorts when RSI
+    is below the sell floor (anti-chase).
     """
 
     name = "donchian_breakout"
     hyperparams = [
         "donchian_period",
         "ema_trend",
+        "use_donchian_rsi",
+        "rsi_buy_max",
+        "rsi_sell_min",
+        "use_donchian_compression",
+        "donchian_compression_lookback",
+        "donchian_compression_max_range_atr",
     ]
 
     def apply_indicators(self, df, params):
@@ -300,14 +345,31 @@ class DonchianBreakoutStrategy(Strategy):
             df["ema_trend"] = pd.NA
         # RSI kept for consistency (other code expects the column to exist).
         df["rsi"] = rsi(df["close"], params.rsi_period)
+        if params.use_donchian_compression:
+            p_atr = max(int(params.atr_period), 1)
+            df["dc_atr"] = wilder_atr(df, p_atr)
+            Lc = max(int(params.donchian_compression_lookback), 1)
+            br = (df["high"] - df["low"]).abs()
+            # Mean range over the Lc bars *before* t (exclude signal bar).
+            df["dc_prior_mean_range"] = br.rolling(Lc).mean().shift(1)
+        else:
+            df["dc_atr"] = pd.NA
+            df["dc_prior_mean_range"] = pd.NA
         return df
 
     def warmup_bars(self, params):
         # +1 because of the .shift(1) above.
+        comp = 0
+        if params.use_donchian_compression:
+            comp = max(
+                params.donchian_compression_lookback + 1,
+                params.atr_period + 2,
+            )
         return max(
             params.donchian_period + 1,
             params.rsi_period,
             params.ema_trend or 0,
+            comp,
             filter_warmup_bars(params),
         ) + 2
 
@@ -328,11 +390,169 @@ class DonchianBreakoutStrategy(Strategy):
             and last["close"] < last["donchian_low"]
         )
 
+        comp_ok = self._compression_passes(last, params)
         ok_long, ok_short = _trend_ok(last, params)
 
-        if break_up and ok_long and filters_pass(last, params, "long"):
+        long_ok = (
+            break_up
+            and comp_ok
+            and ok_long
+            and filters_pass(last, params, "long")
+        )
+        if long_ok and params.use_donchian_rsi:
+            r = last.get("rsi")
+            if pd.isna(r) or not (float(r) < params.rsi_buy_max):
+                long_ok = False
+        if long_ok:
             return "BUY"
-        if break_down and ok_short and filters_pass(last, params, "short"):
+
+        short_ok = (
+            break_down
+            and comp_ok
+            and ok_short
+            and filters_pass(last, params, "short")
+        )
+        if short_ok and params.use_donchian_rsi:
+            r = last.get("rsi")
+            if pd.isna(r) or not (float(r) > params.rsi_sell_min):
+                short_ok = False
+        if short_ok:
+            return "SELL"
+        return "HOLD"
+
+    def _compression_passes(self, last, params) -> bool:
+        """True when prior mean range is not wider than k×ATR (optional gate)."""
+        if not params.use_donchian_compression:
+            return True
+        mr = last.get("dc_prior_mean_range")
+        a = last.get("dc_atr")
+        k = float(params.donchian_compression_max_range_atr)
+        if pd.isna(mr) or pd.isna(a) or a <= 0.0 or k <= 0.0:
+            return False
+        return float(mr) <= k * float(a)
+
+
+# ---------------------------------------------------- intraday_donchian ----
+class IntradayDonchianStrategy(Strategy):
+    """HTF trend (opt-in: `use_htf_confirm` + 1h EMA) + LTF Donchian breakout
+    with ATR regime and strength filters. Intended for 5m/15m entries vs
+    1h regime.
+
+    Entry (long, symmetric for short):
+      - First close through shifted Donchian high / low (no repeat entries).
+      - ATR > rolling mean of ATR (volatility "alive").
+      - Breakout distance beyond the channel >= `breakout_atr_mult` * ATR.
+      - Optional: ATR increasing vs prior bar, RSI not extreme, LTF EMA
+        alignment.
+
+    Use `use_atr_sizing=True` in Params so SL/TP and size use ATR (e.g. stop
+    2*ATR, take 4*ATR for 1:2 R:R with default mults).
+    """
+
+    name = "intraday_donchian"
+    hyperparams = [
+        "donchian_period",
+        "rsi_period",
+        "rsi_buy_max",
+        "rsi_sell_min",
+        "atr_period",
+        "atr_ma_period",
+        "breakout_atr_mult",
+        "ltf_ema_period",
+        "use_breakout_rsi",
+        "use_atr_expansion",
+    ]
+
+    def apply_indicators(self, df, params):
+        df = df.copy()
+        n = params.donchian_period
+        df["donchian_high"] = df["high"].rolling(n).max().shift(1)
+        df["donchian_low"] = df["low"].rolling(n).min().shift(1)
+        df["rsi"] = rsi(df["close"], params.rsi_period)
+        p_atr = max(params.atr_period, 1)
+        df["atr"] = wilder_atr(df, p_atr)
+        ma = max(params.atr_ma_period, 1)
+        df["atr_ma"] = df["atr"].rolling(ma).mean()
+        if params.ltf_ema_period and params.ltf_ema_period > 0:
+            df["ltf_ema"] = df["close"].ewm(
+                span=int(params.ltf_ema_period), adjust=False
+            ).mean()
+        else:
+            df["ltf_ema"] = pd.NA
+        return df
+
+    def warmup_bars(self, params):
+        return max(
+            params.donchian_period + 1,
+            params.rsi_period,
+            params.atr_period + 2,
+            params.atr_ma_period,
+            params.ltf_ema_period or 0,
+            filter_warmup_bars(params),
+        ) + 2
+
+    def generate_signal(self, df, params):
+        if len(df) < 2:
+            return "HOLD"
+        prev, last = df.iloc[-2], df.iloc[-1]
+        for col in (
+            "donchian_high",
+            "donchian_low",
+            "atr",
+            "atr_ma",
+            "rsi",
+        ):
+            if pd.isna(prev.get(col)) or pd.isna(last.get(col)):
+                return "HOLD"
+
+        break_up = (
+            prev["close"] <= prev["donchian_high"]
+            and last["close"] > last["donchian_high"]
+        )
+        break_down = (
+            prev["close"] >= prev["donchian_low"]
+            and last["close"] < last["donchian_low"]
+        )
+
+        if not (last["atr"] > last["atr_ma"]):
+            return "HOLD"
+
+        mult = float(params.breakout_atr_mult)
+        if break_up:
+            ext = last["close"] - last["donchian_high"]
+            if ext < mult * last["atr"]:
+                return "HOLD"
+        elif break_down:
+            ext = last["donchian_low"] - last["close"]
+            if ext < mult * last["atr"]:
+                return "HOLD"
+        else:
+            return "HOLD"
+
+        if params.use_atr_expansion:
+            pa = prev.get("atr")
+            if pd.isna(pa) or not (last["atr"] > pa):
+                return "HOLD"
+
+        if params.ltf_ema_period and params.ltf_ema_period > 0:
+            ema = last.get("ltf_ema")
+            if pd.isna(ema):
+                return "HOLD"
+            if break_up and not (last["close"] > ema):
+                return "HOLD"
+            if break_down and not (last["close"] < ema):
+                return "HOLD"
+
+        if params.use_breakout_rsi:
+            r = last["rsi"]
+            if break_up and not (r < params.rsi_buy_max):
+                return "HOLD"
+            if break_down and not (r > params.rsi_sell_min):
+                return "HOLD"
+
+        if break_up and filters_pass(last, params, "long"):
+            return "BUY"
+        if break_down and filters_pass(last, params, "short"):
             return "SELL"
         return "HOLD"
 
@@ -379,8 +599,9 @@ class LiquiditySweepStrategy(Strategy):
         df["sweep_high"] = df["high"].rolling(n).max().shift(1)
         df["sweep_low"] = df["low"].rolling(n).min().shift(1)
         df["adx"] = adx(df, params.sweep_adx_period)
+        # Median of prior bars only; current bar's volume is not in the window.
         df["vol_median"] = (
-            df["volume"].rolling(params.sweep_volume_lookback).median()
+            df["volume"].shift(1).rolling(params.sweep_volume_lookback).median()
         )
         # RSI kept only so replay_on_df's "has this df been indicator'd?"
         # sentinel check (looks for an "rsi" column) passes cleanly.
@@ -451,11 +672,36 @@ FILTER_HYPERPARAMS: list[str] = [
     "vol_mult",
     "use_atr_filter",
     "atr_min_pct",
+    "use_atr_max_filter",
+    "atr_max_pct",
+    "use_time_filter",
+    "time_start_utc_mins",
+    "time_end_utc_mins",
     "use_macd_confirm",
     "macd_fast",
     "macd_slow",
     "macd_signal",
 ]
+
+
+def _utc_time_filter_allows(params, ts) -> bool:
+    """True if the bar's UTC time-of-day is inside the allowed window."""
+    if not params.use_time_filter:
+        return True
+    if ts is None or (isinstance(ts, float) and pd.isna(ts)):
+        return True
+    t = pd.Timestamp(ts)
+    if t.tz is None:
+        t = t.tz_localize("UTC")
+    else:
+        t = t.tz_convert("UTC")
+    m = t.hour * 60 + t.minute
+    a, b = int(params.time_start_utc_mins) % 1440, int(params.time_end_utc_mins) % 1440
+    if a < b:
+        return a <= m < b
+    if a > b:
+        return m >= a or m < b
+    return True
 
 
 def attach_filter_indicators(df: pd.DataFrame, params) -> pd.DataFrame:
@@ -471,7 +717,7 @@ def attach_filter_indicators(df: pd.DataFrame, params) -> pd.DataFrame:
         df["filt_vol_ma"] = (
             df["volume"].rolling(params.vol_ma_period).median()
         )
-    if params.use_atr_filter:
+    if params.use_atr_filter or params.use_atr_max_filter:
         high = df["high"]
         low = df["low"]
         close_prev = df["close"].shift(1)
@@ -539,7 +785,7 @@ def filter_warmup_bars(params) -> int:
         need = max(need, params.filter_adx_period * 3)
     if params.use_volume_filter:
         need = max(need, params.vol_ma_period)
-    if params.use_atr_filter:
+    if params.use_atr_filter or params.use_atr_max_filter:
         need = max(need, params.atr_period + 2)
     if params.use_macd_confirm:
         need = max(need, params.macd_slow + params.macd_signal + 2)
@@ -554,6 +800,10 @@ def _filter_gate_ok(last, params, side: str) -> bool:
     side: "long" or "short". Filters that care about direction (HTF trend,
     MACD) check the side; symmetric filters (ADX, volume, ATR) ignore it.
     """
+    if params.use_time_filter:
+        if not _utc_time_filter_allows(params, last.get("timestamp")):
+            return False
+
     if params.use_htf_confirm:
         htf_bull = last.get("htf_bull")
         if pd.isna(htf_bull):
@@ -585,6 +835,13 @@ def _filter_gate_ok(last, params, side: str) -> bool:
         if pd.isna(atr_pct):
             return False
         if atr_pct < params.atr_min_pct:
+            return False
+
+    if params.use_atr_max_filter and params.atr_max_pct > 0:
+        atr_pct = last.get("filt_atr_pct")
+        if pd.isna(atr_pct):
+            return False
+        if atr_pct > params.atr_max_pct:
             return False
 
     if params.use_macd_confirm:
@@ -624,6 +881,7 @@ REGISTRY: dict[str, Strategy] = {
         EmaCrossoverStrategy(),
         RsiMeanReversionStrategy(),
         DonchianBreakoutStrategy(),
+        IntradayDonchianStrategy(),
         LiquiditySweepStrategy(),
     ]
 }

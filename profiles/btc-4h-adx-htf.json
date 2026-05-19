@@ -20,5 +20,43 @@
     "use_htf_confirm": true,
     "htf_timeframe": "1d",
     "htf_ema_period": 50
+  },
+  "parent": null,
+  "changelog": [
+    {
+      "at": "2026-05-19T04:40:14Z",
+      "message": "rebaseline performance with walk-forward + final holdout OOS"
+    }
+  ],
+  "performance": {
+    "kind": "walkforward",
+    "summary": {
+      "n_windows": 1,
+      "mean_test_ret": -0.6951815923421667,
+      "median_test_ret": -0.6951815923421667,
+      "stdev_test_ret": 0.0,
+      "positive_rate": 0.0,
+      "mean_test_mdd_pct": 3.544,
+      "total_test_trades": 3,
+      "total_train_trades": 1,
+      "unique_selected_configs": 1,
+      "selection_transition_rate": 0.0,
+      "tuned_keys": [
+        "ema_long",
+        "ema_short",
+        "ema_trend"
+      ],
+      "train_engine": "grid",
+      "dev_end_bar": 749,
+      "holdout_start_bar": 749,
+      "holdout_bars": 250,
+      "final_oos_return_pct": -1.0891676589420844,
+      "final_oos_trades": 1,
+      "final_oos_win_rate": 0.0,
+      "final_oos_mdd_pct": 1.0,
+      "final_oos_profit_factor": 0.0,
+      "final_oos_policy": "mode_selected_config"
+    },
+    "recorded_at": "2026-05-19T04:40:14Z"
   }
 }

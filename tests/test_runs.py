@@ -54,6 +54,17 @@ class TestRunsStore:
         assert loaded["meta"]["id"] == meta["id"]
         assert loaded["data"]["initial_balance"] == 1000.0
 
+    def test_save_portfolio_kind_roundtrip(self):
+        data = self._fake_data()
+        meta = runs_store.save_run(
+            kind="portfolio",
+            params={"strategy": "portfolio", "symbol": "BTC/USDT", "timeframe": "1h"},
+            data=data,
+        )
+        assert meta["kind"] == "portfolio"
+        loaded = runs_store.load_run(meta["id"])
+        assert loaded["meta"]["kind"] == "portfolio"
+
     def test_list_runs_newest_first(self):
         # Force distinct timestamps.
         m1 = runs_store.save_run(
@@ -152,6 +163,17 @@ class TestDeriveSummary:
         out = runs_store._derive_summary(data)
         assert out["max_drawdown_pct"] == pytest.approx(25.0)
 
+    def test_summary_includes_funding_pnl(self):
+        data = {
+            "initial_balance": 1000.0,
+            "balance": 1010.0,
+            "trades": [{"profit": 12.0}],
+            "cumulative_funding": -2.0,
+            "equity_history": [{"balance": 1000.0}, {"balance": 1010.0}],
+        }
+        out = runs_store._derive_summary(data)
+        assert out["funding_pnl"] == pytest.approx(-2.0)
+
 
 # ------------------------------------------------------- sweep runner ---
 
@@ -210,12 +232,12 @@ class TestSweepRunner:
                 base_params={}, matrix={"rsi_oversold": []}
             )
 
-    def test_over_200_configs_rejected(self, stubbed_fetch):
+    def test_over_400_configs_rejected(self, stubbed_fetch):
         sweep = stubbed_fetch.SweepJob()
         with pytest.raises(ValueError, match="Refusing to run"):
             sweep.start(
                 base_params={},
-                matrix={"rsi_oversold": list(range(201))},
+                matrix={"rsi_oversold": list(range(401))},
             )
 
     def test_second_start_while_running_raises(self, stubbed_fetch):

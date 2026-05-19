@@ -3,8 +3,16 @@ import type {
   DashboardData,
   DataSource,
   LiveStatus,
+  PortfolioRiskConfig,
+  PortfolioRunResponse,
+  ReadinessResponse,
+  RegimeExpectancyResponse,
+  DivergenceResponse,
+  TournamentRunResponse,
   ProfileDoc,
   ProfileMeta,
+  ProfilesWalkforwardRebaselineResponse,
+  ProfilesWalkforwardRebaselineStart,
   RunMeta,
   RunPayload,
   SaveProfilePayload,
@@ -14,6 +22,7 @@ import type {
   SweepStart,
   SweepStatus,
   WalkforwardStart,
+  WalkforwardStabilityResponse,
   WalkforwardStatus,
 } from "./types";
 
@@ -172,6 +181,126 @@ export function walkforwardCancel(): Promise<WalkforwardStatus> {
   return request("/walkforward/cancel", { method: "POST" });
 }
 
+export function walkforwardStability(
+  signal?: AbortSignal
+): Promise<WalkforwardStabilityResponse> {
+  return request("/walkforward/stability", { signal });
+}
+
+export async function downloadWalkforwardStabilityCsv(): Promise<void> {
+  const res = await fetch(`${API}/api/walkforward/stability.csv`);
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "walkforward_stability.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+export async function downloadWalkforwardWindowsCsv(): Promise<void> {
+  const res = await fetch(`${API}/api/walkforward/windows.csv`);
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "walkforward_windows.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+export async function downloadWalkforwardReportJson(): Promise<void> {
+  const res = await fetch(`${API}/api/walkforward/report.json`);
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "walkforward_report.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// -------------------------------------------------------------- regime
+export function regimeExpectancy(
+  body: { params: Partial<StrategyParams>; strategies?: string[] }
+): Promise<RegimeExpectancyResponse> {
+  return request("/regime/expectancy", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function portfolioRun(body: {
+  params: Partial<StrategyParams>;
+  weights: Record<string, number>;
+  risk?: Partial<PortfolioRiskConfig>;
+}): Promise<PortfolioRunResponse> {
+  return request("/portfolio/run", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function tournamentRun(body: {
+  profiles?: string[];
+  train_bars?: number;
+  test_bars?: number;
+  step?: number;
+  mc_sims?: number;
+  train_engine?: "grid" | "optuna";
+  optuna_trials?: number;
+  optuna_seed?: number;
+  min_pos_rate?: number;
+  min_oos_ret?: number;
+  dry_run?: boolean;
+}): Promise<TournamentRunResponse> {
+  return request("/tournament/run", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function monitorDivergence(body: {
+  run_id?: string;
+  compare_bars?: number;
+  thresholds?: Record<string, number>;
+} = {}): Promise<DivergenceResponse> {
+  return request("/monitor/divergence", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function monitorReadiness(body: {
+  days?: number;
+  min_aligned_pct?: number;
+  min_samples?: number;
+  compare_bars?: number;
+  thresholds?: Record<string, number>;
+  min_avg_timestamp_match_rate?: number;
+  max_avg_mean_abs_pnl_delta_pct?: number;
+} = {}): Promise<ReadinessResponse> {
+  return request("/monitor/readiness", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
 // -------------------------------------------------------------- profiles
 // Named parameter presets persisted to disk on the backend. The list
 // endpoint returns lightweight summaries; only fetch the full params
@@ -214,5 +343,14 @@ export function deleteProfile(
 ): Promise<{ deleted: boolean }> {
   return request(`/profiles/${encodeURIComponent(name)}`, {
     method: "DELETE",
+  });
+}
+
+export function rebaselineProfilesWalkforward(
+  body: ProfilesWalkforwardRebaselineStart
+): Promise<ProfilesWalkforwardRebaselineResponse> {
+  return request("/profiles/rebaseline/walkforward", {
+    method: "POST",
+    body: JSON.stringify(body),
   });
 }

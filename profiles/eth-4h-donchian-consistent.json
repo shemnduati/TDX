@@ -15,5 +15,43 @@
     "use_adx_filter": false,
     "adx_min": 0.0,
     "adx_max": 0.0
+  },
+  "parent": null,
+  "changelog": [
+    {
+      "at": "2026-05-19T04:40:37Z",
+      "message": "rebaseline performance with walk-forward + final holdout OOS"
+    }
+  ],
+  "performance": {
+    "kind": "walkforward",
+    "summary": {
+      "n_windows": 1,
+      "mean_test_ret": -0.47890726803935785,
+      "median_test_ret": -0.47890726803935785,
+      "stdev_test_ret": 0.0,
+      "positive_rate": 0.0,
+      "mean_test_mdd_pct": 2.11,
+      "total_test_trades": 3,
+      "total_train_trades": 5,
+      "unique_selected_configs": 1,
+      "selection_transition_rate": 0.0,
+      "tuned_keys": [
+        "breakout_atr_mult",
+        "donchian_period",
+        "ema_trend"
+      ],
+      "train_engine": "grid",
+      "dev_end_bar": 749,
+      "holdout_start_bar": 749,
+      "holdout_bars": 250,
+      "final_oos_return_pct": -3.567897580486613,
+      "final_oos_trades": 8,
+      "final_oos_win_rate": 25.0,
+      "final_oos_mdd_pct": 6.148,
+      "final_oos_profit_factor": 0.44,
+      "final_oos_policy": "mode_selected_config"
+    },
+    "recorded_at": "2026-05-19T04:40:37Z"
   }
 }

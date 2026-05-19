@@ -392,3 +392,51 @@ def test_profile_round_trip_survives_save_load_get(client):
             f"field {k!r} did not round-trip "
             f"(got {params.get(k)!r}, expected {v!r})"
         )
+
+
+def test_profiles_rebaseline_walkforward_endpoint_dry_run(client, monkeypatch):
+    import dashboard
+
+    captured = {}
+
+    def fake_run_rebaseline(**kwargs):
+        captured.update(kwargs)
+        return {
+            "ok": 1,
+            "total": 1,
+            "dry_run": True,
+            "elapsed_secs": 0.123,
+            "started_with": {"profiles": ["p1"]},
+            "rows": [{"name": "p1", "ok": True, "summary": {"mean_test_ret": 1.0}}],
+        }
+
+    monkeypatch.setattr(dashboard, "run_rebaseline", fake_run_rebaseline)
+    res = client.post(
+        "/profiles/rebaseline/walkforward",
+        data=json.dumps(
+            {
+                "profiles": ["p1"],
+                "dry_run": True,
+                "train_engine": "grid",
+                "optuna_trials": 9,
+            }
+        ),
+        content_type="application/json",
+    )
+    assert res.status_code == 200
+    body = res.get_json()
+    assert body["ok"] == 1
+    assert body["profiles_updated"] == 0
+    assert captured["profile_names"] == ["p1"]
+    assert captured["dry_run"] is True
+    assert captured["wf_train_engine"] == "grid"
+
+
+def test_profiles_rebaseline_walkforward_rejects_bad_profiles_type(client):
+    res = client.post(
+        "/profiles/rebaseline/walkforward",
+        data=json.dumps({"profiles": "not-a-list"}),
+        content_type="application/json",
+    )
+    assert res.status_code == 400
+    assert "profiles must be a list" in res.get_json()["error"]

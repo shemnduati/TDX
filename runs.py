@@ -1,7 +1,8 @@
 """
 Run storage.
 
-Each "run" is a single backtest or live session the user wants to keep. It
+Each "run" is a single backtest, live session, or portfolio run the user wants
+to keep. It
 lives on disk under RUNS_DIR as a directory:
 
     runs/<id>/
@@ -9,7 +10,7 @@ lives on disk under RUNS_DIR as a directory:
         data.json   # {equity_history, trades, balance, position, ...}
 
 `id` is a timestamp + short random suffix, sortable and human-friendly.
-`kind` is one of "backtest" | "live".
+`kind` is one of "backtest" | "live" | "portfolio".
 `data.json` matches the exact shape produced by PaperTrader.save_data(),
 so it can be served directly to the frontend without transformation.
 """
@@ -62,8 +63,10 @@ def save_run(
     label: Optional[str] = None,
 ) -> dict:
     """Persist a run and return its meta dict."""
-    if kind not in ("backtest", "live"):
-        raise ValueError(f"kind must be 'backtest' or 'live', got {kind!r}")
+    if kind not in ("backtest", "live", "portfolio"):
+        raise ValueError(
+            f"kind must be 'backtest', 'live', or 'portfolio', got {kind!r}"
+        )
 
     run_id = _new_id()
     run_dir = _run_dir(run_id)
@@ -104,6 +107,7 @@ def _derive_summary(data: dict) -> dict:
     equity = data.get("equity_history") or []
     initial = float(data.get("initial_balance") or 0)
     balance = float(data.get("balance") or initial)
+    funding = float(data.get("cumulative_funding") or 0.0)
     wins = [t for t in trades if float(t.get("profit", 0)) > 0]
     total_pnl = balance - initial if initial else 0.0
 
@@ -142,6 +146,7 @@ def _derive_summary(data: dict) -> dict:
         "total_pnl": total_pnl,
         "return_pct": (total_pnl / initial * 100) if initial else 0.0,
         "balance": balance,
+        "funding_pnl": funding,
         "profit_factor": round(pf, 3),
         "trade_sharpe": round(sharpe, 3),
         "max_drawdown_pct": round(max_dd, 3),

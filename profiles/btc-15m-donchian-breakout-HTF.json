@@ -4,35 +4,42 @@
   "source": "run:20260419T153317-5570 (backtest \u00b7 donchian_breakout \u00b7 BTC/USDT \u00b7 15m)",
   "parent": null,
   "created_at": "2026-04-19T15:41:53Z",
-  "changelog": [],
+  "changelog": [
+    {
+      "at": "2026-05-19T04:39:33Z",
+      "message": "rebaseline performance with walk-forward + final holdout OOS"
+    }
+  ],
   "performance": {
-    "kind": "backtest",
-    "run_id": "20260419T153317-5570",
+    "kind": "walkforward",
     "summary": {
-      "avg_trade_pnl": 3.229,
-      "balance": 1200.2008731205963,
-      "bars": 9898,
-      "fees_paid": 137.94186242055267,
-      "gross_pnl": 338.1427355411492,
-      "losses": 38,
-      "max_drawdown_pct": 14.791,
-      "profit_factor": 1.243,
-      "reasons": {
-        "backtest_end": 1,
-        "reverse": 22,
-        "stop_loss": 17,
-        "take_profit": 22
-      },
-      "return_pct": 20.02008731205965,
-      "skipped_by_cooldown": 6,
-      "timeframe": "15m",
-      "total_pnl": 200.2008731205965,
-      "trade_sharpe": 0.096,
-      "trades": 62,
-      "win_rate": 38.70967741935484,
-      "wins": 24
+      "n_windows": 1,
+      "mean_test_ret": -1.3382883452263488,
+      "median_test_ret": -1.3382883452263488,
+      "stdev_test_ret": 0.0,
+      "positive_rate": 0.0,
+      "mean_test_mdd_pct": 2.491,
+      "total_test_trades": 3,
+      "total_train_trades": 3,
+      "unique_selected_configs": 1,
+      "selection_transition_rate": 0.0,
+      "tuned_keys": [
+        "breakout_atr_mult",
+        "donchian_period",
+        "ema_trend"
+      ],
+      "train_engine": "grid",
+      "dev_end_bar": 749,
+      "holdout_start_bar": 749,
+      "holdout_bars": 250,
+      "final_oos_return_pct": 1.6089667752426442,
+      "final_oos_trades": 1,
+      "final_oos_win_rate": 100.0,
+      "final_oos_mdd_pct": 1.383,
+      "final_oos_profit_factor": 999.0,
+      "final_oos_policy": "mode_selected_config"
     },
-    "recorded_at": "2026-04-19T15:41:53Z"
+    "recorded_at": "2026-05-19T04:39:33Z"
   },
   "params": {
     "timeframe": "15m",

@@ -45,6 +45,14 @@ npm install
 npm run dev
 ```
 
+**One terminal:** Vite + Flask on port 5001 (avoids `ECONNREFUSED` on `/api/walkforward/...`, `/api/sweep/...`, etc.):
+
+```powershell
+cd frontend
+npm install
+npm run dev:with-api
+```
+
 Open http://127.0.0.1:5173. The Vite dev server proxies
 `/api/*` → `http://127.0.0.1:5001/*`, so no CORS hassle in dev.
 
