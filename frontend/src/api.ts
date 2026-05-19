@@ -7,6 +7,7 @@ import type {
   PortfolioRunResponse,
   ReadinessResponse,
   RegimeExpectancyResponse,
+  SessionExpectancyResponse,
   DivergenceResponse,
   TournamentRunResponse,
   ProfileDoc,
@@ -240,6 +241,17 @@ export function regimeExpectancy(
   body: { params: Partial<StrategyParams>; strategies?: string[] }
 ): Promise<RegimeExpectancyResponse> {
   return request("/regime/expectancy", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export function sessionExpectancy(body: {
+  params: Partial<StrategyParams>;
+  strategies?: string[];
+  weekend_split?: boolean;
+}): Promise<SessionExpectancyResponse> {
+  return request("/session/expectancy", {
     method: "POST",
     body: JSON.stringify(body),
   });

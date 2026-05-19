@@ -442,6 +442,8 @@ const FIELD_META: Record<
     help: "0.03 = 3% of price",
   },
   use_time_filter: { label: "Time filter (UTC)", type: "text" },
+  allowed_sessions: { label: "Allowed sessions", type: "text" },
+  block_weekends: { label: "Block weekends", type: "boolean" },
   time_start_utc_mins: {
     label: "Start (min from midnight)",
     type: "number",
@@ -630,6 +632,59 @@ export function StrategyForm({
             );
           })}
         </div>
+      </Section>
+
+      {/* ---- Session filter ------------------------------------------- */}
+      <Section title="Session filter (UTC)">
+        <p className="mb-3 text-[11px] text-slate-500">
+          Leave all unchecked to allow all sessions. Check specific sessions to
+          restrict entries to those UTC windows only. Block weekends eliminates
+          Saturday / Sunday bars.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          {(
+            [
+              { id: "asia", label: "Asia (00-07)" },
+              { id: "london", label: "London (07-13)" },
+              { id: "overlap", label: "Overlap (13-16)" },
+              { id: "ny", label: "NY (16-22)" },
+              { id: "off", label: "Off (22-24)" },
+            ] as const
+          ).map(({ id, label }) => {
+            const checked = (params.allowed_sessions ?? []).includes(id);
+            return (
+              <label
+                key={id}
+                className="flex cursor-pointer items-center gap-1.5 text-xs text-slate-300"
+              >
+                <input
+                  type="checkbox"
+                  disabled={disabled}
+                  checked={checked}
+                  className="h-4 w-4 rounded border-slate-700 bg-slate-950"
+                  onChange={(e) => {
+                    const current = params.allowed_sessions ?? [];
+                    const next = e.target.checked
+                      ? [...current, id]
+                      : current.filter((s) => s !== id);
+                    set("allowed_sessions", next as unknown as StrategyParams["allowed_sessions"]);
+                  }}
+                />
+                {label}
+              </label>
+            );
+          })}
+        </div>
+        <label className="mt-3 flex cursor-pointer items-center gap-1.5 text-xs text-slate-300">
+          <input
+            type="checkbox"
+            disabled={disabled}
+            checked={params.block_weekends ?? false}
+            className="h-4 w-4 rounded border-slate-700 bg-slate-950"
+            onChange={(e) => set("block_weekends", e.target.checked)}
+          />
+          Block weekends (Sat / Sun UTC)
+        </label>
       </Section>
 
       <Section title="ATR sizing (volatility-scaled risk)">

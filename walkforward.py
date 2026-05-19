@@ -72,7 +72,8 @@ from strategies import get_strategy, list_strategies
 
 
 def _param_key(params: Params) -> tuple:
-    return tuple(sorted(params.__dict__.items()))
+    # repr() each value so mixed-type fields (e.g. tuple vs int) sort safely.
+    return tuple(sorted((k, repr(v)) for k, v in params.__dict__.items()))
 
 
 def _cartesian_candidates(base: Params, matrix: dict[str, list]) -> list[Params]:
@@ -101,6 +102,10 @@ def _default_tuning_matrix(params: Params) -> dict[str, list]:
 
     Keep this intentionally small to avoid brute-force overfitting in each train
     window while still testing local robustness around the baseline profile.
+
+    Each strategy also gets a small set of allowed_sessions candidates so the
+    tournament can auto-discover the best session subset. Tuples are hashable
+    and pass through _cartesian_candidates / Optuna suggest_categorical.
     """
     s = params.strategy
     if s == "ema_crossover":
@@ -108,30 +113,56 @@ def _default_tuning_matrix(params: Params) -> dict[str, list]:
             "ema_short": sorted({params.ema_short, _i(params.ema_short, 0.8), _i(params.ema_short, 1.2)}),
             "ema_long": sorted({params.ema_long, _i(params.ema_long, 0.85), _i(params.ema_long, 1.15)}),
             "ema_trend": sorted({params.ema_trend, _i(params.ema_trend, 0.85), _i(params.ema_trend, 1.15)}),
+            "allowed_sessions": [
+                (),
+                ("london", "overlap", "ny"),
+                ("overlap", "ny"),
+            ],
         }
     if s == "rsi_mean_reversion":
         return {
             "rsi_oversold": sorted({params.rsi_oversold, max(5.0, params.rsi_oversold - 5.0), min(45.0, params.rsi_oversold + 5.0)}),
             "rsi_overbought": sorted({params.rsi_overbought, max(55.0, params.rsi_overbought - 5.0), min(95.0, params.rsi_overbought + 5.0)}),
             "mr_regime_adx_max": sorted({params.mr_regime_adx_max, 20.0, 25.0}) if params.mr_regime_adx_max > 0 else [0.0, 20.0, 25.0],
+            "allowed_sessions": [
+                (),
+                ("asia",),
+                ("asia", "off"),
+            ],
         }
     if s == "donchian_breakout":
         return {
             "donchian_period": sorted({params.donchian_period, _i(params.donchian_period, 0.75), _i(params.donchian_period, 1.25)}),
             "ema_trend": sorted({params.ema_trend, _i(params.ema_trend, 0.85), _i(params.ema_trend, 1.15)}),
             "breakout_atr_mult": sorted({params.breakout_atr_mult, max(0.2, params.breakout_atr_mult - 0.2), params.breakout_atr_mult + 0.2}),
+            "allowed_sessions": [
+                (),
+                ("london",),
+                ("london", "overlap"),
+                ("overlap", "ny"),
+            ],
         }
     if s == "intraday_donchian":
         return {
             "donchian_period": sorted({params.donchian_period, _i(params.donchian_period, 0.8), _i(params.donchian_period, 1.2)}),
             "atr_ma_period": sorted({params.atr_ma_period, _i(params.atr_ma_period, 0.8), _i(params.atr_ma_period, 1.2)}),
             "breakout_atr_mult": sorted({params.breakout_atr_mult, max(0.2, params.breakout_atr_mult - 0.2), params.breakout_atr_mult + 0.2}),
+            "allowed_sessions": [
+                (),
+                ("london", "overlap"),
+                ("overlap", "ny"),
+            ],
         }
     if s == "liquidity_sweep":
         return {
             "sweep_lookback": sorted({params.sweep_lookback, _i(params.sweep_lookback, 0.8), _i(params.sweep_lookback, 1.2)}),
             "sweep_adx_max": sorted({params.sweep_adx_max, 20.0, 25.0, 30.0}),
             "sweep_volume_mult": sorted({params.sweep_volume_mult, max(1.1, params.sweep_volume_mult - 0.2), params.sweep_volume_mult + 0.2}),
+            "allowed_sessions": [
+                (),
+                ("london", "overlap"),
+                ("overlap", "ny"),
+            ],
         }
     return {}
 
@@ -141,6 +172,22 @@ def _normalize_train_engine(name: str) -> str:
     if n not in {"grid", "optuna"}:
         raise ValueError(f"train_engine must be 'grid' or 'optuna', got {name!r}")
     return n
+
+
+def resolve_train_engine(name: str) -> tuple[str, str | None]:
+    """Resolve requested train engine, falling back to grid when Optuna is absent."""
+    requested = _normalize_train_engine(name)
+    if requested != "optuna":
+        return requested, None
+    try:
+        import optuna  # noqa: F401
+    except ImportError:
+        return (
+            "grid",
+            "train_engine='optuna' requires optional dependency 'optuna'. "
+            "Install: pip install optuna>=3",
+        )
+    return "optuna", None
 
 
 def _search_space_cartesian(matrix: dict[str, list[Any]]) -> int:

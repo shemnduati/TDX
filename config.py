@@ -196,6 +196,12 @@ USE_TIME_FILTER = False
 TIME_START_UTC_MINS = 8 * 60
 TIME_END_UTC_MINS = 20 * 60
 
+# Session-aware filter. Empty tuple = all sessions allowed.
+# Valid values: "asia", "london", "overlap", "ny", "off".
+ALLOWED_SESSIONS: tuple[str, ...] = ()
+# Block Saturday and Sunday bars entirely.
+BLOCK_WEEKENDS: bool = False
+
 # --- Mean-reversion–specific (rsi_mean_reversion only) --------------------
 # 0 = off. When >0, only trade when ADX < this (ranging; uses filter_adx_period).
 MR_REGIME_ADX_MAX = 0.0

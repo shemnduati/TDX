@@ -21,7 +21,7 @@ from typing import Any, Optional
 
 from backtest import Params
 import profiles as profile_store
-from walkforward import walk_forward
+from walkforward import resolve_train_engine, walk_forward
 
 
 def _performance_summary_from_wf(r: dict[str, Any]) -> dict[str, Any]:
@@ -118,6 +118,9 @@ def run_rebaseline(
     if int(wf_optuna_trials) < 1:
         raise ValueError("wf_optuna_trials must be >= 1")
 
+    requested_engine = str(wf_train_engine).strip().lower()
+    effective_engine, fallback_reason = resolve_train_engine(requested_engine)
+
     selected = [str(x).strip() for x in (profile_names or []) if str(x).strip()]
     names = selected or profile_store.list_profiles()
     if not names:
@@ -135,7 +138,12 @@ def run_rebaseline(
         print(
             f"Rebaseline {len(names)} profile(s): "
             f"train={train_bars} test={test_bars} step={step or test_bars} "
-            f"engine={wf_train_engine}"
+            f"engine={effective_engine}"
+            + (
+                f" (requested={requested_engine}, fallback={fallback_reason})"
+                if fallback_reason
+                else ""
+            )
         )
     t0 = time.time()
     for i, name in enumerate(names, 1):
@@ -148,7 +156,7 @@ def run_rebaseline(
                 int(test_bars),
                 int(step) if step is not None else None,
                 mc_sims=int(mc_sims),
-                train_engine=str(wf_train_engine),
+                train_engine=str(effective_engine),
                 optuna_trials=int(wf_optuna_trials),
                 optuna_seed=int(wf_optuna_seed),
             )
@@ -194,12 +202,16 @@ def run_rebaseline(
         "dry_run": bool(dry_run),
         "elapsed_secs": round(elapsed, 3),
         "rows": out_rows,
+        "requested_engine": requested_engine,
+        "effective_engine": effective_engine,
+        "fallback_reason": fallback_reason,
         "started_with": {
             "train_bars": int(train_bars),
             "test_bars": int(test_bars),
             "step": int(step) if step is not None else None,
             "mc_sims": int(mc_sims),
-            "train_engine": str(wf_train_engine),
+            "train_engine": effective_engine,
+            "requested_engine": requested_engine,
             "optuna_trials": int(wf_optuna_trials),
             "optuna_seed": int(wf_optuna_seed),
             "profiles": names,

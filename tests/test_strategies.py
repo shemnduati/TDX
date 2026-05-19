@@ -22,6 +22,7 @@ from strategies import (
     DonchianBreakoutStrategy,
     EmaCrossoverStrategy,
     RsiMeanReversionStrategy,
+    _utc_time_filter_allows,
     attach_htf_trend,
     filters_pass,
     get_strategy,
@@ -389,3 +390,61 @@ class TestHtfAttach:
         merged = attach_htf_trend(ltf, ltf.iloc[0:0], ema_period=3)
         assert "htf_close" in merged.columns
         assert merged["htf_close"].isna().all()
+
+
+class TestSessionFilter:
+    """Tests for _utc_time_filter_allows with allowed_sessions / block_weekends."""
+
+    def _p(self, **kw):
+        """Build a Params-like object via Params dataclass."""
+        return Params(**kw)
+
+    def test_allowed_sessions_filters_entries_outside_window(self):
+        """A bar in the NY session (17:00 UTC) should be rejected when only
+        asia + london are allowed."""
+        ny_ts = pd.Timestamp("2024-01-03 17:30:00", tz="UTC")  # Wednesday NY
+        p = self._p(allowed_sessions=("asia", "london"), use_time_filter=False)
+        assert _utc_time_filter_allows(p, ny_ts) is False
+
+    def test_allowed_sessions_permits_bar_in_allowed_session(self):
+        london_ts = pd.Timestamp("2024-01-03 09:00:00", tz="UTC")  # Wednesday London
+        p = self._p(allowed_sessions=("london",), use_time_filter=False)
+        assert _utc_time_filter_allows(p, london_ts) is True
+
+    def test_empty_allowed_sessions_allows_all(self):
+        """Empty tuple (default) disables the session gate."""
+        ny_ts = pd.Timestamp("2024-01-03 17:30:00", tz="UTC")
+        p = self._p(allowed_sessions=(), use_time_filter=False)
+        assert _utc_time_filter_allows(p, ny_ts) is True
+
+    def test_block_weekends_blocks_saturday(self):
+        sat_ts = pd.Timestamp("2024-01-06 12:00:00", tz="UTC")  # Saturday
+        p = self._p(block_weekends=True, use_time_filter=False)
+        assert _utc_time_filter_allows(p, sat_ts) is False
+
+    def test_block_weekends_blocks_sunday(self):
+        sun_ts = pd.Timestamp("2024-01-07 12:00:00", tz="UTC")  # Sunday
+        p = self._p(block_weekends=True, use_time_filter=False)
+        assert _utc_time_filter_allows(p, sun_ts) is False
+
+    def test_block_weekends_allows_weekday(self):
+        mon_ts = pd.Timestamp("2024-01-08 12:00:00", tz="UTC")  # Monday
+        p = self._p(block_weekends=True, use_time_filter=False)
+        assert _utc_time_filter_allows(p, mon_ts) is True
+
+    def test_session_and_weekend_combined(self):
+        """A Saturday bar in the 'london' session should be blocked when both
+        filters are active."""
+        sat_london = pd.Timestamp("2024-01-06 10:00:00", tz="UTC")  # Sat London hour
+        p = self._p(
+            allowed_sessions=("london",),
+            block_weekends=True,
+            use_time_filter=False,
+        )
+        assert _utc_time_filter_allows(p, sat_london) is False
+
+    def test_legacy_time_filter_still_works(self):
+        """use_time_filter=True with a narrow window still rejects bars outside it."""
+        ts = pd.Timestamp("2024-01-03 05:00:00", tz="UTC")  # 05:00 outside 08:00–20:00
+        p = self._p(use_time_filter=True, time_start_utc_mins=480, time_end_utc_mins=1200)
+        assert _utc_time_filter_allows(p, ts) is False

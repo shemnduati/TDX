@@ -673,6 +673,13 @@ function RebaselineResultCard({
         <div className="text-[11px] text-slate-300">
           Last run: {result.ok}/{result.total} ok · {fails.length} failed ·{" "}
           {result.elapsed_secs.toFixed(1)}s
+          {result.fallback_reason && (
+            <>
+              {" "}
+              · engine {result.effective_engine ?? "grid"} (requested{" "}
+              {result.requested_engine ?? "optuna"}, Optuna unavailable)
+            </>
+          )}
         </div>
         <div className="flex items-center gap-1.5">
           <button

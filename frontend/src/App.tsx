@@ -21,6 +21,7 @@ import {
   portfolioRun,
   renameRun,
   regimeExpectancy,
+  sessionExpectancy,
   rebaselineProfilesWalkforward,
   runBacktest,
   saveProfile,
@@ -43,6 +44,7 @@ import type {
   PortfolioRiskConfig,
   ReadinessResponse,
   RegimeExpectancyResponse,
+  SessionExpectancyResponse,
   ProfileDoc,
   ProfileMeta,
   ProfilePerformance,
@@ -142,6 +144,7 @@ export default function App() {
   const [wfBusy, setWfBusy] = useState(false);
   const [regimeBusy, setRegimeBusy] = useState(false);
   const [regimeData, setRegimeData] = useState<RegimeExpectancyResponse | null>(null);
+  const [sessionData, setSessionData] = useState<SessionExpectancyResponse | null>(null);
   const [portfolioBusy, setPortfolioBusy] = useState(false);
   const [portfolioResult, setPortfolioResult] = useState<PortfolioRunResponse | null>(null);
   const [automationBusy, setAutomationBusy] = useState(false);
@@ -809,6 +812,26 @@ export default function App() {
     }
   }, [backtestParams]);
 
+  const handleSessionRun = useCallback(
+    async (weekendSplit: boolean) => {
+      if (!backtestParams) return;
+      setRegimeBusy(true);
+      setError(null);
+      try {
+        const res = await sessionExpectancy({
+          params: backtestParams,
+          weekend_split: weekendSplit,
+        });
+        setSessionData(res);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : String(e));
+      } finally {
+        setRegimeBusy(false);
+      }
+    },
+    [backtestParams]
+  );
+
   const handlePortfolioRun = useCallback(
     async (weights: Record<string, number>, risk: PortfolioRiskConfig) => {
       if (!backtestParams) return;
@@ -1132,8 +1155,10 @@ export default function App() {
             params={backtestParams}
             busy={regimeBusy}
             data={regimeData}
+            sessionData={sessionData}
             error={error}
             onRun={handleRegimeRun}
+            onRunSession={handleSessionRun}
           />
         )}
 

@@ -8,17 +8,27 @@ def test_tournament_optuna_importerror_falls_back_to_grid(monkeypatch):
 
     def _fake_run_rebaseline(**kwargs):
         calls.append(str(kwargs.get("wf_train_engine")))
-        if kwargs.get("wf_train_engine") == "optuna":
-            raise ImportError("optuna missing")
-        return {"rows": [], "ok": 0, "total": 0}
+        return {
+            "rows": [],
+            "ok": 0,
+            "total": 0,
+            "requested_engine": "optuna",
+            "effective_engine": "grid",
+            "fallback_reason": "optuna missing",
+        }
 
+    monkeypatch.setattr(
+        automation,
+        "resolve_train_engine",
+        lambda _: ("grid", "optuna missing"),
+    )
     monkeypatch.setattr(automation, "run_rebaseline", _fake_run_rebaseline)
     out = automation.run_weekly_tournament(
         profile_names=[],
         dry_run=True,
         wf_train_engine="optuna",
     )
-    assert calls == ["optuna", "grid"]
+    assert calls == ["optuna"]
     assert out["requested_engine"] == "optuna"
     assert out["effective_engine"] == "grid"
     assert "optuna" in str(out.get("fallback_reason", "")).lower()

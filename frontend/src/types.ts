@@ -113,6 +113,10 @@ export interface StrategyParams {
   /** Minutes from midnight UTC, start inclusive. */
   time_start_utc_mins: number;
   time_end_utc_mins: number;
+  /** Named UTC session buckets to allow. Empty array = all sessions. */
+  allowed_sessions: string[];
+  /** Block Saturday and Sunday UTC bars entirely. */
+  block_weekends: boolean;
   /** rsi_mean_reversion: only trade when ADX < this (0 = off). */
   mr_regime_adx_max: number;
   slippage_pct: number;
@@ -324,12 +328,16 @@ export interface ProfilesWalkforwardRebaselineResponse {
   dry_run: boolean;
   elapsed_secs: number;
   profiles_updated: number;
+  requested_engine?: "grid" | "optuna" | string;
+  effective_engine?: "grid" | "optuna" | string;
+  fallback_reason?: string | null;
   started_with: {
     train_bars: number;
     test_bars: number;
     step: number | null;
     mc_sims: number;
     train_engine: "grid" | "optuna" | string;
+    requested_engine?: "grid" | "optuna" | string;
     optuna_trials: number;
     optuna_seed: number;
     profiles: string[];
@@ -497,6 +505,28 @@ export interface RegimeExpectancyResponse {
   strategies: string[];
   regimes: string[];
   rows: RegimeExpectancyRow[];
+}
+
+export interface SessionExpectancyRow {
+  strategy: string;
+  /** session bucket, optionally suffixed with |weekday or |weekend */
+  session: string;
+  trades: number;
+  win_rate: number;
+  avg_pnl: number;
+  expectancy_pct: number;
+  total_pnl: number;
+  return_pct: number;
+}
+
+export interface SessionExpectancyResponse {
+  symbol: string;
+  timeframe: string;
+  bars: number;
+  strategies: string[];
+  sessions: string[];
+  weekend_split: boolean;
+  rows: SessionExpectancyRow[];
 }
 
 // ---- Portfolio runner -------------------------------------------------

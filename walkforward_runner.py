@@ -40,6 +40,7 @@ from walkforward import (
     _normalize_train_engine,
     _param_key,
     _search_space_cartesian,
+    resolve_train_engine,
     select_best_train_config,
 )
 
@@ -72,7 +73,8 @@ class WalkforwardJob:
                 raise ValueError("train_bars and test_bars must be > 0")
             if step is not None and step <= 0:
                 raise ValueError("step must be > 0")
-            eng = _normalize_train_engine(train_engine)
+            requested_engine = _normalize_train_engine(train_engine)
+            eng, fallback_reason = resolve_train_engine(requested_engine)
             ot = int(optuna_trials)
             if ot < 1:
                 raise ValueError("optuna_trials must be >= 1")
@@ -92,6 +94,8 @@ class WalkforwardJob:
                     "tuned_keys": [],
                     "mc_sims": int(mc_sims),
                     "train_engine": eng,
+                    "requested_engine": requested_engine,
+                    "fallback_reason": fallback_reason,
                     "optuna_trials_requested": ot if eng == "optuna" else None,
                     "optuna_trials_effective": None,
                     "optuna_seed": int(optuna_seed) if eng == "optuna" else None,

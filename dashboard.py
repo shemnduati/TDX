@@ -44,6 +44,7 @@ Endpoints:
     GET  /walkforward/windows.csv     CSV per-window diagnostics + chosen params
     GET  /walkforward/report.json     full latest WFO job as JSON (download)
     POST /regime/expectancy           strategy x regime expectancy heatmap payload
+    POST /session/expectancy          strategy x session expectancy heatmap payload
     POST /tournament/run              weekly WFO rerun + auto promote/demote
     POST /monitor/divergence          live-paper vs backtest divergence report
     POST /monitor/readiness           rolling readiness from live divergence
@@ -95,10 +96,10 @@ from automation import (
 from experiments.rebaseline_profiles_walkforward import run_rebaseline
 from live_bot import LIVE
 from portfolio import PortfolioRiskConfig, run_multi_strategy_portfolio
-from regime import strategy_regime_expectancy
+from regime import strategy_regime_expectancy, strategy_session_expectancy
 from strategies import REGISTRY as STRATEGY_REGISTRY
 from sweep_runner import SWEEP
-from walkforward import _normalize_train_engine, walkforward_report_payload
+from walkforward import _normalize_train_engine, resolve_train_engine, walkforward_report_payload
 from walkforward_runner import WALKFORWARD
 
 
@@ -187,9 +188,24 @@ def _params_from_payload(payload: dict) -> Params:
         "use_breakout_rsi",
         "use_atr_expansion",
         "enable_funding",
+        "block_weekends",
     }
     for k in bool_fields & overrides.keys():
         overrides[k] = bool(overrides[k])
+    # allowed_sessions: list[str] -> tuple[str, ...]; validate each bucket name.
+    _valid_sessions = {"asia", "london", "overlap", "ny", "off"}
+    if "allowed_sessions" in overrides:
+        raw_sessions = overrides["allowed_sessions"]
+        if isinstance(raw_sessions, (list, tuple)):
+            bad = [s for s in raw_sessions if str(s) not in _valid_sessions]
+            if bad:
+                raise ValueError(
+                    f"allowed_sessions contains invalid values: {bad}. "
+                    f"Valid: {sorted(_valid_sessions)}"
+                )
+            overrides["allowed_sessions"] = tuple(str(s) for s in raw_sessions)
+        else:
+            raise ValueError("allowed_sessions must be an array")
     return replace(defaults, **overrides)
 
 
@@ -550,7 +566,8 @@ def walkforward_start():
 
     te_raw = body.get("train_engine", "grid")
     try:
-        train_engine = _normalize_train_engine(str(te_raw))
+        requested_engine = _normalize_train_engine(str(te_raw))
+        train_engine, _fallback_reason = resolve_train_engine(requested_engine)
     except ValueError as e:
         return _json_error(str(e))
 
@@ -814,6 +831,48 @@ def regime_expectancy():
             df_raw=df_raw,
             apply_full_indicators_fn=apply_full_indicators,
             replay_on_df_fn=replay_on_df,
+            include_unknown=False,
+        )
+    except Exception as e:
+        return _json_error(
+            f"{type(e).__name__}: {e}\n{traceback.format_exc(limit=3)}", 500
+        )
+    payload["symbol"] = params.symbol
+    payload["timeframe"] = params.timeframe
+    payload["bars"] = params.bars
+    return jsonify(payload)
+
+
+@app.route("/session/expectancy", methods=["POST"])
+def session_expectancy():
+    """Build strategy x session expectancy from replayed historical trades."""
+    body = request.get_json(silent=True) or {}
+    try:
+        params = _params_from_payload(body.get("params") or {})
+    except ValueError as e:
+        return _json_error(str(e))
+
+    raw = body.get("strategies")
+    if raw is None:
+        strategy_names = sorted(STRATEGY_REGISTRY.keys())
+    elif isinstance(raw, list):
+        strategy_names = [str(s) for s in raw if str(s) in STRATEGY_REGISTRY]
+        if not strategy_names:
+            return _json_error("strategies list has no valid strategy names")
+    else:
+        return _json_error("strategies must be an array of names")
+
+    weekend_split = bool(body.get("weekend_split", False))
+
+    try:
+        df_raw = fetch_data(params)
+        payload = strategy_session_expectancy(
+            base_params=params,
+            strategy_names=strategy_names,
+            df_raw=df_raw,
+            apply_full_indicators_fn=apply_full_indicators,
+            replay_on_df_fn=replay_on_df,
+            weekend_split=weekend_split,
             include_unknown=False,
         )
     except Exception as e:

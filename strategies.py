@@ -685,9 +685,13 @@ FILTER_HYPERPARAMS: list[str] = [
 
 
 def _utc_time_filter_allows(params, ts) -> bool:
-    """True if the bar's UTC time-of-day is inside the allowed window."""
-    if not params.use_time_filter:
-        return True
+    """True if the bar's UTC timestamp passes all active time-based gates.
+
+    Gates applied in order (each is skipped when disabled):
+    1. Single UTC window [time_start_utc_mins, time_end_utc_mins)  — legacy.
+    2. allowed_sessions  — set of named UTC session buckets.
+    3. block_weekends    — reject Saturday/Sunday UTC bars.
+    """
     if ts is None or (isinstance(ts, float) and pd.isna(ts)):
         return True
     t = pd.Timestamp(ts)
@@ -695,12 +699,33 @@ def _utc_time_filter_allows(params, ts) -> bool:
         t = t.tz_localize("UTC")
     else:
         t = t.tz_convert("UTC")
-    m = t.hour * 60 + t.minute
-    a, b = int(params.time_start_utc_mins) % 1440, int(params.time_end_utc_mins) % 1440
-    if a < b:
-        return a <= m < b
-    if a > b:
-        return m >= a or m < b
+
+    # Gate 1: legacy minute-window filter
+    if params.use_time_filter:
+        m = t.hour * 60 + t.minute
+        a = int(params.time_start_utc_mins) % 1440
+        b = int(params.time_end_utc_mins) % 1440
+        if a < b:
+            if not (a <= m < b):
+                return False
+        elif a > b:
+            if not (m >= a or m < b):
+                return False
+        # a == b: degenerate (no-op)
+
+    # Gate 2: named session filter
+    allowed = getattr(params, "allowed_sessions", ())
+    if allowed:
+        from regime import _classify_session  # local import avoids circular dep
+        session = _classify_session(t)
+        if session not in allowed:
+            return False
+
+    # Gate 3: weekend blocker
+    if getattr(params, "block_weekends", False):
+        if t.dayofweek >= 5:  # 5=Sat, 6=Sun
+            return False
+
     return True
 
 

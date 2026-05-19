@@ -11,6 +11,7 @@ from typing import Any
 
 import profiles as profile_store
 from experiments.rebaseline_profiles_walkforward import run_rebaseline
+from walkforward import resolve_train_engine
 
 
 def _classify(summary: dict[str, Any], *, min_pos_rate: float, min_oos_ret: float) -> tuple[str, float]:
@@ -41,42 +42,23 @@ def run_weekly_tournament(
 ) -> dict[str, Any]:
     """Run WFO rebaseline and attach promotion decisions to profile baselines."""
     requested_engine = str(wf_train_engine).strip().lower()
-    effective_engine = requested_engine
-    fallback_reason: str | None = None
-    try:
-        base = run_rebaseline(
-            profile_names=profile_names,
-            train_bars=train_bars,
-            test_bars=test_bars,
-            step=step,
-            mc_sims=mc_sims,
-            wf_train_engine=requested_engine,
-            wf_optuna_trials=wf_optuna_trials,
-            wf_optuna_seed=wf_optuna_seed,
-            append_message="weekly tournament rebaseline",
-            dry_run=dry_run,
-            verbose=False,
-        )
-    except ImportError as e:
-        # Optional dependency fallback: keep automation alive on hosts
-        # without optuna while preserving deterministic behavior.
-        if requested_engine != "optuna":
-            raise
-        effective_engine = "grid"
-        fallback_reason = str(e)
-        base = run_rebaseline(
-            profile_names=profile_names,
-            train_bars=train_bars,
-            test_bars=test_bars,
-            step=step,
-            mc_sims=mc_sims,
-            wf_train_engine="grid",
-            wf_optuna_trials=wf_optuna_trials,
-            wf_optuna_seed=wf_optuna_seed,
-            append_message="weekly tournament rebaseline (fallback grid)",
-            dry_run=dry_run,
-            verbose=False,
-        )
+    effective_engine, fallback_reason = resolve_train_engine(requested_engine)
+    append_message = "weekly tournament rebaseline"
+    if fallback_reason:
+        append_message += " (fallback grid)"
+    base = run_rebaseline(
+        profile_names=profile_names,
+        train_bars=train_bars,
+        test_bars=test_bars,
+        step=step,
+        mc_sims=mc_sims,
+        wf_train_engine=requested_engine,
+        wf_optuna_trials=wf_optuna_trials,
+        wf_optuna_seed=wf_optuna_seed,
+        append_message=append_message,
+        dry_run=dry_run,
+        verbose=False,
+    )
     rows: list[dict[str, Any]] = []
     promoted = demoted = candidate = 0
     for r in base.get("rows", []):

@@ -83,6 +83,8 @@ from config import (
     USE_TIME_FILTER,
     TIME_START_UTC_MINS,
     TIME_END_UTC_MINS,
+    ALLOWED_SESSIONS,
+    BLOCK_WEEKENDS,
     MR_REGIME_ADX_MAX,
     SLIPPAGE_PCT,
     SLIPPAGE_ATR_MULT,
@@ -103,7 +105,7 @@ from config import (
 )
 from history import fetch_history
 from paper_trader import PaperTrader
-from regime import attach_regime_columns
+from regime import attach_regime_columns, attach_session_columns
 from strategies import (
     attach_filter_indicators,
     attach_htf_trend,
@@ -185,6 +187,10 @@ class Params:
     use_time_filter: bool = USE_TIME_FILTER
     time_start_utc_mins: int = TIME_START_UTC_MINS
     time_end_utc_mins: int = TIME_END_UTC_MINS
+    # Session-aware filter: tuple of allowed session names.
+    # Empty = all sessions. Valid: "asia","london","overlap","ny","off".
+    allowed_sessions: tuple[str, ...] = ALLOWED_SESSIONS
+    block_weekends: bool = BLOCK_WEEKENDS
     mr_regime_adx_max: float = MR_REGIME_ADX_MAX
     slippage_pct: float = SLIPPAGE_PCT
     slippage_atr_mult: float = SLIPPAGE_ATR_MULT
@@ -383,6 +389,8 @@ def apply_full_indicators(df: pd.DataFrame, params: Params) -> pd.DataFrame:
         df = attach_htf_trend(df, htf_df, params.htf_ema_period)
     # Phase 3 regime engine baseline: every bar gets a regime label.
     df = attach_regime_columns(df)
+    # Phase 6 session engine: every bar gets a session + is_weekend label.
+    df = attach_session_columns(df)
     return df
 
 
