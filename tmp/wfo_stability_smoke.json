@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "strategy": "ema_crossover",
+    "symbol": "BTC/USDT",
+    "timeframe": "4h",
+    "train_bars": 300,
+    "test_bars": 120,
+    "step": 120,
+    "n_candidates": 27,
+    "tuned_keys": [
+      "ema_long",
+      "ema_short",
+      "ema_trend"
+    ]
+  },
+  "summary": {
+    "n_windows": 4,
+    "mean_test_ret": -0.7913101617033165,
+    "median_test_ret": -0.530911209106249,
+    "stdev_test_ret": 1.0078273668588473,
+    "mean_test_mdd_pct": 0.9705,
+    "positive_rate": 0.0,
+    "unique_selected_configs": 4,
+    "selection_transition_rate": 100.0,
+    "trade_mc": {
+      "n_trades": 3,
+      "sims": 500,
+      "ret_mean_pct": -3.132,
+      "ret_p05_pct": -3.146,
+      "ret_p50_pct": -3.132,
+      "ret_p95_pct": -3.118,
+      "mdd_mean_pct": 3.132,
+      "mdd_p95_pct": 3.146
+    }
+  },
+  "windows": [
+    {
+      "i": 0,
+      "train_ret": 1.4433696725285736,
+      "test_ret": -2.1034182286007677,
+      "train_n": 1,
+      "test_n": 2,
+      "test_wr": 0.0,
+      "test_mdd": 2.487,
+      "train_score": 3.3028793853850003,
+      "chosen": {
+        "ema_long": 50,
+        "ema_short": 10,
+        "ema_trend": 85
+      }
+    },
+    {
+      "i": 1,
+      "train_ret": -0.3595156191439851,
+      "test_ret": -1.061822418212498,
+      "train_n": 4,
+      "test_n": 1,
+      "test_wr": 0.0,
+      "test_mdd": 1.395,
+      "train_score": -1.7604804667003948,
+      "chosen": {
+        "ema_long": 42,
+        "ema_short": 14,
+        "ema_trend": 85
+      }
+    },
+    {
+      "i": 2,
+      "train_ret": 2.1902096438639416,
+      "test_ret": 0.0,
+      "train_n": 5,
+      "test_n": 0,
+      "test_wr": 0.0,
+      "test_mdd": 0.0,
+      "train_score": 1.4219733753523798,
+      "chosen": {
+        "ema_long": 42,
+        "ema_short": 12,
+        "ema_trend": 85
+      }
+    },
+    {
+      "i": 3,
+      "train_ret": 3.235170421302692,
+      "test_ret": 0.0,
+      "train_n": 4,
+      "test_n": 0,
+      "test_wr": 0.0,
+      "test_mdd": 0.0,
+      "train_score": 4.196109647455942,
+      "chosen": {
+        "ema_long": 57,
+        "ema_short": 14,
+        "ema_trend": 85
+      }
+    }
+  ]
+}

@@ -68,6 +68,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import traceback
 import csv
 import io
@@ -132,16 +133,31 @@ EMPTY_STATE = {
 def _serve_file(path: str):
     if not os.path.exists(path):
         return jsonify(EMPTY_STATE)
-    try:
-        with open(path) as f:
-            return jsonify(json.load(f))
-    except (OSError, json.JSONDecodeError) as e:
-        return jsonify(
-            {
-                **EMPTY_STATE,
-                "error": f"Failed to read {os.path.basename(path)}: {e}",
-            }
-        ), 500
+    last_err: Exception | None = None
+    for attempt in range(5):
+        try:
+            with open(path, encoding="utf-8") as f:
+                raw = f.read()
+            if not raw.strip():
+                if attempt < 4:
+                    time.sleep(0.05)
+                    continue
+                return jsonify(EMPTY_STATE)
+            return jsonify(json.loads(raw))
+        except json.JSONDecodeError as e:
+            last_err = e
+            if attempt < 4:
+                time.sleep(0.05)
+                continue
+        except OSError as e:
+            last_err = e
+            break
+    return jsonify(
+        {
+            **EMPTY_STATE,
+            "error": f"Failed to read {os.path.basename(path)}: {last_err}",
+        }
+    ), 500
 
 
 def _params_from_payload(payload: dict) -> Params:

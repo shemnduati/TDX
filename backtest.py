@@ -13,8 +13,8 @@ dashboard can render backtest results by hitting `/backtest` instead of
 Public API (used by `sweep.py`):
     fetch_data(params)      -> DataFrame
     apply_full_indicators(df, params) -> DataFrame
-    replay_on_df(df, params, start=None, end=None, data_file=None, verbose=False)
-        -> dict summary
+    replay_on_df(df, params, start=None, end=None, data_file=os.devnull, verbose=False)
+        -> dict summary   # pass data_file=OUTPUT_FILE to persist for the dashboard
     run(params, verbose=True) -> dict summary        # fetches + replays
 """
 from __future__ import annotations
@@ -117,6 +117,8 @@ from strategies import (
 OUTPUT_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "backtest.json"
 )
+# Internal replays (WFO windows, portfolio sleeves, etc.) discard disk output.
+_DISCARD_FILE = os.devnull
 
 
 @dataclass
@@ -684,7 +686,7 @@ def replay_on_df(
     params: Params,
     start: Optional[int] = None,
     end: Optional[int] = None,
-    data_file: Optional[str] = None,
+    data_file: str = _DISCARD_FILE,
     verbose: bool = False,
     include_trades: bool = False,
 ) -> dict:
@@ -730,7 +732,7 @@ def replay_on_df(
         take_profit_pct=params.take_profit_pct,
         entry_cooldown_bars=params.entry_cooldown_bars,
         fee_pct=params.fee_pct,
-        data_file=data_file or OUTPUT_FILE,
+        data_file=data_file,
         slippage_pct=params.slippage_pct,
         slippage_atr_mult=params.slippage_atr_mult,
         half_spread_bps=params.half_spread_bps,
@@ -826,7 +828,7 @@ def replay_on_df(
                 print(f"  {k:<20} {v:>10.2f}")
             else:
                 print(f"  {k:<20} {v}")
-        print(f"\nWrote {data_file or OUTPUT_FILE}")
+        print(f"\nWrote {data_file}")
 
     return s
 
@@ -837,7 +839,7 @@ def run(params: Optional[Params] = None, verbose: bool = True) -> dict:
         print(f"Fetching {p.bars} bars of {p.symbol} {p.timeframe}...")
     df = fetch_data(p)
     df = apply_full_indicators(df, p)
-    return replay_on_df(df, p, verbose=verbose)
+    return replay_on_df(df, p, data_file=OUTPUT_FILE, verbose=verbose)
 
 
 if __name__ == "__main__":

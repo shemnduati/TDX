@@ -21,6 +21,7 @@ Every tick the bot calls `on_tick`, which:
 import json
 import os
 import random
+import tempfile
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from typing import Optional
@@ -355,8 +356,27 @@ class PaperTrader:
             "cumulative_funding": self.cumulative_funding,
             "funding_events": self.funding_log,
         }
-        with open(self.data_file, "w") as f:
-            json.dump(data, f, indent=4)
+        self._persist_json(data)
+
+    def _persist_json(self, data: dict) -> None:
+        """Write JSON atomically so concurrent readers never see a partial file."""
+        target = self.data_file
+        if target in (os.devnull, "/dev/null", "nul"):
+            with open(target, "w") as f:
+                json.dump(data, f, indent=4)
+            return
+        directory = os.path.dirname(os.path.abspath(target)) or "."
+        fd, tmp_path = tempfile.mkstemp(dir=directory, suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4)
+            os.replace(tmp_path, target)
+        except Exception:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
 
     # --------------------------------------------------------- position mgmt
     def _open(

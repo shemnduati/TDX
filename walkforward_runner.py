@@ -25,6 +25,7 @@ from statistics import mean, median, stdev
 from typing import Any, Optional
 
 from backtest import (
+    OUTPUT_FILE,
     Params,
     apply_full_indicators,
     fetch_data,
@@ -284,6 +285,7 @@ class WalkforwardJob:
                     final_params,
                     start=holdout_start,
                     end=total,
+                    data_file=OUTPUT_FILE,
                     verbose=False,
                     include_trades=True,
                 )

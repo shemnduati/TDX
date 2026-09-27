@@ -77,6 +77,7 @@ import { WalkforwardPanel } from "./components/WalkforwardPanel";
 import { RegimePanel } from "./components/RegimePanel";
 import { PortfolioPanel } from "./components/PortfolioPanel";
 import { AutomationPanel } from "./components/AutomationPanel";
+import { HelpPanel } from "./components/HelpPanel";
 import { formatCurrency } from "./metrics";
 
 const POLL_MS = 3000;
@@ -92,7 +93,8 @@ type TabId =
   | "automation"
   | "history"
   | "compare"
-  | "profiles";
+  | "profiles"
+  | "help";
 
 type CurrentSource =
   | { type: "live" }
@@ -1019,6 +1021,7 @@ export default function App() {
       label: "Profiles",
       badge: profiles.length || undefined,
     },
+    { id: "help", label: "How to" },
   ];
 
   return (
@@ -1235,6 +1238,10 @@ export default function App() {
             onDelete={handleDeleteProfile}
             onRebaselineWalkforward={handleRebaselineProfilesWalkforward}
           />
+        )}
+
+        {tab === "help" && (
+          <HelpPanel onNavigateTab={setTab} />
         )}
       </main>
     </div>

@@ -1,0 +1,5008 @@
+{
+  "initial_balance": 1000.0,
+  "balance": 914.1161363548453,
+  "position": null,
+  "entry_price": 0.0,
+  "position_size": 0.0,
+  "stop_price": 0.0,
+  "take_price": 0.0,
+  "trades": [
+    {
+      "timestamp": "2026-03-17T04:00:00",
+      "opened_at": "2026-03-17T01:00:00",
+      "side": "LONG",
+      "entry": 75318.48,
+      "exit": 74176.15401849998,
+      "size": 0.008754068595085943,
+      "gross_profit": -10.000000000000052,
+      "fee": 1.308686280795217,
+      "profit": -11.308686280795268,
+      "reason": "stop_loss"
+    },
+    {
+      "timestamp": "2026-03-20T08:00:00",
+      "opened_at": "2026-03-19T08:00:00",
+      "side": "SHORT",
+      "entry": 70191.16,
+      "exit": 71166.19587402152,
+      "size": 0.01014005063876636,
+      "gross_profit": -9.886913137191991,
+      "fee": 1.4333707467246957,
+      "profit": -11.320283883916687,
+      "reason": "stop_loss"
+    },
+    {
+      "timestamp": "2026-03-22T13:00:00",
+      "opened_at": "2026-03-22T12:00:00",
+      "side": "SHORT",
+      "entry": 68217.94,
+      "exit": 68915.12598156589,
+      "size": 0.014018799225424832,
+      "gross_profit": -9.773710298352848,
+      "fee": 1.9224409191625083,
+      "profit": -11.696151217515355,
+      "reason": "stop_loss"
+    },
+    {
+      "timestamp": "2026-03-23T05:00:00",
+      "opened_at": "2026-03-22T22:00:00",
+      "side": "SHORT",
+      "entry": 67899.97,
+      "exit": 68645.22590878198,
+      "size": 0.012957627940126365,
+      "gross_profit": -9.656748786177685,
+      "fee": 1.7693018455976617,
+      "profit": -11.426050631775347,
+      "reason": "stop_loss"
+    },
+    {
+      "timestamp": "2026-03-27T09:00:00",
+      "opened_at": "2026-03-26T16:00:00",
+      "side": "SHORT",
+      "entry": 69082.64,
+      "exit": 67605.95684447775,
+      "size": 0.010770182536195607,
+      "gross_profit": 15.904147133099906,
+      "fee": 1.4721611386314764,
+      "profit": 14.43198599446843,
+      "reason": "take_profit"
+    },
+    {
+      "timestamp": "2026-03-28T15:00:00",
+      "opened_at": "2026-03-27T14:00:00",
+      "side": "SHORT",
+      "entry": 66188.31,
+      "exit": 67185.38965434388,
+      "size": 0.009715179822999152,
+      "gross_profit": -9.686808139804606,
+      "fee": 1.2957494758006307,
+      "profit": -10.982557615605238,
+      "reason": "stop_loss"
+    },
+    {
+      "timestamp": "2026-04-02T14:00:00",
+      "opened_at": "2026-04-02T13:00:00",
+      "side": "SHORT",
+      "entry": 66052.71,
+      "exit": 66890.4356441882,
+      "size": 0.011432122951099742,
+      "gross_profit": -9.576982563648633,
+      "fee": 1.5198223865103198,
+      "profit": -11.096804950158953,
+      "reason": "stop_loss"
+    },
+    {
+      "timestamp": "2026-04-05T10:00:00",
+      "opened_at": "2026-04-05T07:00:00",
+      "side": "SHORT",
+      "entry": 66802.24,
+      "exit": 67143.53392466744,
+      "size": 0.027735666620409386,
+      "gross_profit": -9.466014514147119,
+      "fee": 3.7150753307873012,
+      "profit": -13.18108984493442,
+      "reason": "stop_loss"
+    },
+    {
+      "timestamp": "2026-04-12T01:00:00",
+      "opened_at": "2026-04-10T21:00:00",
+      "side": "LONG",
+      "entry": 73361.68,
+      "exit": 72501.20048010866,
+      "size": 0.010847676673207084,
+      "gross_profit": -9.334203615697659,
+      "fee": 1.5822733660708677,
+      "profit": -10.916476981768525,
+      "reason": "stop_loss"
+    },
+    {
+      "timestamp": "2026-04-13T19:00:00",
+      "opened_at": "2026-04-13T14:00:00",
+      "side": "LONG",
+      "entry": 71662.65,
+      "exit": 72737.1577510513,
+      "size": 0.014308937956092215,
+      "gross_profit": 15.375064743133338,
+      "fee": 2.0662078899814365,
+      "profit": 13.308856853151902,
+      "reason": "take_profit"
+    },
+    {
+      "timestamp": "2026-04-15T07:00:00",
+      "opened_at": "2026-04-13T23:00:00",
+      "side": "LONG",
+      "entry": 74627.04,
+      "exit": 73610.48186880922,
+      "size": 0.009205698255002547,
+      "gross_profit": -9.358127414411554,
+      "fee": 1.3646298963935988,
+      "profit": -10.722757310805152,
+      "reason": "stop_loss"
+    },
+    {
+      "timestamp": "2026-04-23T00:00:00",
+      "opened_at": "2026-04-22T14:00:00",
+      "side": "LONG",
+      "entry": 78840.94,
+      "exit": 77998.83154801132,
+      "size": 0.01098540196272475,
+      "gross_profit": -9.250899841303534,
+      "fee": 1.722947934196825,
+      "profit": -10.973847775500358,
+      "reason": "stop_loss"
+    }
+  ],
+  "equity_history": [
+    {
+      "timestamp": "2026-04-25T18:41:16.224953+00:00",
+      "balance": 1000.0,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-03-16T23:00:00",
+      "balance": 1000.0,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T00:00:00",
+      "balance": 1000.0,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T01:00:00",
+      "balance": 1002.6737551709972,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T02:00:00",
+      "balance": 998.9454848970361,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T03:00:00",
+      "balance": 992.5196483854991,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T04:00:00",
+      "balance": 988.6913137192047,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-03-17T04:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T05:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T06:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T07:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T08:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T09:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T10:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T11:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T12:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T13:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T14:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T15:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T16:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T17:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T18:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T19:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T20:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T21:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T22:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-17T23:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T00:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T01:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T02:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T03:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T04:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T05:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T06:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T07:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T08:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T09:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T10:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T11:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T12:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T13:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T14:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T15:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T16:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T17:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T18:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T19:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T20:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T21:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T22:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-18T23:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T00:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T01:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T02:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T03:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T04:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T05:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T06:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T07:00:00",
+      "balance": 988.6913137192047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T08:00:00",
+      "balance": 990.7798599492714,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T09:00:00",
+      "balance": 985.4278398216242,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T10:00:00",
+      "balance": 989.2737582278954,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T11:00:00",
+      "balance": 991.108803191993,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T12:00:00",
+      "balance": 997.826383939163,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T13:00:00",
+      "balance": 991.586399577079,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T14:00:00",
+      "balance": 995.8796970175326,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T15:00:00",
+      "balance": 996.5868641490802,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T16:00:00",
+      "balance": 996.1472929538896,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T17:00:00",
+      "balance": 992.108510784469,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T18:00:00",
+      "balance": 992.4426254530163,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T19:00:00",
+      "balance": 987.8716934260732,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T20:00:00",
+      "balance": 985.731737139268,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T21:00:00",
+      "balance": 986.4370790617006,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T22:00:00",
+      "balance": 988.7640178822846,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-19T23:00:00",
+      "balance": 991.339489344025,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T00:00:00",
+      "balance": 988.7943366336946,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T01:00:00",
+      "balance": 986.5352347518839,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T02:00:00",
+      "balance": 986.4167989604231,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T03:00:00",
+      "balance": 983.228260037063,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T04:00:00",
+      "balance": 982.6830295142165,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T05:00:00",
+      "balance": 984.4823815000656,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T06:00:00",
+      "balance": 985.5302543330757,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T07:00:00",
+      "balance": 981.9633901203832,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T08:00:00",
+      "balance": 977.371029835288,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-03-20T08:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T09:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T10:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T11:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T12:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T13:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T14:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T15:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T16:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T17:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T18:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T19:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T20:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T21:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T22:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-20T23:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T00:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T01:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T02:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T03:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T04:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T05:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T06:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T07:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T08:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T09:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T10:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T11:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T12:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T13:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T14:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T15:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T16:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T17:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T18:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T19:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T20:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T21:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T22:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-21T23:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T00:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T01:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T02:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T03:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T04:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T05:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T06:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T07:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T08:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T09:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T10:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T11:00:00",
+      "balance": 977.371029835288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T12:00:00",
+      "balance": 971.2463566416922,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T13:00:00",
+      "balance": 965.6748786177727,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-03-22T13:00:00",
+      "balance": 965.6748786177727,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T14:00:00",
+      "balance": 965.6748786177727,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T15:00:00",
+      "balance": 965.6748786177727,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T16:00:00",
+      "balance": 965.6748786177727,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T17:00:00",
+      "balance": 965.6748786177727,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T18:00:00",
+      "balance": 965.6748786177727,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T19:00:00",
+      "balance": 965.6748786177727,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T20:00:00",
+      "balance": 965.6748786177727,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T21:00:00",
+      "balance": 965.6748786177727,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T22:00:00",
+      "balance": 959.9812969008813,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-22T23:00:00",
+      "balance": 966.2057526344797,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T00:00:00",
+      "balance": 968.6548738914429,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T01:00:00",
+      "balance": 965.6097017492339,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T02:00:00",
+      "balance": 960.2229566619645,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T03:00:00",
+      "balance": 963.4120880505884,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T04:00:00",
+      "balance": 957.3686503793135,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T05:00:00",
+      "balance": 954.2488279859974,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-03-23T05:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T06:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T07:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T08:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T09:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T10:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T11:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T12:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T13:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T14:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T15:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T16:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T17:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T18:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T19:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T20:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T21:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T22:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-23T23:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T00:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T01:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T02:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T03:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T04:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T05:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T06:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T07:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T08:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T09:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T10:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T11:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T12:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T13:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T14:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T15:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T16:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T17:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T18:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T19:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T20:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T21:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T22:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-24T23:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T00:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T01:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T02:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T03:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T04:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T05:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T06:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T07:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T08:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T09:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T10:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T11:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T12:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T13:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T14:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T15:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T16:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T17:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T18:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T19:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T20:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T21:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T22:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-25T23:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T00:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T01:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T02:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T03:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T04:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T05:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T06:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T07:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T08:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T09:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T10:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T11:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T12:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T13:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T14:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T15:00:00",
+      "balance": 954.2488279859974,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T16:00:00",
+      "balance": 955.8656477883311,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T17:00:00",
+      "balance": 960.6654873374121,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T18:00:00",
+      "balance": 960.553585140861,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T19:00:00",
+      "balance": 960.1539036669427,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T20:00:00",
+      "balance": 955.082763219775,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T21:00:00",
+      "balance": 955.9886432728944,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T22:00:00",
+      "balance": 956.2948395623985,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-26T23:00:00",
+      "balance": 957.0741699707177,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T00:00:00",
+      "balance": 957.4543574142454,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T01:00:00",
+      "balance": 954.5866886121578,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T02:00:00",
+      "balance": 956.1772291691033,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T03:00:00",
+      "balance": 957.6428356086288,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T04:00:00",
+      "balance": 959.6838929010631,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T05:00:00",
+      "balance": 959.1155503686281,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T06:00:00",
+      "balance": 958.8422031358596,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T07:00:00",
+      "balance": 960.0879901498213,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T08:00:00",
+      "balance": 966.7652879186118,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T09:00:00",
+      "balance": 968.6808139804658,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-03-27T09:00:00",
+      "balance": 968.6808139804658,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T10:00:00",
+      "balance": 968.6808139804658,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T11:00:00",
+      "balance": 968.6808139804658,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T12:00:00",
+      "balance": 968.6808139804658,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T13:00:00",
+      "balance": 968.6808139804658,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T14:00:00",
+      "balance": 968.5180847184306,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T15:00:00",
+      "balance": 969.4142129053039,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T16:00:00",
+      "balance": 970.7114808670691,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T17:00:00",
+      "balance": 974.0765277023613,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T18:00:00",
+      "balance": 972.0968655098287,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T19:00:00",
+      "balance": 970.1152602813315,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T20:00:00",
+      "balance": 970.3085923598094,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T21:00:00",
+      "balance": 969.5581918702809,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T22:00:00",
+      "balance": 970.3083009044146,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-27T23:00:00",
+      "balance": 966.5534810546237,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T00:00:00",
+      "balance": 966.3176936403195,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T01:00:00",
+      "balance": 968.7727195815913,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T02:00:00",
+      "balance": 969.9934319263513,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T03:00:00",
+      "balance": 968.1786363354149,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T04:00:00",
+      "balance": 967.7413560915818,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T05:00:00",
+      "balance": 967.1886595114514,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T06:00:00",
+      "balance": 966.7990808005491,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T07:00:00",
+      "balance": 965.0554003259173,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T08:00:00",
+      "balance": 966.5335649359865,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T09:00:00",
+      "balance": 967.4857497104387,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T10:00:00",
+      "balance": 968.3595329837192,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T11:00:00",
+      "balance": 967.4065709948812,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T12:00:00",
+      "balance": 966.0889983072861,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T13:00:00",
+      "balance": 962.3971328227481,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T14:00:00",
+      "balance": 963.300644546287,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T15:00:00",
+      "balance": 957.6982563648605,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-03-28T15:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T16:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T17:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T18:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T19:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T20:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T21:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T22:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-28T23:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T00:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T01:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T02:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T03:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T04:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T05:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T06:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T07:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T08:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T09:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T10:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T11:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T12:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T13:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T14:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T15:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T16:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T17:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T18:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T19:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T20:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T21:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T22:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-29T23:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T00:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T01:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T02:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T03:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T04:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T05:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T06:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T07:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T08:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T09:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T10:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T11:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T12:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T13:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T14:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T15:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T16:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T17:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T18:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T19:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T20:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T21:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T22:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-30T23:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T00:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T01:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T02:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T03:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T04:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T05:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T06:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T07:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T08:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T09:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T10:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T11:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T12:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T13:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T14:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T15:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T16:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T17:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T18:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T19:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T20:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T21:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T22:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-03-31T23:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T00:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T01:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T02:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T03:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T04:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T05:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T06:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T07:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T08:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T09:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T10:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T11:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T12:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T13:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T14:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T15:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T16:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T17:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T18:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T19:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T20:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T21:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T22:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-01T23:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T00:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T01:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T02:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T03:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T04:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T05:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T06:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T07:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T08:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T09:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T10:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T11:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T12:00:00",
+      "balance": 957.6982563648605,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T13:00:00",
+      "balance": 955.2042244218487,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T14:00:00",
+      "balance": 946.6014514147016,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-04-02T14:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T15:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T16:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T17:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T18:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T19:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T20:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T21:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T22:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-02T23:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T00:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T01:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T02:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T03:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T04:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T05:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T06:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T07:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T08:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T09:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T10:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T11:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T12:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T13:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T14:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T15:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T16:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T17:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T18:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T19:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T20:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T21:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T22:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-03T23:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T00:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T01:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T02:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T03:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T04:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T05:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T06:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T07:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T08:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T09:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T10:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T11:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T12:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T13:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T14:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T15:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T16:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T17:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T18:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T19:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T20:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T21:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T22:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-04T23:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T00:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T01:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T02:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T03:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T04:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T05:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T06:00:00",
+      "balance": 946.6014514147016,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T07:00:00",
+      "balance": 946.0911151488863,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T08:00:00",
+      "balance": 942.9697432274255,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T09:00:00",
+      "balance": 940.1415373021424,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T10:00:00",
+      "balance": 933.4203615697672,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-04-05T10:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T11:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T12:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T13:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T14:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T15:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T16:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T17:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T18:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T19:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T20:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T21:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T22:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-05T23:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T00:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T01:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T02:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T03:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T04:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T05:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T06:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T07:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T08:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T09:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T10:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T11:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T12:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T13:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T14:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T15:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T16:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T17:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T18:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T19:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T20:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T21:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T22:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-06T23:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T00:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T01:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T02:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T03:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T04:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T05:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T06:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T07:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T08:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T09:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T10:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T11:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T12:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T13:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T14:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T15:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T16:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T17:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T18:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T19:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T20:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T21:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T22:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-07T23:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T00:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T01:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T02:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T03:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T04:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T05:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T06:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T07:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T08:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T09:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T10:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T11:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T12:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T13:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T14:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T15:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T16:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T17:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T18:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T19:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T20:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T21:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T22:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-08T23:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T00:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T01:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T02:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T03:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T04:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T05:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T06:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T07:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T08:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T09:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T10:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T11:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T12:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T13:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T14:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T15:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T16:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T17:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T18:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T19:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T20:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T21:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T22:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-09T23:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T00:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T01:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T02:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T03:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T04:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T05:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T06:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T07:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T08:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T09:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T10:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T11:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T12:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T13:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T14:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T15:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T16:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T17:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T18:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T19:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T20:00:00",
+      "balance": 933.4203615697672,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T21:00:00",
+      "balance": 931.5653003818821,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T22:00:00",
+      "balance": 928.1627096397973,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-10T23:00:00",
+      "balance": 929.0923555306911,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T00:00:00",
+      "balance": 927.6357295070129,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T01:00:00",
+      "balance": 929.0022113375368,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T02:00:00",
+      "balance": 929.1343360394166,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T03:00:00",
+      "balance": 928.0502192326962,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T04:00:00",
+      "balance": 927.3933924101335,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T05:00:00",
+      "balance": 926.4843571049187,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T06:00:00",
+      "balance": 926.9152268223785,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T07:00:00",
+      "balance": 926.7349384360698,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T08:00:00",
+      "balance": 925.8539986134386,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T09:00:00",
+      "balance": 928.4893331844276,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T10:00:00",
+      "balance": 927.8015904833463,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T11:00:00",
+      "balance": 928.4886823238272,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T12:00:00",
+      "balance": 928.8514286317793,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T13:00:00",
+      "balance": 925.7878277857321,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T14:00:00",
+      "balance": 926.2933295187036,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T15:00:00",
+      "balance": 927.9584478880408,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T16:00:00",
+      "balance": 929.869374610793,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T17:00:00",
+      "balance": 930.5380254009294,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T18:00:00",
+      "balance": 935.4403074430852,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T19:00:00",
+      "balance": 936.9509548965959,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T20:00:00",
+      "balance": 932.6474646068012,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T21:00:00",
+      "balance": 934.129365717128,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T22:00:00",
+      "balance": 933.5758087764943,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-11T23:00:00",
+      "balance": 929.9651595958175,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T00:00:00",
+      "balance": 930.3643540973915,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T01:00:00",
+      "balance": 922.5038845879988,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-04-12T01:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T02:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T03:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T04:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T05:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T06:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T07:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T08:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T09:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T10:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T11:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T12:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T13:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T14:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T15:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T16:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T17:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T18:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T19:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T20:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T21:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T22:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-12T23:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T00:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T01:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T02:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T03:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T04:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T05:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T06:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T07:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T08:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T09:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T10:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T11:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T12:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T13:00:00",
+      "balance": 922.5038845879988,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T14:00:00",
+      "balance": 933.0567263306168,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T15:00:00",
+      "balance": 925.4220493947643,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T16:00:00",
+      "balance": 930.2265614922813,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T17:00:00",
+      "balance": 929.4611764010099,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T18:00:00",
+      "balance": 933.4103001875119,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T19:00:00",
+      "balance": 935.8127414411507,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-04-13T19:00:00",
+      "balance": 935.8127414411507,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T20:00:00",
+      "balance": 935.8127414411507,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T21:00:00",
+      "balance": 935.8127414411507,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T22:00:00",
+      "balance": 935.8127414411507,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-13T23:00:00",
+      "balance": 933.8882902209425,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T00:00:00",
+      "balance": 931.5484778954685,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T01:00:00",
+      "balance": 933.59398404773,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T02:00:00",
+      "balance": 933.0873024157747,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T03:00:00",
+      "balance": 934.1316888828047,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T04:00:00",
+      "balance": 933.6108304755368,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T05:00:00",
+      "balance": 931.9746096676926,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T06:00:00",
+      "balance": 934.8524950561714,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T07:00:00",
+      "balance": 935.0667116545653,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T08:00:00",
+      "balance": 936.9446740985859,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T09:00:00",
+      "balance": 934.6432495348353,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T10:00:00",
+      "balance": 933.2624868535673,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T11:00:00",
+      "balance": 933.5065299143075,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T12:00:00",
+      "balance": 934.2013760185952,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T13:00:00",
+      "balance": 944.0877436025726,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T14:00:00",
+      "balance": 939.3714802725696,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T15:00:00",
+      "balance": 942.1649494080502,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T16:00:00",
+      "balance": 936.0443568092466,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T17:00:00",
+      "balance": 936.9345478305053,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T18:00:00",
+      "balance": 930.8982794277176,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T19:00:00",
+      "balance": 932.0949281438853,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T20:00:00",
+      "balance": 930.9820512818382,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T21:00:00",
+      "balance": 932.5917596787078,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T22:00:00",
+      "balance": 930.2535123219373,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-14T23:00:00",
+      "balance": 931.2514100127796,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T00:00:00",
+      "balance": 935.2725510675472,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T01:00:00",
+      "balance": 935.686071033162,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T02:00:00",
+      "balance": 933.0046352454448,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T03:00:00",
+      "balance": 933.2252958326172,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T04:00:00",
+      "balance": 933.1738359793718,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T05:00:00",
+      "balance": 930.2383229198165,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T06:00:00",
+      "balance": 929.0426868304568,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T07:00:00",
+      "balance": 925.0899841303456,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-04-15T07:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T08:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T09:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T10:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T11:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T12:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T13:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T14:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T15:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T16:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T17:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T18:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T19:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T20:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T21:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T22:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-15T23:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T00:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T01:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T02:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T03:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T04:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T05:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T06:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T07:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T08:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T09:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T10:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T11:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T12:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T13:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T14:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T15:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T16:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T17:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T18:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T19:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T20:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T21:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T22:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-16T23:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T00:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T01:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T02:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T03:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T04:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T05:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T06:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T07:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T08:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T09:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T10:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T11:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T12:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T13:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T14:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T15:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T16:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T17:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T18:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T19:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T20:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T21:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T22:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-17T23:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T00:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T01:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T02:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T03:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T04:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T05:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T06:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T07:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T08:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T09:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T10:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T11:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T12:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T13:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T14:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T15:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T16:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T17:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T18:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T19:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T20:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T21:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T22:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-18T23:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T00:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T01:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T02:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T03:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T04:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T05:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T06:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T07:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T08:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T09:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T10:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T11:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T12:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T13:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T14:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T15:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T16:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T17:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T18:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T19:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T20:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T21:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T22:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-19T23:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T00:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T01:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T02:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T03:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T04:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T05:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T06:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T07:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T08:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T09:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T10:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T11:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T12:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T13:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T14:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T15:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T16:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T17:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T18:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T19:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T20:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T21:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T22:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-20T23:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T00:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T01:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T02:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T03:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T04:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T05:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T06:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T07:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T08:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T09:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T10:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T11:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T12:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T13:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T14:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T15:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T16:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T17:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T18:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T19:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T20:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T21:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T22:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-21T23:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T00:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T01:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T02:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T03:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T04:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T05:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T06:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T07:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T08:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T09:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T10:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T11:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T12:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T13:00:00",
+      "balance": 925.0899841303456,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T14:00:00",
+      "balance": 927.3399043063312,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T15:00:00",
+      "balance": 929.8352383621641,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T16:00:00",
+      "balance": 924.0205552492743,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T17:00:00",
+      "balance": 925.7387819702641,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T18:00:00",
+      "balance": 927.0832853164819,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T19:00:00",
+      "balance": 925.1523812134938,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T20:00:00",
+      "balance": 920.6490255328944,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T21:00:00",
+      "balance": 924.2303764267623,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T22:00:00",
+      "balance": 922.5304953270503,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-22T23:00:00",
+      "balance": 917.8098483956281,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T00:00:00",
+      "balance": 914.1161363548453,
+      "realized": true
+    },
+    {
+      "timestamp": "2026-04-23T00:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T01:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T02:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T03:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T04:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T05:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T06:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T07:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T08:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T09:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T10:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T11:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T12:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T13:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T14:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T15:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T16:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T17:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T18:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T19:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T20:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T21:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T22:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-23T23:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T00:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T01:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T02:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T03:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T04:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T05:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T06:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T07:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T08:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T09:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T10:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T11:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T12:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T13:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T14:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T15:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T16:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T17:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T18:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T19:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T20:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T21:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T22:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-24T23:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T00:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T01:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T02:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T03:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T04:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T05:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T06:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T07:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T08:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T09:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T10:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T11:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T12:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T13:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T14:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T15:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T16:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    },
+    {
+      "timestamp": "2026-04-25T17:00:00",
+      "balance": 914.1161363548453,
+      "realized": false
+    }
+  ],
+  "updated_at": "2026-04-25T18:41:16.585541+00:00",
+  "config": {
+    "allocation_pct": 1.0,
+    "stop_loss_pct": 0.02,
+    "take_profit_pct": 0.04,
+    "entry_cooldown_bars": 3,
+    "fee_pct": 0.001,
+    "slippage_pct": 0.0,
+    "trading_halted": false
+  },
+  "cooldown_remaining": 0
+}
