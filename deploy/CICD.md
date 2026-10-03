@@ -33,6 +33,16 @@ ssh root@YOUR_SERVER "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys" < ~/.ssh
 
 Put the contents of `~/.ssh/tdx_deploy` (private) into **`DEPLOY_SSH_KEY`**.
 
+**Paste the whole private key** (including `BEGIN` / `END` lines). Do not use a passphrase on this key (`-N ""`). Do not paste the `.pub` file.
+
+Because the workflow uses `environment: production`, add these secrets either as **repository secrets** (available to all jobs) **or** under **Settings → Environments → production → Environment secrets**. If deploy fails before SSH connects, the **Validate deploy secrets** step will say which name is empty.
+
+Verify from your machine before relying on CI:
+
+```bash
+ssh -i ~/.ssh/tdx_deploy -o BatchMode=yes root@72.61.19.150 "echo ok"
+```
+
 ### 2. GitHub Environment (optional but recommended)
 
 **Settings → Environments → New environment → `production`**
@@ -64,6 +74,8 @@ bash deploy/deploy.sh
 | Issue | Fix |
 |-------|-----|
 | Deploy job skipped | Only runs on **push to main** after tests pass |
-| `Permission denied (publickey)` | Check `DEPLOY_SSH_KEY`, user, and `authorized_keys` on server |
+| `ssh: unable to authenticate ... publickey` | Secrets missing/wrong, or public key not in server `~/.ssh/authorized_keys` for `DEPLOY_USER`. Re-run the `ssh-keygen` + `authorized_keys` steps above; confirm `DEPLOY_USER` matches (usually `root`). |
+| `Permission denied (publickey)` | Same as above |
+| Missing secret in **Validate deploy secrets** | Create the secret in GitHub (repo or `production` environment) and re-run the workflow |
 | `pytest` fails in CI | Fix tests locally; deploy will not run |
 | `pip` / `coincurve` on server | `deploy.sh` skips `coincurve` on Python ≥ 3.14 automatically |

@@ -44,6 +44,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - name: Validate deploy secrets
+        run: |
+          missing=0
+          if [ -z "${{ secrets.DEPLOY_HOST }}" ]; then echo "::error::Missing secret DEPLOY_HOST (Settings → Secrets, or production environment)"; missing=1; fi
+          if [ -z "${{ secrets.DEPLOY_USER }}" ]; then echo "::error::Missing secret DEPLOY_USER"; missing=1; fi
+          if [ -z "${{ secrets.DEPLOY_SSH_KEY }}" ]; then echo "::error::Missing secret DEPLOY_SSH_KEY"; missing=1; fi
+          exit "$missing"
+
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.0
         with:
