@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -101,13 +102,19 @@ def test_monitor_divergence_for_live_run(client, monkeypatch):
 def test_monitor_readiness_rollup(client, monkeypatch):
     import dashboard
 
+    # Use timestamps inside the default 30-day readiness window (CI date varies).
+    now = datetime.now(timezone.utc)
+    t1 = (now - timedelta(days=2)).isoformat()
+    t2 = (now - timedelta(days=1)).isoformat()
+    t_backtest = now.isoformat()
+
     monkeypatch.setattr(
         dashboard.runs_store,
         "list_runs",
         lambda: [
-            {"id": "r1", "kind": "live", "created_at": "2026-05-18T10:00:00+00:00", "label": "l1"},
-            {"id": "r2", "kind": "live", "created_at": "2026-05-18T11:00:00+00:00", "label": "l2"},
-            {"id": "b1", "kind": "backtest", "created_at": "2026-05-18T12:00:00+00:00", "label": "b"},
+            {"id": "r1", "kind": "live", "created_at": t1, "label": "l1"},
+            {"id": "r2", "kind": "live", "created_at": t2, "label": "l2"},
+            {"id": "b1", "kind": "backtest", "created_at": t_backtest, "label": "b"},
         ],
     )
     monkeypatch.setattr(
