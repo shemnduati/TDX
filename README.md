@@ -65,6 +65,11 @@ npm run build
 Serve `frontend/dist` with Nginx (or similar) and proxy `/api/*` to the Flask
 API on port 5001. Step-by-step server setup: **[deploy/DEPLOY.md](deploy/DEPLOY.md)**.
 
+### CI/CD
+
+Pushes to `main` run tests and deploy to production via GitHub Actions.
+Configure secrets once: **[deploy/CICD.md](deploy/CICD.md)**.
+
 ## 3. What's in the dashboard
 
 - **Metric cards** — Balance, Total P&L, Win Rate, Avg Profit, Max

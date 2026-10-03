@@ -66,12 +66,14 @@ sudo certbot --nginx -d tdx.yourdomain.com
 
 ## 6. Updates
 
+**Automatic (recommended):** push to `main` — GitHub Actions runs tests and deploys. See [CICD.md](CICD.md) for secrets setup.
+
+**Manual:**
+
 ```bash
 cd /opt/tdx
-git pull
-source venv/bin/activate && pip install -r requirements.txt
-cd frontend && npm ci && npm run build
-sudo systemctl restart tdx-api
+git fetch origin main && git reset --hard origin/main
+bash deploy/deploy.sh
 ```
 
 ## Security
