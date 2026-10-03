@@ -62,6 +62,9 @@ new profile under a different name.
 | `btc-4h-adx-htf` | BTC/USDT 4h | + HTF 1d EMA50 confirmation | **0.33** | +1.17% | 75% |
 | `eth-4h-donchian` | ETH/USDT 4h | Donchian 20 + trend100, no ADX | **0.43** | +2.39% | 75% |
 | `eth-4h-donchian-consistent` | ETH/USDT 4h | Donchian 20 + trend200, no ADX | **0.39** | +2.05% | **81%** |
+| `btc-4h-don40-adx-htf-vol` | BTC/USDT 4h | Donchian 40 + ADX + HTF + vol 1.3× | — | +58% (full BT)* | — |
 
-All four were validated over 16 walk-forward windows on 10,000 bars of
+\*Full-sample backtest on cached history only (see profile `performance`); run walk-forward before treating as production-ready.
+
+All four WF-validated profiles above were validated over 16 walk-forward windows on 10,000 bars of
 4h data (~4.5 years covering 2022 bear, 2024 halving, 2025 top).

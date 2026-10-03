@@ -57,7 +57,7 @@ def run_bot(
     # in-progress open, then SL/TP on that bar's range. `loop_state` holds
     # dedupe keys so we do not re-run the strategy on the same closed bar
     # if the loop fires twice before a new candle completes.
-    signal, mtm, rsi_val, out_ts = run_exchange_paper_step(
+    signal, mtm, rsi_val, out_ts, _, _ = run_exchange_paper_step(
         params,
         strategy,
         exchange,

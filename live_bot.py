@@ -27,6 +27,7 @@ import pandas as pd
 from backtest import Params, _atr_overrides, _bar_atr, apply_full_indicators
 from exchange import get_exchange
 from history import TF_MS, trim_incomplete_last_row
+from microstructure import apply_spread_entry_gate, fetch_spread_bps
 from paper_trader import DEFAULT_DATA_FILE, PaperTrader
 from strategies import get_strategy
 from utils import format_data
@@ -53,7 +54,7 @@ def run_exchange_paper_step(
     ohlcv_limit: int = 300,
     last_processed_closed_ts: object | None = None,
     last_reported_signal: str = "HOLD",
-) -> tuple[str, float, float | None, pd.Timestamp]:
+) -> tuple[str, float, float | None, pd.Timestamp, float | None, bool]:
     """Fetch OHLCV, run strategy on the last *closed* row set, then fill at the
     open of the in-progress bar and evaluate SL/TP on that bar's range.
 
@@ -62,7 +63,14 @@ def run_exchange_paper_step(
     the same bar when the loop wakes more than once before the next close);
     still runs ``on_tick`` so stops / cooldown / mark-to-market advance.
 
-    Returns (signal, mark_price, rsi_on_last_closed_bar | None, newest_closed_ts).
+    Returns (
+        signal,
+        mark_price,
+        rsi_on_last_closed_bar | None,
+        newest_closed_ts,
+        spread_bps | None,
+        spread_blocked,
+    ).
     """
     if params.timeframe not in TF_MS:
         raise ValueError(f"Unsupported timeframe: {params.timeframe}")
@@ -103,9 +111,26 @@ def run_exchange_paper_step(
         trader.on_tick(
             f_cl, timestamp=f_ts, high=f_hi, low=f_lo, atr=atr_tick_bar
         )
-        return last_reported_signal, f_cl, None, newest_closed_ts
+        return (
+            last_reported_signal,
+            f_cl,
+            None,
+            newest_closed_ts,
+            None,
+            False,
+        )
 
     signal = strategy.generate_signal(closed_df, params)
+    spread_bps: float | None = None
+    spread_blocked = False
+    if params.max_spread_bps > 0 and signal in ("BUY", "SELL"):
+        spread_bps = fetch_spread_bps(exchange, params.symbol)
+        signal, spread_blocked = apply_spread_entry_gate(
+            signal,
+            spread_bps,
+            params.max_spread_bps,
+            position=trader.position,
+        )
     last_bar = closed_df.iloc[-1]
     rsi_out: float | None = None
     if "rsi" in closed_df.columns and not closed_df["rsi"].empty:
@@ -126,7 +151,7 @@ def run_exchange_paper_step(
     trader.on_tick(
         f_cl, timestamp=f_ts, high=f_hi, low=f_lo, atr=atr_tick_bar
     )
-    return signal, f_cl, rsi_out, newest_closed_ts
+    return signal, f_cl, rsi_out, newest_closed_ts, spread_bps, spread_blocked
 
 
 class LiveBotManager:
@@ -147,6 +172,8 @@ class LiveBotManager:
         self._last_signal: str = "HOLD"
         self._last_price: Optional[float] = None
         self._last_error: Optional[str] = None
+        self._last_spread_bps: Optional[float] = None
+        self._last_spread_blocked: bool = False
 
     # ------------------------------------------------------------ public API
     def start(self, params: Params) -> dict:
@@ -183,6 +210,8 @@ class LiveBotManager:
             self._last_signal = "HOLD"
             self._last_price = None
             self._last_error = None
+            self._last_spread_bps = None
+            self._last_spread_blocked = False
 
             self._thread = threading.Thread(
                 target=self._run, name="live-bot", daemon=True
@@ -218,6 +247,8 @@ class LiveBotManager:
             "last_signal": self._last_signal,
             "last_price": self._last_price,
             "last_error": self._last_error,
+            "last_spread_bps": self._last_spread_bps,
+            "last_spread_blocked": self._last_spread_blocked,
             "params": (
                 {k: v for k, v in self._params.__dict__.items()}
                 if self._params
@@ -260,14 +291,16 @@ class LiveBotManager:
         # actually start trading.
         while not self._stop_event.is_set():
             try:
-                signal, mtm, _, out_ts = run_exchange_paper_step(
-                    params,
-                    strategy,
-                    exchange,
-                    self._trader,
-                    ohlcv_limit=self.warmup_bars,
-                    last_processed_closed_ts=last_closed_ts,
-                    last_reported_signal=self._last_signal,
+                signal, mtm, _, out_ts, spread_bps, spread_blocked = (
+                    run_exchange_paper_step(
+                        params,
+                        strategy,
+                        exchange,
+                        self._trader,
+                        ohlcv_limit=self.warmup_bars,
+                        last_processed_closed_ts=last_closed_ts,
+                        last_reported_signal=self._last_signal,
+                    )
                 )
                 last_closed_ts = out_ts
                 with self._lock:
@@ -275,6 +308,8 @@ class LiveBotManager:
                     self._last_signal = signal
                     self._last_price = mtm
                     self._last_error = None
+                    self._last_spread_bps = spread_bps
+                    self._last_spread_blocked = spread_blocked
             except Exception as e:
                 with self._lock:
                     self._last_error = (

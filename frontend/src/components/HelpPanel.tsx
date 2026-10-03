@@ -290,8 +290,9 @@ export function HelpPanel({ onNavigateTab }: Props) {
             </li>
             <li>
               <strong className="text-slate-300">Risk</strong> — allocation,
-              stop-loss / take-profit, ATR sizing, slippage, spread, and funding
-              (for perpetual-style simulation).
+              stop-loss / take-profit, ATR sizing, slippage, half-spread (backtest
+              cost model), max spread (live-only entry gate from real bid/ask), and
+              funding (for perpetual-style simulation).
             </li>
           </ul>
           <Tip>

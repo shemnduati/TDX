@@ -1,0 +1,56 @@
+{
+  "name": "btc-4h-don40-adx-htf-vol",
+  "description": "BTC/USDT 4h — Donchian 40 breakout, ATR sizing (2×ATR stop / 3×ATR take), ADX≥20, HTF 1d EMA50 trend, volume ≥1.3× rolling median. No compression, no Donchian RSI, no trailing stop. Seeded from experiments/compare_1h_4h_donchian.py (4h_repo_htf_vol); full-sample backtest +58% net on cached history — run walk-forward before live.",
+  "source": "experiments/compare_1h_4h_donchian.py 4h_repo_htf_vol (2026-10-03)",
+  "created_at": "2026-10-03T17:15:00Z",
+  "parent": null,
+  "changelog": [
+    {
+      "at": "2026-10-03T17:15:00Z",
+      "message": "Initial profile: Don 40 + ADX + HTF + vol 1.3 on BTC 4h"
+    }
+  ],
+  "performance": {
+    "kind": "backtest",
+    "summary": {
+      "trades": 311,
+      "win_rate": 48.87,
+      "return_pct": 58.28,
+      "gross_pnl": 878.49,
+      "fees_paid": 295.64,
+      "total_pnl": 582.85,
+      "max_drawdown_pct": 8.97,
+      "bars": 19946,
+      "fee_pct": 0.001,
+      "note": "Cached BTC/USDT 4h history (~20k bars); not walk-forward validated"
+    },
+    "recorded_at": "2026-10-03T17:15:00Z"
+  },
+  "params": {
+    "symbol": "BTC/USDT",
+    "timeframe": "4h",
+    "strategy": "donchian_breakout",
+    "donchian_period": 40,
+    "ema_trend": 0,
+    "use_donchian_compression": false,
+    "use_donchian_rsi": false,
+    "use_atr_sizing": true,
+    "atr_period": 14,
+    "atr_risk_pct": 0.01,
+    "atr_stop_mult": 2.0,
+    "atr_tp_mult": 3.0,
+    "use_adx_filter": true,
+    "filter_adx_period": 14,
+    "adx_min": 20.0,
+    "adx_max": 0.0,
+    "use_htf_confirm": true,
+    "htf_timeframe": "1d",
+    "htf_ema_period": 50,
+    "use_volume_filter": true,
+    "vol_ma_period": 20,
+    "vol_mult": 1.3,
+    "use_trailing_stop": false,
+    "entry_cooldown_bars": 3,
+    "fee_pct": 0.001
+  }
+}

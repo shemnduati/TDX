@@ -122,6 +122,8 @@ export interface StrategyParams {
   slippage_pct: number;
   slippage_atr_mult: number;
   half_spread_bps: number;
+  /** Live only: skip flat entries when bid–ask spread exceeds this (bps). 0 = off. */
+  max_spread_bps: number;
   intrabar_sl_tp_policy: string;
   intrabar_random_seed: number;
   enable_funding: boolean;
@@ -214,6 +216,8 @@ export interface LiveStatus {
   last_signal: string;
   last_price: number | null;
   last_error: string | null;
+  last_spread_bps?: number | null;
+  last_spread_blocked?: boolean;
   params: StrategyParams | null;
   balance: number | null;
   position: "LONG" | "SHORT" | null;

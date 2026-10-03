@@ -216,6 +216,9 @@ SLIPPAGE_ATR_MULT = 0.0
 # Adds (HALF_SPREAD_BPS / 10000) to the *fractional* adverse move on entry/exit,
 # stacked on top of SLIPPAGE_PCT + ATR-linked terms (see PaperTrader).
 HALF_SPREAD_BPS = 0.0
+# Live paper only: skip new entries when full bid–ask spread exceeds this (bps).
+# 0 = off. Typical BTC/USDT spot is often ~1–5 bps; alts can be 20+ in stress.
+MAX_SPREAD_BPS = 0.0
 # Intraday ambiguity: candle touches BOTH stop and TP. `stop_first` is conservative.
 # Use `take_first` for an optimistic bracket; `random` for a stochastic path (seeded).
 INTRABAR_SL_TP_POLICY = "stop_first"  # stop_first | take_first | random

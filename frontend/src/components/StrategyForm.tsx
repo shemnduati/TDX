@@ -15,6 +15,7 @@ const RISK_FIELDS: (keyof StrategyParams)[] = [
   "slippage_pct",
   "slippage_atr_mult",
   "half_spread_bps",
+  "max_spread_bps",
   "intrabar_sl_tp_policy",
   "intrabar_random_seed",
   "enable_funding",
@@ -287,6 +288,14 @@ const FIELD_META: Record<
     min: 0,
     help:
       "Fixed liquidity cost per fill: adds bps÷10000 to fractional slip (distinct from pct + ATR terms)",
+  },
+  max_spread_bps: {
+    label: "Max spread (live, bps)",
+    type: "number",
+    step: 1,
+    min: 0,
+    help:
+      "Live paper only: block new entries when full bid–ask spread exceeds this (0 = off). Exits still fill.",
   },
   intrabar_sl_tp_policy: {
     label: "Same-bar SL vs TP",

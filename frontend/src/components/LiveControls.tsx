@@ -131,6 +131,20 @@ export function LiveControls({
               status?.params?.timeframe ?? ""
             }`.trim()}
           />
+          {(status?.params?.max_spread_bps ?? 0) > 0 && (
+            <Stat
+              label="Spread (bps)"
+              value={
+                status?.last_spread_bps != null
+                  ? `${status.last_spread_bps.toFixed(1)}${
+                      status.last_spread_blocked ? " · blocked" : ""
+                    }`
+                  : "—"
+              }
+              mono
+              tone={status?.last_spread_blocked ? "bear" : undefined}
+            />
+          )}
         </div>
       )}
 

@@ -89,6 +89,7 @@ from config import (
     SLIPPAGE_PCT,
     SLIPPAGE_ATR_MULT,
     HALF_SPREAD_BPS,
+    MAX_SPREAD_BPS,
     INTRABAR_SL_TP_POLICY,
     INTRABAR_RANDOM_SEED,
     USE_TRAILING_STOP,
@@ -197,6 +198,7 @@ class Params:
     slippage_pct: float = SLIPPAGE_PCT
     slippage_atr_mult: float = SLIPPAGE_ATR_MULT
     half_spread_bps: float = HALF_SPREAD_BPS
+    max_spread_bps: float = MAX_SPREAD_BPS
     intrabar_sl_tp_policy: str = INTRABAR_SL_TP_POLICY
     intrabar_random_seed: Optional[int] = INTRABAR_RANDOM_SEED
     use_trailing_stop: bool = USE_TRAILING_STOP
