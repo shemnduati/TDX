@@ -39,6 +39,7 @@ yarl==1.23.0
 
 # ---- optional extras ----
 # optuna>=3  # Bayesian train-window tuning: pip install optuna
+gunicorn==23.0.0  # production WSGI server (see deploy/DEPLOY.md)
 
 # ---- dev / test only ----
 pytest==8.3.4

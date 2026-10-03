@@ -1,0 +1,17 @@
+[Unit]
+Description=TDX live paper bot (optional)
+After=network.target tdx-api.service
+
+[Service]
+Type=simple
+User=tdx
+Group=tdx
+WorkingDirectory=/opt/tdx
+Environment=PATH=/opt/tdx/venv/bin
+# EnvironmentFile=/opt/tdx/.env
+ExecStart=/opt/tdx/venv/bin/python bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

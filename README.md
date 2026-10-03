@@ -60,8 +60,10 @@ Open http://127.0.0.1:5173. The Vite dev server proxies
 
 ```powershell
 npm run build
-npm run preview
 ```
+
+Serve `frontend/dist` with Nginx (or similar) and proxy `/api/*` to the Flask
+API on port 5001. Step-by-step server setup: **[deploy/DEPLOY.md](deploy/DEPLOY.md)**.
 
 ## 3. What's in the dashboard
 

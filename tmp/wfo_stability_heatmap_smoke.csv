@@ -1,5 +1,0 @@
-x_key,y_key,x,y,n_windows,mean_test_ret,mean_test_mdd,mean_train_score,positive_rate
-ema_long,ema_short,42,12,1,0.0,0.0,1.421973,0.0
-ema_long,ema_short,42,14,1,-1.061822,1.395,-1.76048,0.0
-ema_long,ema_short,50,10,1,-2.103418,2.487,3.302879,0.0
-ema_long,ema_short,57,14,1,0.0,0.0,4.19611,0.0
