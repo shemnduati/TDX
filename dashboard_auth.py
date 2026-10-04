@@ -8,11 +8,15 @@ Also set ``DASHBOARD_SECRET_KEY`` (>= 16 chars) to sign session cookies.
 """
 from __future__ import annotations
 
+import hashlib
+import logging
 import os
 from datetime import timedelta
 from secrets import compare_digest
 
 from flask import Flask, jsonify, request, session
+
+_log = logging.getLogger(__name__)
 
 
 def auth_enabled() -> bool:
@@ -43,6 +47,25 @@ def secret_key() -> str:
     ).strip()
 
 
+def _resolve_session_secret() -> str:
+    """Session signing key; never log the value."""
+    sk = secret_key()
+    if len(sk) >= 16:
+        return sk
+    if not auth_enabled():
+        return "tdx-dev-no-dashboard-auth"
+    pwd = _expected_password()
+    derived = hashlib.sha256(
+        b"tdx-dashboard-session-v1:" + pwd.encode("utf-8")
+    ).hexdigest()
+    _log.warning(
+        "DASHBOARD_SECRET_KEY is unset or too short; using a key derived "
+        "from DASHBOARD_AUTH_PASSWORD. Set DASHBOARD_SECRET_KEY (>=16 chars) "
+        "in .env for production."
+    )
+    return derived
+
+
 def configure_app(app: Flask) -> None:
     """Apply session settings and register auth routes / guard."""
     _register_routes(app)
@@ -51,14 +74,7 @@ def configure_app(app: Flask) -> None:
         app.config.setdefault("SECRET_KEY", "tdx-dev-no-dashboard-auth")
         return
 
-    sk = secret_key()
-    if len(sk) < 16:
-        raise RuntimeError(
-            "DASHBOARD_AUTH_PASSWORD is set but DASHBOARD_SECRET_KEY "
-            "(or FLASK_SECRET_KEY) is missing or shorter than 16 characters."
-        )
-
-    app.config["SECRET_KEY"] = sk
+    app.config["SECRET_KEY"] = _resolve_session_secret()
     app.config.update(
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",

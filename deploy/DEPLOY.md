@@ -99,6 +99,29 @@ Without that variable (typical local dev), auth is **off** — do not deploy pub
 without setting password + secret key.
 
 Also use HTTPS (Let's Encrypt) so `DASHBOARD_COOKIE_SECURE=1` protects the session cookie.
+If you use HTTP only, leave `DASHBOARD_COOKIE_SECURE` unset or `0` — otherwise the
+browser will not store the login cookie and the app will look broken after sign-in.
+
+### 502 Bad Gateway after `systemctl restart tdx-api`
+
+Nginx returns 502 when nothing is listening on `127.0.0.1:5001`. On the server:
+
+```bash
+sudo systemctl status tdx-api --no-pager
+sudo journalctl -u tdx-api -n 40 --no-pager
+curl -v http://127.0.0.1:5001/health
+```
+
+Common fixes:
+
+| Journal / symptom | Fix |
+|---|---|
+| `Failed to load environment files` | Fix `/opt/tdx/.env` path; `chmod 640 .env`; ensure `EnvironmentFile=` in the unit |
+| `ModuleNotFoundError`, import error | `cd /opt/tdx && ./venv/bin/pip install -r requirements.txt` |
+| Gunicorn exits immediately | Run manually: `cd /opt/tdx && ./venv/bin/gunicorn -w 1 -b 127.0.0.1:5001 dashboard:app` and read the traceback |
+| Auth works locally but not in browser | Match `DASHBOARD_COOKIE_SECURE` to HTTPS; redeploy frontend (`npm run build`) |
+
+After code changes: `git pull && bash deploy/deploy.sh` (rebuilds UI and restarts API).
 
 ## Optional: live paper bot
 

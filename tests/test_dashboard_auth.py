@@ -7,8 +7,16 @@ import pytest
 
 
 @pytest.fixture
-def client():
+def client(monkeypatch):
+    monkeypatch.delenv("DASHBOARD_AUTH_PASSWORD", raising=False)
+    monkeypatch.delenv("DASHBOARD_SECRET_KEY", raising=False)
+    monkeypatch.delenv("FLASK_SECRET_KEY", raising=False)
+
     import dashboard
+    import dashboard_auth
+
+    importlib.reload(dashboard_auth)
+    importlib.reload(dashboard)
 
     dashboard.app.config["TESTING"] = True
     with dashboard.app.test_client() as c:
@@ -23,6 +31,7 @@ def test_auth_disabled_by_default(client):
 
 @pytest.fixture
 def auth_client(monkeypatch):
+    monkeypatch.setenv("DASHBOARD_AUTH_USERNAME", "admin")
     monkeypatch.setenv("DASHBOARD_AUTH_PASSWORD", "test-pass-123")
     monkeypatch.setenv("DASHBOARD_SECRET_KEY", "x" * 32)
     monkeypatch.delenv("FLASK_SECRET_KEY", raising=False)

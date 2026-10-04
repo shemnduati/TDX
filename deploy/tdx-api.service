@@ -8,7 +8,7 @@ User=tdx
 Group=tdx
 WorkingDirectory=/opt/tdx
 Environment=PATH=/opt/tdx/venv/bin
-# Optional: EnvironmentFile=/opt/tdx/.env
+Optional: EnvironmentFile=/opt/tdx/.env
 ExecStart=/opt/tdx/venv/bin/gunicorn -w 1 -b 127.0.0.1:5001 --timeout 300 dashboard:app
 Restart=always
 RestartSec=5
