@@ -482,7 +482,10 @@ export function HelpPanel({ onNavigateTab }: Props) {
             using the paper execution model (no real orders).
           </p>
           <ol className="ml-4 list-decimal space-y-2">
-            <li>Load or configure params (ideally from a validated profile).</li>
+            <li>
+              Pick a profile on the Walk-forward tab (Apply) or load one on
+              Backtest first — both share the same params.
+            </li>
             <li>Click Start — the status dot in the header turns green.</li>
             <li>
               Switch to Current to watch equity, open position, and recent fills

@@ -23,7 +23,21 @@ pip install gunicorn
 curl -s http://127.0.0.1:5001/health   # after starting gunicorn (step 4)
 ```
 
-Optional: `export API_KEY=... SECRET=...` in `/opt/tdx/.env` and load from systemd.
+Optional env in `/opt/tdx/.env` (see `.env.example` at repo root):
+
+```bash
+# Exchange keys (if needed)
+API_KEY=...
+SECRET=...
+
+# Required when the dashboard is on the public internet
+DASHBOARD_AUTH_USERNAME=admin
+DASHBOARD_AUTH_PASSWORD=your-long-random-password
+DASHBOARD_SECRET_KEY=another-long-random-string-min-16-chars
+DASHBOARD_COOKIE_SECURE=1
+```
+
+Uncomment `EnvironmentFile=/opt/tdx/.env` in `tdx-api.service`.
 
 ## 3. Frontend build
 
@@ -78,7 +92,13 @@ bash deploy/deploy.sh
 
 ## Security
 
-The dashboard has **no built-in login**. Restrict access (VPN, firewall, or Nginx basic auth) before exposing publicly.
+With `DASHBOARD_AUTH_PASSWORD` set, the React app shows a **sign-in** screen and the
+API requires a session cookie on all routes except `/health` and `/auth/*`.
+
+Without that variable (typical local dev), auth is **off** — do not deploy publicly
+without setting password + secret key.
+
+Also use HTTPS (Let's Encrypt) so `DASHBOARD_COOKIE_SECURE=1` protects the session cookie.
 
 ## Optional: live paper bot
 

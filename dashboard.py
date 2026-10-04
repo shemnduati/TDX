@@ -32,6 +32,11 @@ Endpoints:
     GET  /sweep/status            current sweep progress + results
     POST /sweep/cancel            stop the currently-running sweep (if any)
 
+    GET  /auth/config             whether login is required (+ default username)
+    GET  /auth/me                 current session (always 200 when auth off)
+    POST /auth/login              body {"username","password"} — session cookie
+    POST /auth/logout             clear session
+
     POST /walkforward/start       start a walk-forward validation job
         body: {"params": {...}, "train_bars": N, "test_bars": M,
                "step": S?, "opt_matrix": {"field": [v1, ...]}?,
@@ -102,6 +107,7 @@ from strategies import REGISTRY as STRATEGY_REGISTRY
 from sweep_runner import SWEEP
 from walkforward import _normalize_train_engine, resolve_train_engine, walkforward_report_payload
 from walkforward_runner import WALKFORWARD
+import dashboard_auth
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -112,7 +118,8 @@ BACKTEST_FILE = OUTPUT_FILE
 WALKFORWARD_OPTUNA_TRIALS_CAP = 512
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
+dashboard_auth.configure_app(app)
 
 
 EMPTY_STATE = {

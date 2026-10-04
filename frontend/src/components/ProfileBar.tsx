@@ -17,11 +17,13 @@ interface Props {
   /** Currently-applied profile name, if any. Cleared by the parent
    *  when the user edits any field (so the label doesn't lie). */
   activeName?: string | null;
-  onApply: (name: string) => void;
-  onSave: (name: string, description: string) => void;
-  onDelete: (name: string) => void;
+  onApply: (name: string) => void | Promise<void>;
+  onSave?: (name: string, description: string) => void;
+  onDelete?: (name: string) => void;
   onRefresh?: () => void;
   disabled?: boolean;
+  /** Hide save/delete when the bar is only for loading presets (e.g. WF tab). */
+  applyOnly?: boolean;
 }
 
 export function ProfileBar({
@@ -33,6 +35,7 @@ export function ProfileBar({
   onDelete,
   onRefresh,
   disabled,
+  applyOnly = false,
 }: Props) {
   const [selected, setSelected] = useState<string>("");
   const [saveOpen, setSaveOpen] = useState(false);
@@ -44,11 +47,11 @@ export function ProfileBar({
 
   const handleApply = () => {
     if (!choice) return;
-    onApply(choice);
+    void onApply(choice);
   };
 
   const handleDelete = () => {
-    if (!choice) return;
+    if (!choice || !onDelete) return;
     if (!window.confirm(`Delete profile "${choice}"?`)) return;
     onDelete(choice);
     setSelected("");
@@ -56,7 +59,7 @@ export function ProfileBar({
 
   const handleSave = () => {
     const name = saveName.trim();
-    if (!name) return;
+    if (!name || !onSave) return;
     onSave(name, saveDesc.trim());
     setSaveOpen(false);
     setSaveName("");
@@ -112,24 +115,28 @@ export function ProfileBar({
           Apply
         </button>
 
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={() => setSaveOpen((v) => !v)}
-          className="rounded-md border border-slate-700 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          {saveOpen ? "Cancel" : "Save as…"}
-        </button>
+        {!applyOnly && (
+          <>
+            <button
+              type="button"
+              disabled={disabled}
+              onClick={() => setSaveOpen((v) => !v)}
+              className="rounded-md border border-slate-700 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {saveOpen ? "Cancel" : "Save as…"}
+            </button>
 
-        <button
-          type="button"
-          disabled={disabled || !choice}
-          onClick={handleDelete}
-          className="rounded-md border border-bear/40 px-3 py-1.5 text-xs text-bear hover:bg-bear/10 disabled:cursor-not-allowed disabled:opacity-30"
-          title="Delete the selected profile"
-        >
-          Delete
-        </button>
+            <button
+              type="button"
+              disabled={disabled || !choice}
+              onClick={handleDelete}
+              className="rounded-md border border-bear/40 px-3 py-1.5 text-xs text-bear hover:bg-bear/10 disabled:cursor-not-allowed disabled:opacity-30"
+              title="Delete the selected profile"
+            >
+              Delete
+            </button>
+          </>
+        )}
 
         {onRefresh && (
           <button
@@ -156,7 +163,7 @@ export function ProfileBar({
         </div>
       )}
 
-      {saveOpen && (
+      {!applyOnly && saveOpen && (
         <div className="mt-3 space-y-2 rounded-md border border-slate-800 bg-slate-900/60 p-3">
           <div className="text-[10px] text-slate-500">
             Saves the CURRENT form values as a profile. Only fields that

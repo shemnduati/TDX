@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { clsx } from "clsx";
 import type {
+  ProfileMeta,
   StrategyParams,
   WalkforwardStabilityMatrix,
   WalkforwardStabilityResponse,
   WalkforwardStart,
   WalkforwardStatus,
 } from "../types";
+import { ProfileBar } from "./ProfileBar";
+import {
+  estimateWalkforwardWindows,
+  suggestFixedOptMatrix,
+} from "../walkforwardUtils";
 
 interface Props {
   defaults: StrategyParams | null;
@@ -21,6 +27,11 @@ interface Props {
   onDownloadReportJson: () => Promise<void>;
   busy: boolean;
   error: string | null;
+  profiles: ProfileMeta[];
+  profilesLoading?: boolean;
+  activeProfile: string | null;
+  onApplyProfile: (name: string) => Promise<StrategyParams | null>;
+  onRefreshProfiles?: () => void;
 }
 
 /**
@@ -47,6 +58,11 @@ export function WalkforwardPanel({
   onDownloadReportJson,
   busy,
   error,
+  profiles,
+  profilesLoading,
+  activeProfile,
+  onApplyProfile,
+  onRefreshProfiles,
 }: Props) {
   const [trainBars, setTrainBars] = useState(500);
   const [testBars, setTestBars] = useState(200);
@@ -80,6 +96,14 @@ export function WalkforwardPanel({
     trainBars > 0 &&
     testBars > 0 &&
     (params.bars ?? 0) >= trainBars + testBars;
+
+  const handleApplyProfile = async (name: string) => {
+    setOptError(null);
+    const merged = await onApplyProfile(name);
+    if (merged) {
+      setOptMatrixText(suggestFixedOptMatrix(merged));
+    }
+  };
 
   const handleStart = async () => {
     if (!params) return;
@@ -140,6 +164,23 @@ export function WalkforwardPanel({
             Slide a rolling (train, test) window across history. Consistently
             positive <em>test</em> returns across windows ⇒ the strategy
             generalises. Good test on one window + losses elsewhere ⇒ overfit.
+          </p>
+        </div>
+
+        <div className="mb-4">
+          <ProfileBar
+            profiles={profiles}
+            loading={profilesLoading}
+            activeName={activeProfile}
+            disabled={running}
+            applyOnly
+            onApply={handleApplyProfile}
+            onRefresh={onRefreshProfiles}
+          />
+          <p className="mt-2 text-[10px] text-slate-500">
+            Apply loads the profile into walk-forward params (same as Backtest).
+            <code className="ml-1 text-slate-400">opt_matrix</code> is set to
+            lock key hyperparameters to the profile when possible.
           </p>
         </div>
 
@@ -220,7 +261,7 @@ export function WalkforwardPanel({
             <span className="text-slate-300">opt_matrix (optional JSON)</span>
             <textarea
               className="mt-1 h-24 w-full rounded-md border border-slate-800 bg-slate-950 px-2 py-1 font-mono text-[11px] text-slate-100 focus:border-slate-600 focus:outline-none disabled:opacity-50"
-              placeholder='{"ema_short":[10,12,14],"ema_long":[40,50,60]}'
+              placeholder='Leave blank for strategy default grid, or {"donchian_period":[40]} to lock params'
               value={optMatrixText}
               onChange={(e) => setOptMatrixText(e.target.value)}
               disabled={running}
@@ -234,7 +275,15 @@ export function WalkforwardPanel({
         <div className="mt-3 text-xs text-slate-500">
           {params ? (
             <>
-              Using current Backtest params:{" "}
+              {activeProfile ? (
+                <>
+                  Profile{" "}
+                  <span className="font-mono text-slate-300">
+                    {activeProfile}
+                  </span>
+                  {" · "}
+                </>
+              ) : null}
               <span className="font-mono text-slate-300">
                 {params.strategy}
               </span>{" "}
@@ -247,9 +296,29 @@ export function WalkforwardPanel({
                   ATR
                 </span>
               )}
-              . Expected windows:{" "}
+              {params.use_adx_filter && (
+                <span className="ml-1 rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">
+                  ADX
+                </span>
+              )}
+              {params.use_htf_confirm && (
+                <span className="ml-1 rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">
+                  HTF
+                </span>
+              )}
+              {params.use_volume_filter && (
+                <span className="ml-1 rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">
+                  Vol
+                </span>
+              )}
+              . Expected windows (75% dev slice):{" "}
               <span className="font-mono text-slate-300">
-                {estimateWindows(params.bars, trainBars, testBars, step)}
+                {estimateWalkforwardWindows(
+                  params.bars,
+                  trainBars,
+                  testBars,
+                  step
+                )}
               </span>
             </>
           ) : (
@@ -794,18 +863,6 @@ function NumberField({
       {help && <span className="mt-1 block text-[10px] text-slate-500">{help}</span>}
     </label>
   );
-}
-
-function estimateWindows(
-  bars: number,
-  trainBars: number,
-  testBars: number,
-  step: number | ""
-): string {
-  if (!bars || !trainBars || !testBars) return "—";
-  if (bars < trainBars + testBars) return "0";
-  const s = step === "" || !step ? testBars : step;
-  return String(Math.floor((bars - trainBars - testBars) / s) + 1);
 }
 
 function fmtSeconds(secs: number, allowFractional = false): string {

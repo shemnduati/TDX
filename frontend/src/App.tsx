@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  AuthRequiredError,
+  authLogout,
+  authMe,
   deleteProfile,
   deleteRun,
   downloadWalkforwardReportJson,
   downloadWalkforwardStabilityCsv,
   downloadWalkforwardWindowsCsv,
+  fetchAuthConfig,
   fetchDashboardData,
   fetchDefaults,
   fetchStrategies,
@@ -78,6 +82,7 @@ import { RegimePanel } from "./components/RegimePanel";
 import { PortfolioPanel } from "./components/PortfolioPanel";
 import { AutomationPanel } from "./components/AutomationPanel";
 import { HelpPanel } from "./components/HelpPanel";
+import { LoginPage } from "./components/LoginPage";
 import { formatCurrency } from "./metrics";
 
 const POLL_MS = 3000;
@@ -102,6 +107,11 @@ type CurrentSource =
   | { type: "run"; id: string; label: string; params: StrategyParams };
 
 export default function App() {
+  const [authReady, setAuthReady] = useState(false);
+  const [authRequired, setAuthRequired] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loginUsername, setLoginUsername] = useState("admin");
+
   const [tab, setTab] = useState<TabId>("current");
   const [currentSource, setCurrentSource] = useState<CurrentSource>({
     type: "live",
@@ -166,14 +176,43 @@ export default function App() {
   const lastUpdatedRef = useRef<Date | null>(null);
   const [, forceTick] = useState(0);
 
+  // ------------------------------------------------ auth gate
+  const refreshAuth = useCallback(async () => {
+    const [cfg, me] = await Promise.all([fetchAuthConfig(), authMe()]);
+    setAuthRequired(cfg.auth_required);
+    setLoginUsername(cfg.username ?? "admin");
+    setAuthenticated(me.authenticated);
+    setAuthReady(true);
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    refreshAuth().catch((e) => {
+      setError(e instanceof Error ? e.message : String(e));
+      setAuthReady(true);
+    });
+    return () => controller.abort();
+  }, [refreshAuth]);
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await authLogout();
+    } catch {
+      /* session may already be gone */
+    }
+    setAuthenticated(false);
+    setData(null);
+  }, []);
+
   // ------------------------------------------------ boot: metadata + runs
   useEffect(() => {
+    if (!authReady) return;
+    if (authRequired && !authenticated) return;
+
     const controller = new AbortController();
     Promise.all([
       fetchStrategies(controller.signal),
       fetchDefaults(controller.signal),
-      // Symbol list drives the Symbol dropdown in the backtest/live forms.
-      // Failure here is non-fatal: the form falls back to a free-text input.
       fetchSymbols(controller.signal).catch(() => ({ symbols: [] as string[] })),
     ])
       .then(([s, d, sym]) => {
@@ -183,9 +222,15 @@ export default function App() {
         setLiveParams(d);
         setSymbols(sym.symbols);
       })
-      .catch((e) => setError(e instanceof Error ? e.message : String(e)));
+      .catch((e) => {
+        if (e instanceof AuthRequiredError) {
+          setAuthenticated(false);
+          return;
+        }
+        setError(e instanceof Error ? e.message : String(e));
+      });
     return () => controller.abort();
-  }, []);
+  }, [authReady, authRequired, authenticated]);
 
   const refreshRuns = useCallback(async () => {
     setRunsLoading(true);
@@ -472,8 +517,11 @@ export default function App() {
   // decides which form's state to update and which active-profile badge
   // to set.
   const applyProfileTo = useCallback(
-    async (target: "backtest" | "live", name: string) => {
-      if (!defaults) return;
+    async (
+      target: "backtest" | "live",
+      name: string
+    ): Promise<StrategyParams | null> => {
+      if (!defaults) return null;
       setError(null);
       try {
         const doc = await getProfile(name);
@@ -485,8 +533,10 @@ export default function App() {
           setLiveParams(merged);
           setActiveProfileLive(name);
         }
+        return merged;
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e));
+        return null;
       }
     },
     [defaults]
@@ -975,6 +1025,25 @@ export default function App() {
     return "Live bot stopped";
   }, [currentSource, data, liveState]);
 
+  if (!authReady) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 text-sm text-slate-500">
+        Loading…
+      </div>
+    );
+  }
+
+  if (authRequired && !authenticated) {
+    return (
+      <LoginPage
+        defaultUsername={loginUsername}
+        onSuccess={() => {
+          void refreshAuth();
+        }}
+      />
+    );
+  }
+
   const tabDefs: Tab<TabId>[] = [
     { id: "current", label: "Current" },
     { id: "backtest", label: "Backtest" },
@@ -1036,9 +1105,18 @@ export default function App() {
               Backtest, live-test & save strategies · paper trading
             </p>
           </div>
-          <div className="flex items-center gap-2 text-xs">
+          <div className="flex items-center gap-3 text-xs">
             <span className={`inline-block h-2 w-2 rounded-full ${statusDot}`} />
             <span className="text-slate-400">{statusLabel}</span>
+            {authRequired && (
+              <button
+                type="button"
+                onClick={() => void handleLogout()}
+                className="rounded-md border border-slate-700 px-2 py-1 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              >
+                Sign out
+              </button>
+            )}
           </div>
         </div>
         <div className="mx-auto max-w-7xl px-6">
@@ -1145,6 +1223,11 @@ export default function App() {
             stability={wfStability}
             busy={wfBusy}
             error={wfState?.error ?? null}
+            profiles={profiles}
+            profilesLoading={profilesLoading}
+            activeProfile={activeProfileBacktest}
+            onApplyProfile={(name) => applyProfileTo("backtest", name)}
+            onRefreshProfiles={refreshProfiles}
             onStart={handleWfStart}
             onCancel={handleWfCancel}
             onDownloadStabilityCsv={handleWfDownloadStabilityCsv}

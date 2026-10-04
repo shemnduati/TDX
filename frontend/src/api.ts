@@ -29,14 +29,33 @@ import type {
 
 const API = ""; // requests go to /api/... which Vite proxies to Flask
 
+export class AuthRequiredError extends Error {
+  constructor(message = "authentication required") {
+    super(message);
+    this.name = "AuthRequiredError";
+  }
+}
+
+async function apiFetch(
+  path: string,
+  init: RequestInit & { signal?: AbortSignal } = {}
+): Promise<Response> {
+  const headers = new Headers(init.headers);
+  if (init.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+  return fetch(`${API}/api${path}`, {
+    credentials: "include",
+    ...init,
+    headers,
+  });
+}
+
 async function request<T>(
   path: string,
   init: RequestInit & { signal?: AbortSignal } = {}
 ): Promise<T> {
-  const res = await fetch(`${API}/api${path}`, {
-    headers: { "Content-Type": "application/json" },
-    ...init,
-  });
+  const res = await apiFetch(path, init);
   if (!res.ok) {
     let body: unknown = null;
     try {
@@ -48,9 +67,48 @@ async function request<T>(
       (body && typeof body === "object" && "error" in body
         ? String((body as { error: unknown }).error)
         : null) ?? `${res.status} ${res.statusText}`;
+    if (res.status === 401 && path !== "/auth/login") {
+      throw new AuthRequiredError(errMsg);
+    }
     throw new Error(errMsg);
   }
   return (await res.json()) as T;
+}
+
+// --------------------------------------------------------------- auth
+export interface AuthConfigResponse {
+  auth_required: boolean;
+  username: string | null;
+}
+
+export interface AuthMeResponse {
+  authenticated: boolean;
+  auth_required: boolean;
+  username?: string;
+}
+
+export function fetchAuthConfig(
+  signal?: AbortSignal
+): Promise<AuthConfigResponse> {
+  return request("/auth/config", { signal });
+}
+
+export function authMe(signal?: AbortSignal): Promise<AuthMeResponse> {
+  return request("/auth/me", { signal });
+}
+
+export function authLogin(
+  username: string,
+  password: string
+): Promise<{ ok: boolean; username: string }> {
+  return request("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ username, password }),
+  });
+}
+
+export function authLogout(): Promise<{ ok: boolean }> {
+  return request("/auth/logout", { method: "POST" });
 }
 
 // ------------------------------------------------------------- dashboard
@@ -189,7 +247,7 @@ export function walkforwardStability(
 }
 
 export async function downloadWalkforwardStabilityCsv(): Promise<void> {
-  const res = await fetch(`${API}/api/walkforward/stability.csv`);
+  const res = await apiFetch("/walkforward/stability.csv");
   if (!res.ok) {
     throw new Error(`${res.status} ${res.statusText}`);
   }
@@ -205,7 +263,7 @@ export async function downloadWalkforwardStabilityCsv(): Promise<void> {
 }
 
 export async function downloadWalkforwardWindowsCsv(): Promise<void> {
-  const res = await fetch(`${API}/api/walkforward/windows.csv`);
+  const res = await apiFetch("/walkforward/windows.csv");
   if (!res.ok) {
     throw new Error(`${res.status} ${res.statusText}`);
   }
@@ -221,7 +279,7 @@ export async function downloadWalkforwardWindowsCsv(): Promise<void> {
 }
 
 export async function downloadWalkforwardReportJson(): Promise<void> {
-  const res = await fetch(`${API}/api/walkforward/report.json`);
+  const res = await apiFetch("/walkforward/report.json");
   if (!res.ok) {
     throw new Error(`${res.status} ${res.statusText}`);
   }

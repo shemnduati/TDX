@@ -42,8 +42,9 @@ new profile under a different name.
 
 ## Keep-up workflow
 
-1. Run a walk-forward sweep for a market (via the dashboard or
-   `experiments/explore_configs.py`).
+1. Run a walk-forward sweep for a market (via the dashboard **Walk-forward**
+   tab — apply a profile, lock `donchian_period` or strategy keys in
+   `opt_matrix` — or `experiments/explore_configs.py`).
 2. Pick the WF winner and save its Params as a profile (either by
    copying an existing JSON file and editing, or extending
    `profiles.py` with a `save_profile()` call).
@@ -62,9 +63,14 @@ new profile under a different name.
 | `btc-4h-adx-htf` | BTC/USDT 4h | + HTF 1d EMA50 confirmation | **0.33** | +1.17% | 75% |
 | `eth-4h-donchian` | ETH/USDT 4h | Donchian 20 + trend100, no ADX | **0.43** | +2.39% | 75% |
 | `eth-4h-donchian-consistent` | ETH/USDT 4h | Donchian 20 + trend200, no ADX | **0.39** | +2.05% | **81%** |
-| `btc-4h-don40-adx-htf-vol` | BTC/USDT 4h | Donchian 40 + ADX + HTF + vol 1.3× | — | +58% (full BT)* | — |
+| `btc-4h-don40-adx-htf-vol` | BTC/USDT 4h | Donchian 40 + ADX + HTF + vol 1.3× | **ROBUST** | +0.61% / window | **61%** |
 
-\*Full-sample backtest on cached history only (see profile `performance`); run walk-forward before treating as production-ready.
+`btc-4h-don40-adx-htf-vol`: 72 WF windows (train 500 / test 200, Don 40 locked via
+`opt_matrix`), ~20k 4h bars; final holdout **−0.51%**, PF 0.99. Full-sample backtest
++58% kept in profile `performance.summary` as reference only.
+
+On the dashboard **Walk-forward** tab, use **Profile → Apply** to load a preset;
+`opt_matrix` is auto-filled to lock the profile’s main hyperparameter when possible.
 
 All four WF-validated profiles above were validated over 16 walk-forward windows on 10,000 bars of
 4h data (~4.5 years covering 2022 bear, 2024 halving, 2025 top).
